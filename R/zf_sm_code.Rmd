@@ -1,29 +1,41 @@
 ---
 title: "zf_sm_code"
+authors: "Kyle Morrison, Yefeng Yang, Manuela Santana, Malgorazata Lagisz and, Shinichi Nakagawa"
 output: html_document
 date: "2023-03-01"
 ---
 
-```{r setup, include=FALSE}
+Mapping the Behavioral Impacts of Pesticide Exposure on Zebrafish: A Systematic Evidence Map and Bibliometric Analysis
+
+In this Rmarkdown we provide the following workflow:
+
+- Objective 1.	To investigate the types of pesticides and pesticide classes, both in terms of chemical and target, that have been used in experiments examining the effects of pesticide exposure on zebrafish behaviour.
+
+- Objective 2.	To identify the specific behaviours that have been investigated in pesticide exposure experiments that use zebrafish as a model.
+
+- Objective 3.	To identify similarities and differences in research patterns and terminology across different disciplines.
+
+- Objective 4. To examine how are authors connected between countries and how is the literature connected between and within disciplines. 
+
+```{r setup, , results="hide"}
+
 knitr::opts_chunk$set(echo = TRUE)
+pacman::p_load(tidyverse,
+               here,
+               stringr,
+               knitr,
+               formatR,
+               forcats,
+               ggplot2,
+               hrbrthemes,
+               patchwork,
+               bibliometrix,
+               igraph)
 ```
 
-## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+All extracted data is stored in five separate **.csv** files representing different aspects of the data (extracted via structured predefined Google Forms - one per table). 
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+Bibliographic data records are exported from Scopus (including cited references field) in .bib format and locally saved as **scopus.bib**. the pilot version of this file only includes bibliographic information of 'systeamtic review family'-like reviews included in Objectives 1 and 2. In the actual work bibliographic information will be expanded to all reviews on PFAS exposure in humans, animals and the environment.   
 
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+The study identity (authors, title) has been obscured in the pilot data extraction file. It will be public in the final data extraction files.      
