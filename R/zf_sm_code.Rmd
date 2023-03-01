@@ -38,4 +38,11 @@ All extracted data is stored in five separate **.csv** files representing differ
 
 Bibliographic data records are exported from Scopus (including cited references field) in .bib format and locally saved as **scopus.bib**.    
 
+```{r load data}
+bib <- read_csv(here("data", "zf_sm_bibliometrics.csv"), skip = 0)
+sd <- read_csv(here("data","zf_sm_study_details.csv"), skip = 0)
+pd <- read_csv(here("data", "zf_sm_pesticide_details.csv"), skip = 0)
+pdo <-read_csv(here("data","zf_sm_pesticide_dosage.csv"), skip = 0)
+bd <- read_csv(here("data", "zf_sm_behaviour_details.csv"), skip = 0)
+```
 
