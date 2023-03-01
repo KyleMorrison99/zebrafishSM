@@ -36,6 +36,6 @@ pacman::p_load(tidyverse,
 
 All extracted data is stored in five separate **.csv** files representing different aspects of the data (extracted via structured predefined Google Forms - one per table). 
 
-Bibliographic data records are exported from Scopus (including cited references field) in .bib format and locally saved as **scopus.bib**. the pilot version of this file only includes bibliographic information of 'systeamtic review family'-like reviews included in Objectives 1 and 2. In the actual work bibliographic information will be expanded to all reviews on PFAS exposure in humans, animals and the environment.   
+Bibliographic data records are exported from Scopus (including cited references field) in .bib format and locally saved as **scopus.bib**.    
 
-The study identity (authors, title) has been obscured in the pilot data extraction file. It will be public in the final data extraction files.      
+
