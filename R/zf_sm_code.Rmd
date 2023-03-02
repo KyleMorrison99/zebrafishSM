@@ -112,7 +112,7 @@ fig2
 
 ```{r total for target class}
 fig3 <- fd %>%
-  separate_rows(pesticide_target_class, sep = ", ") %>%  # Separate values by comma
+  separate_rows(pesticide_target_class, sep = ", ") %>%  
   count(pesticide_target_class) %>%
   ggplot(aes(x = n, y = reorder(pesticide_target_class, n))) +
   geom_bar(stat = "identity", fill = "black", color = "white", position = position_dodge(0.9)) +
@@ -166,6 +166,6 @@ fig5
 
 
 
-
+I need to discuss how we will map dosages - do we do range for most common pesticides - we need to keep route consistent for this 
 
 
