@@ -179,7 +179,7 @@ fig6 <- bd %>%
   ggplot(aes(x = n, y = reorder(behavioural_class, n))) +
   geom_bar(stat = "identity", fill = "black", color = "white", position = position_dodge(0.9)) +
   geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 3) +
-  labs(title = "Total Number of Pesticides by Behavioural Class",
+  labs(title = "Total Number of studies investigating each Behavioural Class",
        x = "Count",
        y = "Behavioural Class") +
   theme_classic()
@@ -194,8 +194,8 @@ fig6 <- bd %>%
   ggplot(aes(x = reorder(behaviour_activity, n), y = n)) +
   geom_bar(stat = "identity", fill = "black", color = "white", position = position_dodge(0.9)) +
   geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 3) +
-  labs(title = "Total Number of Pesticides by Behavioural Activity",
-       x = "Behavioural Activity",
+  labs(title = "Behavioural assays investigating Activity",
+       x = "Activity Assay",
        y = "Count") +
   theme_classic() +
   coord_flip()
@@ -212,13 +212,66 @@ fig7 <- bd %>%
   ggplot(aes(x = reorder(behaviour_aggression, n), y = n)) +
   geom_bar(stat = "identity", fill = "black", color = "white", position = position_dodge(0.9)) +
   geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 3) +
-  labs(title = "Total Number of Pesticides by Behavioural Aggression",
-       x = "Behavioural Aggression",
+  labs(title = "Behavioural assays investigating Aggression",
+       x = "Aggression Assay"+
        y = "Count") +
   theme_classic() +
   coord_flip()
 
 fig7
 
+```
+
+```{r total number of studies investigating each behavioural assay of behavioural_sociality}
+fig8 <- bd %>%
+  separate_rows(behaviour_sociality, sep = ",\\s*") %>%  
+  count(behaviour_sociality) %>%
+  na.omit() %>%
+  ggplot(aes(x = reorder(behaviour_sociality, n), y = n)) +
+  geom_bar(stat = "identity", fill = "black", color = "white", position = position_dodge(0.9)) +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 3) +
+  labs(title = "Behavioural assays investigating Sociality",
+       x = "BSociality Assay",
+       y = "Count") +
+  theme_classic() +
+  coord_flip()
+
+fig8
+```
+
+
+```{r total number of studies investigating each behavioural assay of behavioural_foraging}
+fig9 <- bd %>%
+  separate_rows(behaviour_foraging, sep = ",\\s*") %>%  
+  count(behaviour_foraging) %>%
+  na.omit() %>%
+  ggplot(aes(x = reorder(behaviour_foraging, n), y = n)) +
+  geom_bar(stat = "identity", fill = "black", color = "white", position = position_dodge(0.9)) +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 3) +
+  labs(title = "Behavioural assays investigating Foraging Behaviour",
+       x = "Foraging Assay",
+       y = "Count") +
+  theme_classic() +
+  coord_flip()
+
+fig9
+```
+
+
+```{r}
+fig10 <- bd %>%
+  separate_rows(behaviour_antipredator, sep = ",\\s*") %>%  
+  count(behaviour_antipredator) %>%
+  na.omit() %>%
+  ggplot(aes(x = reorder(behaviour_antipredator, n), y = n)) +
+  geom_bar(stat = "identity", fill = "black", color = "white", position = position_dodge(0.9)) +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 3) +
+  labs(title = "Behavioural assays investigating Anti-Predator Behaviour",
+       x = "Antipredator Assay",
+       y = "Count") +
+  theme_classic() +
+  coord_flip()
+
+fig10
 ```
 
