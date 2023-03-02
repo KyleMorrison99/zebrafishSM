@@ -99,24 +99,70 @@ fig1 <- fd %>%
 
 fig2 <- fd %>%
   count(pesticide_investigated.y) %>%
-  ggplot(aes(x = n, y = reorder(pesticide_investigated.y,n))) +
+  ggplot(aes(x = n, y = reorder(pesticide_investigated.y, n))) +
   geom_bar(stat = "identity", fill = "black", color = "white", position = position_dodge(0.9)) +
-  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 3) +  
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 2) +  
   labs(title = "Total Number of Pesticides Investigated",
        x = "Count",
        y = "Pesticide") +
   theme_classic()
 
+fig2
 ```
 
 ```{r total for target class}
+fig3 <- fd %>%
+  separate_rows(pesticide_target_class, sep = ", ") %>%  # Separate values by comma
+  count(pesticide_target_class) %>%
+  ggplot(aes(x = n, y = reorder(pesticide_target_class, n))) +
+  geom_bar(stat = "identity", fill = "black", color = "white", position = position_dodge(0.9)) +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 3) +
+  labs(title = "Total Number of Pesticides by Target Class",
+       x = "Count",
+       y = "Pesticide Target Class") +
+  theme_classic()
 
-
-
+fig3
 ```
 
 
+```{r total for chemical class}
+fig4 <- fd %>%
+  separate_rows(pesticide_chemical_class, sep = ", ") %>%  
+  count(pesticide_chemical_class) %>%
+  ggplot(aes(x = n, y = reorder(pesticide_chemical_class, n))) +
+  geom_bar(stat = "identity", fill = "black", color = "white", position = position_dodge(0.9)) +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 3) +
+  labs(title = "Total Number of Pesticides by Chemical Class",
+       x = "Count",
+       y = "Pesticide Chemical Class") +
+  theme_classic()
 
+fig4
+```
+
+```{r total route of exposure completed as a percentage}
+# Calculate total count for each category
+total_count <- fd %>% count(route)
+
+# Calculate proportion and percentage for each category
+route_pct <- fd %>%
+  count(route) %>%
+  mutate(proportion = n/sum(total_count$n),
+         percentage = proportion*100)
+
+# Create bar plot with percentages
+fig4 <- ggplot(route_pct, aes(x = reorder(route, percentage), y = percentage)) +
+  geom_bar(stat = "identity", fill = "black", color = "white") +
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.1) +
+  labs(title = "Percentage of Pesticides by Route of Exposure",
+       x = "Route of Exposure",
+       y = "Percentage") +
+  theme_classic() +
+  coord_flip()
+
+fig5
+```
 
 
 
