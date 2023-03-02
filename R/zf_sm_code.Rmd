@@ -97,11 +97,12 @@ fig1 <- fd %>%
 
 ```{r plot for total of individual pesticide}
 
-fig2 <- fd %>%
-  count(pesticide_investigated.y) %>%
-  ggplot(aes(x = n, y = reorder(pesticide_investigated.y, n))) +
+fig2 <- pd %>%
+  separate_rows(pesticide_investigated, sep = ", ") %>% 
+  count(pesticide_investigated) %>%
+  ggplot(aes(x = n, y = reorder(pesticide_investigated, n))) +
   geom_bar(stat = "identity", fill = "black", color = "white", position = position_dodge(0.9)) +
-  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 2) +  
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 2) + 
   labs(title = "Total Number of Pesticides Investigated",
        x = "Count",
        y = "Pesticide") +
@@ -111,7 +112,7 @@ fig2
 ```
 
 ```{r total for target class}
-fig3 <- fd %>%
+fig3 <- pd %>%
   separate_rows(pesticide_target_class, sep = ", ") %>%  
   count(pesticide_target_class) %>%
   ggplot(aes(x = n, y = reorder(pesticide_target_class, n))) +
@@ -127,7 +128,7 @@ fig3
 
 
 ```{r total for chemical class}
-fig4 <- fd %>%
+fig4 <- pd %>%
   separate_rows(pesticide_chemical_class, sep = ", ") %>%  
   count(pesticide_chemical_class) %>%
   ggplot(aes(x = n, y = reorder(pesticide_chemical_class, n))) +
@@ -143,16 +144,16 @@ fig4
 
 ```{r total route of exposure completed as a percentage}
 # Calculate total count for each category
-total_count <- fd %>% count(route)
+total_count <- pdo %>% count(route)
 
 # Calculate proportion and percentage for each category
-route_pct <- fd %>%
+route_pct <- pdo %>%
   count(route) %>%
   mutate(proportion = n/sum(total_count$n),
          percentage = proportion*100)
 
 # Create bar plot with percentages
-fig4 <- ggplot(route_pct, aes(x = reorder(route, percentage), y = percentage)) +
+fig5 <- ggplot(route_pct, aes(x = reorder(route, percentage), y = percentage)) +
   geom_bar(stat = "identity", fill = "black", color = "white") +
   geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.1) +
   labs(title = "Percentage of Pesticides by Route of Exposure",
@@ -168,4 +169,56 @@ fig5
 
 I need to discuss how we will map dosages - do we do range for most common pesticides - we need to keep route consistent for this 
 
+
+- Objective 2.	To identify the specific behaviours that have been investigated in pesticide exposure experiments that use zebrafish as a model.
+
+```{r total number of studies investigating each broad behaviour class}
+fig6 <- bd %>%
+  separate_rows(behavioural_class, sep = ",\\s*") %>%  
+  count(behavioural_class) %>%
+  ggplot(aes(x = n, y = reorder(behavioural_class, n))) +
+  geom_bar(stat = "identity", fill = "black", color = "white", position = position_dodge(0.9)) +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 3) +
+  labs(title = "Total Number of Pesticides by Behavioural Class",
+       x = "Count",
+       y = "Behavioural Class") +
+  theme_classic()
+fig6
+```
+
+```{r total number of studies investigating each behavioural assay of behaviour activity}
+fig6 <- bd %>%
+  separate_rows(behaviour_activity, sep = ",\\s*") %>%  
+  count(behaviour_activity) %>%
+   na.omit() %>%
+  ggplot(aes(x = reorder(behaviour_activity, n), y = n)) +
+  geom_bar(stat = "identity", fill = "black", color = "white", position = position_dodge(0.9)) +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 3) +
+  labs(title = "Total Number of Pesticides by Behavioural Activity",
+       x = "Behavioural Activity",
+       y = "Count") +
+  theme_classic() +
+  coord_flip()
+
+fig6
+```
+
+Note to not use graph of aggression assay 
+```{r total number of studies investigating each behavioural assay of behaviour_aggression }
+fig7 <- bd %>%
+  separate_rows(behaviour_aggression, sep = ",\\s*") %>%  
+  count(behaviour_aggression) %>%
+  na.omit() %>%
+  ggplot(aes(x = reorder(behaviour_aggression, n), y = n)) +
+  geom_bar(stat = "identity", fill = "black", color = "white", position = position_dodge(0.9)) +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 3) +
+  labs(title = "Total Number of Pesticides by Behavioural Aggression",
+       x = "Behavioural Aggression",
+       y = "Count") +
+  theme_classic() +
+  coord_flip()
+
+fig7
+
+```
 
