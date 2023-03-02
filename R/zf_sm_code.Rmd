@@ -18,7 +18,7 @@ In this Rmarkdown we provide the following workflow:
 - Objective 4. To examine how are authors connected between countries and how is the literature connected between and within disciplines. 
 
 ```{r setup, , results="hide"}
-
+rm(list = ls())
 knitr::opts_chunk$set(echo = TRUE)
 pacman::p_load(tidyverse,
                here,
@@ -30,7 +30,8 @@ pacman::p_load(tidyverse,
                hrbrthemes,
                patchwork,
                bibliometrix,
-               igraph)
+               igraph,
+               tidyr)
 ```
 
 
@@ -44,5 +45,81 @@ sd <- read_csv(here("data","zf_sm_study_details.csv"), skip = 0)
 pd <- read_csv(here("data", "zf_sm_pesticide_details.csv"), skip = 0)
 pdo <-read_csv(here("data","zf_sm_pesticide_dosage.csv"), skip = 0)
 bd <- read_csv(here("data", "zf_sm_behaviour_details.csv"), skip = 0)
+
+# not to self to create a the bibliometric information 
 ```
+
+
+```{r joining data}
+# Left join study details to bibliometrics
+bib_sd <- left_join(bib, sd, by = "study_id")
+
+# Left join pesticide details to previous join
+bib_sd_pd <- left_join(bib_sd, pd, by = "study_id")
+
+# Left join pesticide dosage to previous join
+bib_sd_pd_pdo <- left_join(bib_sd_pd, pdo, by = "study_id")
+
+# Left join behaviour details to previous join
+fd <- left_join(bib_sd_pd_pdo, bd, by = "study_id")
+
+# view(fd)
+```
+
+```{r clean final data}
+# removing timestamps and initals extaction
+
+fd <- fd %>% 
+           select(-starts_with("timestamp"), -starts_with("initials_extractor"))
+
+# view(fd)
+```
+
+
+```{r fig 1 time trends}
+
+fig1 <- fd %>% 
+  count(publication_year) %>%
+  ggplot(aes(x = publication_year, y = n)) +
+  geom_col(width = 0.7, fill = "black") +
+  geom_text(aes(label = n), vjust = -0.2, size = 3.5) +
+  theme_classic() +
+  labs(x = "Year", y = "Article count") +
+  theme(legend.position = "none", 
+        axis.title.x = element_text(size = 10),
+        axis.text.x = element_text(angle = 45, hjust = 1))
+# fig1
+```
+
+
+- Objective 1.	To investigate the types of pesticides and pesticide classes, both in terms of chemical and target, that have been used in experiments examining the effects of pesticide exposure on zebrafish behaviour.
+
+
+```{r plot for total of individual pesticide}
+
+fig2 <- fd %>%
+  count(pesticide_investigated.y) %>%
+  ggplot(aes(x = n, y = reorder(pesticide_investigated.y,n))) +
+  geom_bar(stat = "identity", fill = "black", color = "white", position = position_dodge(0.9)) +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 3) +  
+  labs(title = "Total Number of Pesticides Investigated",
+       x = "Count",
+       y = "Pesticide") +
+  theme_classic()
+
+```
+
+```{r total for target class}
+
+
+
+```
+
+
+
+
+
+
+
+
 
