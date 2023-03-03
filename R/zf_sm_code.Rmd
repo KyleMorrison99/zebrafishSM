@@ -46,7 +46,7 @@ sd <- read_csv(here("data","zf_sm_study_details.csv"), skip = 0)
 pd <- read_csv(here("data", "zf_sm_pesticide_details.csv"), skip = 0)
 pdo <-read_csv(here("data","zf_sm_pesticide_dosage.csv"), skip = 0)
 bd <- read_csv(here("data", "zf_sm_behaviour_details.csv"), skip = 0)
-
+bib_sco <- convert2df(here("data","scopus.bib"), dbsource = "scopus", format = "bibtex")
 # not to self to create a the bibliometric information 
 ```
 
@@ -418,4 +418,62 @@ fig10
 ```
 
 
+
+- Objective 4. To examine how are authors connected between countries and how is the literature connected between and within disciplines.
+
+```{r general bibliometric summaries}
+bib_anal <- biblioAnalysis(bib_sco)
+summary(bib_anal, k = 10, pause = F, width = 130)
+plot(bib_anal)
+```
+
+
+```{r co-occurance matrix}
+NetMatrix_keywords <- biblioNetwork(bib_sco, analysis = "co-occurrences", network = "keywords", sep = ";")
+NetMatrix_keywords_plot <- networkPlot(NetMatrix_keywords, normalize="association", n = 10, 
+                                       Title = "Keyword co-occurrences", type = "fruchterman", 
+                                       size.cex = TRUE, size = 10, remove.multiple = F, 
+                                       edgesize = 4, labelsize = 3, label.cex = TRUE, 
+                                       edges.min = 2, label.n = 9, alpha = 0.3)
+```
+
+
+```{r thematic map based on keywords}
+par(mfrow=c(1,1), mar=c(0,2,0,2))
+map_thematic <- thematicMap(bib_sco, field = "ID", n = 1000, minfreq = 5, stemming = FALSE, size = 0.5, n.labels = 1, repel = TRUE)
+plot(map_thematic$map)
+
+```
+
+
+```{r author collaboration network}
+NetMatrix_authors <- biblioNetwork(bib_sco, analysis = "collaboration",  network = "authors", sep = ";")
+NetMatrix_authors_plot <- networkPlot(NetMatrix_authors,  n = 50, 
+                                      Title = "Author collaboration", 
+                                      type = "auto", size = 2, size.cex = TRUE, 
+                                      edgesize = 10, labelsize = 1.1)
+```
+
+
+```{r country collaboration network}
+bib_sco2 <- metaTagExtraction(bib_sco, Field = "AU_CO", sep = ";") #we need to extract countries from the affiliations first
+NetMatrix_country <- biblioNetwork(bib_sco2, analysis = "collaboration", network = "countries", sep = ";")
+NetMatrix_country_plot <-  networkPlot(NetMatrix_country, n = 50, 
+                                       Title = "Country collaboration", type = "auto", size=TRUE, 
+                                       remove.multiple=FALSE, labelsize=1.5)
+
+```
+
+
+```{r most cited articles and authors}
+
+CR <- citations(bib_sco, field = "article", sep = ";") #list of most cited articles
+ cbind(CR$Cited[1:10]) #ten most cited articles
+ 
+CR <- citations(bib_sco, field = "author", sep = ";")
+cbind(CR$Cited[1:10]) #ten most cited authors
+``` 
+
+
+```
 
