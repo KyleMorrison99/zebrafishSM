@@ -31,7 +31,8 @@ pacman::p_load(tidyverse,
                patchwork,
                bibliometrix,
                igraph,
-               tidyr)
+               tidyr,
+               viridis)
 ```
 
 
@@ -167,13 +168,60 @@ fig5
 
 
 
-I need to discuss how we will map dosages - do we do range for most common pesticides - we need to keep route consistent for this 
+```{r comaprison of highest and lowest waterbourne exposure across all pesticides}
+pdo <- pdo %>%
+  filter(!is.na(dosage_lowest)) %>% # remove rows with NA values
+  mutate(dosage_lowest = as.numeric(dosage_lowest),
+         dosage_lowest_unit = as.character(dosage_lowest_unit),
+         dosage_unit_ugl = case_when(
+           dosage_lowest_unit == "mg/L" ~ "ug/L",
+           dosage_lowest_unit == "ng/L" ~ "ug/L",
+           dosage_lowest_unit == "g/L" ~ "ug/L",
+          dosage_lowest_unit == "ppb" ~ "ug/L",
+            dosage_lowest_unit == "ppm" ~ "ug/L",
+           TRUE ~ dosage_lowest_unit
+         ),
+         dosage_lowest_convert_ugL = case_when(
+           dosage_lowest_unit == "mg/L" ~ dosage_lowest * 1000,
+           dosage_lowest_unit == "ng/L" ~ dosage_lowest / 1000,
+           dosage_lowest_unit == "g/L" ~ dosage_lowest/1000000,
+           dosage_lowest_unit == "ppm" ~ dosage_lowest/1000,
+           TRUE ~ dosage_lowest
+         ),dosage_highest = as.numeric(dosage_highest),
+         dosage_highest_convert_ugL = case_when(
+           dosage_highest_unit == "mg/L" ~ dosage_highest * 1000,
+           dosage_highest_unit == "ng/L" ~ dosage_highest / 1000,
+           dosage_highest_unit == "g/L" ~ dosage_highest/1000000,
+           dosage_highest_unit == "ppm" ~ dosage_highest/1000,
+           TRUE ~ dosage_highest
+         ))
+         
+pdo_waterbourne <- pdo %>%
+  pivot_longer(cols = c(dosage_lowest, dosage_highest), 
+               names_to = "dosage_type",
+               values_to = "dosage_value") %>% 
+  filter(route == "waterbourne", dosage_unit_ugl == "ug/L") %>% 
+  mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed"))
 
+
+fig6 <- ggplot(pdo_waterbourne, aes(x = dosage_type, y = log(dosage_value))) +
+  geom_violin(fill = "gray", alpha = 0.5) +
+  geom_boxplot(width = 0.1, fill = "white", color = "black") +
+  geom_jitter(width = 0.1, height = 0.05) +
+  labs(title = "Waterborne Exposures by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage (ug/L))") +
+  theme_classic() 
+
+fig6
+```
+
+```{r comparison of lowest and highest dosages}
+
+```
 
 - Objective 2.	To identify the specific behaviours that have been investigated in pesticide exposure experiments that use zebrafish as a model.
 
 ```{r total number of studies investigating each broad behaviour class}
-fig6 <- bd %>%
+fig7 <- bd %>%
   separate_rows(behavioural_class, sep = ",\\s*") %>%  
   count(behavioural_class) %>%
   ggplot(aes(x = n, y = reorder(behavioural_class, n))) +
@@ -183,7 +231,7 @@ fig6 <- bd %>%
        x = "Count",
        y = "Behavioural Class") +
   theme_classic()
-fig6
+fig7
 ```
 
 ```{r total number of studies investigating each behavioural assay of behaviour activity}
@@ -213,7 +261,7 @@ fig7 <- bd %>%
   geom_bar(stat = "identity", fill = "black", color = "white", position = position_dodge(0.9)) +
   geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 3) +
   labs(title = "Behavioural assays investigating Aggression",
-       x = "Aggression Assay"+
+       x = "Aggression Assay",
        y = "Count") +
   theme_classic() +
   coord_flip()
@@ -231,7 +279,7 @@ fig8 <- bd %>%
   geom_bar(stat = "identity", fill = "black", color = "white", position = position_dodge(0.9)) +
   geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 3) +
   labs(title = "Behavioural assays investigating Sociality",
-       x = "BSociality Assay",
+       x = "Sociality Assay",
        y = "Count") +
   theme_classic() +
   coord_flip()
@@ -274,4 +322,6 @@ fig10 <- bd %>%
 
 fig10
 ```
+
+
 
