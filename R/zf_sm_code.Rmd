@@ -430,15 +430,15 @@ fig3
 - Objective 4. To examine how are authors connected between countries and how is the literature connected between and within disciplines.
 
 ```{r general bibliometric summaries}
-bib_anal <- biblioAnalysis(bib_sco)
-summary(bib_anal, k = 10, pause = F, width = 130)
-plot(bib_anal)
+fig4a <- biblioAnalysis(bib_sco)
+summary(fig4a, k = 10, pause = F, width = 130)
+plot(fig4a)
 ```
 
 
 ```{r co-occurance matrix}
 NetMatrix_keywords <- biblioNetwork(bib_sco, analysis = "co-occurrences", network = "keywords", sep = ";")
-NetMatrix_keywords_plot <- networkPlot(NetMatrix_keywords, normalize="association", n = 10, 
+fig4b<- networkPlot(NetMatrix_keywords, normalize="association", n = 10, 
                                        Title = "Keyword co-occurrences", type = "fruchterman", 
                                        size.cex = TRUE, size = 10, remove.multiple = F, 
                                        edgesize = 4, labelsize = 3, label.cex = TRUE, 
@@ -448,15 +448,15 @@ NetMatrix_keywords_plot <- networkPlot(NetMatrix_keywords, normalize="associatio
 
 ```{r thematic map based on keywords}
 par(mfrow=c(1,1), mar=c(0,2,0,2))
-map_thematic <- thematicMap(bib_sco, field = "ID", n = 1000, minfreq = 5, stemming = FALSE, size = 0.5, n.labels = 1, repel = TRUE)
-plot(map_thematic$map)
+fig4c <- thematicMap(bib_sco, field = "ID", n = 1000, minfreq = 5, stemming = FALSE, size = 0.5, n.labels = 1, repel = TRUE)
+plot(fig4c$map)
 
 ```
 
 
 ```{r author collaboration network}
 NetMatrix_authors <- biblioNetwork(bib_sco, analysis = "collaboration",  network = "authors", sep = ";")
-NetMatrix_authors_plot <- networkPlot(NetMatrix_authors,  n = 50, 
+fig4d <- networkPlot(NetMatrix_authors,  n = 50, 
                                       Title = "Author collaboration", 
                                       type = "auto", size = 2, size.cex = TRUE, 
                                       edgesize = 10, labelsize = 1.1)
@@ -482,7 +482,7 @@ emptymap <- tibble(region = unique(world_map$region), n = rep(0,length(unique(wo
 fullmap <- left_join(emptymap, firstcountrycounts, by = "region") #join with actual counts table
 fullmap$n <- fullmap$n.x + fullmap$n.y # make new column for fixed counts
 fullmap$n[is.na(fullmap$n)] <- 0 #change NA to 0 for regions with no counts
-fig8a <- fullmap %>% 
+fig4e <- fullmap %>% 
   ggplot(aes(fill = n, map_id = region)) +
   geom_map(map = world_map) +
   expand_limits(x = world_map$long, y = world_map$lat) +
@@ -493,7 +493,7 @@ fig8a <- fullmap %>%
  limits = c(1, 12),
       guide = guide_colorbar(direction = "vertical.")) +
   guides(fill = guide_colourbar(barwidth = unit(15, units = "mm"), barheight = unit(20, units = "mm")))
-fig8a
+fig4e
 ```
 
 ```{r country collaboration network circle plot}
@@ -518,7 +518,7 @@ colnames(NetMatrix_country)[7] <- "Newzealand"
 rownames(NetMatrix_country)[7] <- "Newzealand"
 circos.clear()
 my.cols2 <- c(USA = "#DCDCDC", Australia = "#000000", Netherlands = "#A9A9A9", UK = "#2F4F4F", Brazil = "#C0C0C0", Canada = "slategray", Newzealand = "gainsboro", France = "#778899", Germany = "#808080",Italy = "#696969", Argentina = "#DCDCDC", China = "#000000", Belgium = "#A9A9A9", Sweden = "#2F4F4F", Iran = "#C0C0C0", Mexico = "#778899", Poland = "#A9A9A9")
-fig12<- chordDiagram(NetMatrix_country, annotationTrack = "grid", preAllocateTracks = 1, grid.col = my.cols2)
+fig4f<- chordDiagram(NetMatrix_country, annotationTrack = "grid", preAllocateTracks = 1, grid.col = my.cols2)
 circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
   xlim = get.cell.meta.data("xlim")
   ylim = get.cell.meta.data("ylim")
@@ -527,7 +527,7 @@ circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
   circos.axis(h = "top", labels.cex = 0.5, major.tick.percentage = 0.2, sector.index = sector.name, track.index = 2)
 }, bg.border = NA)
 
-fig12
+fig4f
 
 ```
 
