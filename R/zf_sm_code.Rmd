@@ -241,23 +241,76 @@ fig7
 
 
 ```{r comparison of lowest and highest dosages of waterbourne exposure to rotenone}
-pdo_waterbourne_deltamethrin <- pdo %>%
+pdo_waterbourne_rotenone<- pdo %>%
   pivot_longer(cols = c(dosage_lowest, dosage_highest), 
                names_to = "dosage_type",
                values_to = "dosage_value") %>% 
-  filter(route == "waterbourne", dosage_unit_ugl == "ug/L", pesticide_investigated == "deltamethrin") %>%  # not we had to filter for those studies that gave concentration per litre
+  filter(route == "waterbourne", dosage_unit_ugl == "ug/L", pesticide_investigated == "rotenone") %>%  # not we had to filter for those studies that gave concentration per litre
   mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed"))
 
 
-fig7 <- ggplot(pdo_waterbourne_deltamethrin, aes(x = dosage_type, y = log(dosage_value))) +
+fig8 <- ggplot(pdo_waterbourne_rotenone, aes(x = dosage_type, y = log(dosage_value))) +
   geom_violin(fill = "gray", alpha = 0.5) +
   geom_boxplot(width = 0.1, fill = "white", color = "black") +
   geom_jitter(width = 0.1, height = 0.05) +
   labs(title = "Waterborne Exposures by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage (ug/L))") +
   theme_classic() 
-fig7
+fig8
 ```
 
+```{r comparison of lowest and highest dosages of waterbourne exposure atrazine}
+pdo_waterbourne_atrazine <- pdo %>%
+  pivot_longer(cols = c(dosage_lowest, dosage_highest), 
+               names_to = "dosage_type",
+               values_to = "dosage_value") %>% 
+  filter(route == "waterbourne", dosage_unit_ugl == "ug/L", pesticide_investigated == "atrazine") %>%  # not we had to filter for those studies that gave concentration per litre
+  mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed"))
+
+
+fig9 <- ggplot(pdo_waterbourne_atrazine, aes(x = dosage_type, y = log(dosage_value))) +
+  geom_violin(fill = "gray", alpha = 0.5) +
+  geom_boxplot(width = 0.1, fill = "white", color = "black") +
+  geom_jitter(width = 0.1, height = 0.05) +
+  labs(title = "Waterborne Exposures by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage (ug/L))") +
+  theme_classic() 
+fig9
+```
+
+```{r comparison to lowest and highest dosages of waterbourne exopsure to glyphosate}
+pdo_waterbourne_glyphosate <- pdo %>%
+  pivot_longer(cols = c(dosage_lowest, dosage_highest), 
+               names_to = "dosage_type",
+               values_to = "dosage_value") %>% 
+  filter(route == "waterbourne", dosage_unit_ugl == "ug/L", pesticide_investigated == "glyphosate") %>%  # not we had to filter for those studies that gave concentration per litre
+  mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed"))
+
+
+fig10 <- ggplot(pdo_waterbourne_glyphosate, aes(x = dosage_type, y = log(dosage_value))) +
+  geom_violin(fill = "gray", alpha = 0.5) +
+  geom_boxplot(width = 0.1, fill = "white", color = "black") +
+  geom_jitter(width = 0.1, height = 0.05) +
+  labs(title = "Waterborne Exposures by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage (ug/L))") +
+  theme_classic() 
+fig10
+```
+
+```{r comparison to lowest and highest dosages of waterbourne exopsure to chlropyrifo}
+pdo_waterbourne_chloropyrifo <- pdo %>%
+  pivot_longer(cols = c(dosage_lowest, dosage_highest), 
+               names_to = "dosage_type",
+               values_to = "dosage_value") %>% 
+  filter(route == "waterbourne", dosage_unit_ugl == "ug/L", pesticide_investigated == "chloropyrifo") %>%  # not we had to filter for those studies that gave concentration per litre
+  mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed"))
+
+
+fig11 <- ggplot(pdo_waterbourne_chloropyrifo, aes(x = dosage_type, y = log(dosage_value))) +
+  geom_violin(fill = "gray", alpha = 0.5) +
+  geom_boxplot(width = 0.1, fill = "white", color = "black") +
+  geom_jitter(width = 0.1, height = 0.05) +
+  labs(title = "Waterborne Exposures by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage (ug/L))") +
+  theme_classic() 
+fig11
+```
 
 - Objective 2.	To identify the specific behaviours that have been investigated in pesticide exposure experiments that use zebrafish as a model.
 
