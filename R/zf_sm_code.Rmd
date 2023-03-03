@@ -32,7 +32,10 @@ pacman::p_load(tidyverse,
                bibliometrix,
                igraph,
                tidyr,
-               viridis)
+               viridis,
+               circlize,
+               cowplot,
+               mapproj)
 ```
 
 
@@ -98,7 +101,7 @@ fig1 <- fd %>%
 
 ```{r plot for total of individual pesticide}
 
-fig2 <- pd %>%
+fig2a <- pd %>%
   separate_rows(pesticide_investigated, sep = ", ") %>% 
   count(pesticide_investigated) %>%
   ggplot(aes(x = n, y = reorder(pesticide_investigated, n))) +
@@ -109,11 +112,11 @@ fig2 <- pd %>%
        y = "Pesticide") +
   theme_classic()
 
-fig2
+fig2a
 ```
 
 ```{r total for target class}
-fig3 <- pd %>%
+fig2b <- pd %>%
   separate_rows(pesticide_target_class, sep = ", ") %>%  
   count(pesticide_target_class) %>%
   ggplot(aes(x = n, y = reorder(pesticide_target_class, n))) +
@@ -124,12 +127,12 @@ fig3 <- pd %>%
        y = "Pesticide Target Class") +
   theme_classic()
 
-fig3
+fig2b
 ```
 
 
 ```{r total for chemical class}
-fig4 <- pd %>%
+fig2c <- pd %>%
   separate_rows(pesticide_chemical_class, sep = ", ") %>%  
   count(pesticide_chemical_class) %>%
   ggplot(aes(x = n, y = reorder(pesticide_chemical_class, n))) +
@@ -140,7 +143,7 @@ fig4 <- pd %>%
        y = "Pesticide Chemical Class") +
   theme_classic()
 
-fig4
+fig2c
 ```
 
 ```{r total route of exposure completed as a percentage}
@@ -154,7 +157,7 @@ route_pct <- pdo %>%
          percentage = proportion*100)
 
 # Create bar plot with percentages
-fig5 <- ggplot(route_pct, aes(x = reorder(route, percentage), y = percentage)) +
+fig2d <- ggplot(route_pct, aes(x = reorder(route, percentage), y = percentage)) +
   geom_bar(stat = "identity", fill = "black", color = "white") +
   geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.1) +
   labs(title = "Percentage of Pesticides by Route of Exposure",
@@ -163,7 +166,7 @@ fig5 <- ggplot(route_pct, aes(x = reorder(route, percentage), y = percentage)) +
   theme_classic() +
   coord_flip()
 
-fig5
+fig2d
 ```
 
 
@@ -209,14 +212,14 @@ pdo_waterbourne <- pdo %>%
   mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed"))
 
 
-fig6 <- ggplot(pdo_waterbourne, aes(x = dosage_type, y = log(dosage_value))) +
+fig2e <- ggplot(pdo_waterbourne, aes(x = dosage_type, y = log(dosage_value))) +
   geom_violin(fill = "gray", alpha = 0.5) +
   geom_boxplot(width = 0.1, fill = "white", color = "black") +
   geom_jitter(width = 0.1, height = 0.05) +
   labs(title = "Waterborne Exposures by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage (ug/L))") +
   theme_classic() 
 
-fig6
+fig2e
 
 # there is not enough data to represent graphically for other exposure routes
 ```
@@ -230,13 +233,13 @@ pdo_waterbourne_deltamethrin <- pdo %>%
   mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed"))
 
 
-fig7 <- ggplot(pdo_waterbourne_deltamethrin, aes(x = dosage_type, y = log(dosage_value))) +
+fig2f <- ggplot(pdo_waterbourne_deltamethrin, aes(x = dosage_type, y = log(dosage_value))) +
   geom_violin(fill = "gray", alpha = 0.5) +
   geom_boxplot(width = 0.1, fill = "white", color = "black") +
   geom_jitter(width = 0.1, height = 0.05) +
   labs(title = "Waterborne Exposures by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage (ug/L))") +
   theme_classic() 
-fig7
+fig2f
 ```
 
 
@@ -249,13 +252,13 @@ pdo_waterbourne_rotenone<- pdo %>%
   mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed"))
 
 
-fig8 <- ggplot(pdo_waterbourne_rotenone, aes(x = dosage_type, y = log(dosage_value))) +
+fig2g <- ggplot(pdo_waterbourne_rotenone, aes(x = dosage_type, y = log(dosage_value))) +
   geom_violin(fill = "gray", alpha = 0.5) +
   geom_boxplot(width = 0.1, fill = "white", color = "black") +
   geom_jitter(width = 0.1, height = 0.05) +
   labs(title = "Waterborne Exposures by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage (ug/L))") +
   theme_classic() 
-fig8
+fig2g
 ```
 
 ```{r comparison of lowest and highest dosages of waterbourne exposure atrazine}
@@ -267,13 +270,13 @@ pdo_waterbourne_atrazine <- pdo %>%
   mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed"))
 
 
-fig9 <- ggplot(pdo_waterbourne_atrazine, aes(x = dosage_type, y = log(dosage_value))) +
+fig2h <- ggplot(pdo_waterbourne_atrazine, aes(x = dosage_type, y = log(dosage_value))) +
   geom_violin(fill = "gray", alpha = 0.5) +
   geom_boxplot(width = 0.1, fill = "white", color = "black") +
   geom_jitter(width = 0.1, height = 0.05) +
   labs(title = "Waterborne Exposures by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage (ug/L))") +
   theme_classic() 
-fig9
+fig2h
 ```
 
 ```{r comparison to lowest and highest dosages of waterbourne exopsure to glyphosate}
@@ -285,13 +288,13 @@ pdo_waterbourne_glyphosate <- pdo %>%
   mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed"))
 
 
-fig10 <- ggplot(pdo_waterbourne_glyphosate, aes(x = dosage_type, y = log(dosage_value))) +
+fig2i <- ggplot(pdo_waterbourne_glyphosate, aes(x = dosage_type, y = log(dosage_value))) +
   geom_violin(fill = "gray", alpha = 0.5) +
   geom_boxplot(width = 0.1, fill = "white", color = "black") +
   geom_jitter(width = 0.1, height = 0.05) +
   labs(title = "Waterborne Exposures by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage (ug/L))") +
   theme_classic() 
-fig10
+fig2i
 ```
 
 ```{r comparison to lowest and highest dosages of waterbourne exopsure to chlropyrifo}
@@ -303,19 +306,19 @@ pdo_waterbourne_chloropyrifo <- pdo %>%
   mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed"))
 
 
-fig11 <- ggplot(pdo_waterbourne_chloropyrifo, aes(x = dosage_type, y = log(dosage_value))) +
+fig2j <- ggplot(pdo_waterbourne_chloropyrifo, aes(x = dosage_type, y = log(dosage_value))) +
   geom_violin(fill = "gray", alpha = 0.5) +
   geom_boxplot(width = 0.1, fill = "white", color = "black") +
   geom_jitter(width = 0.1, height = 0.05) +
   labs(title = "Waterborne Exposures by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage (ug/L))") +
   theme_classic() 
-fig11
+fig2j
 ```
 
 - Objective 2.	To identify the specific behaviours that have been investigated in pesticide exposure experiments that use zebrafish as a model.
 
 ```{r total number of studies investigating each broad behaviour class}
-fig7 <- bd %>%
+fig3a <- bd %>%
   separate_rows(behavioural_class, sep = ",\\s*") %>%  
   count(behavioural_class) %>%
   ggplot(aes(x = n, y = reorder(behavioural_class, n))) +
@@ -325,11 +328,11 @@ fig7 <- bd %>%
        x = "Count",
        y = "Behavioural Class") +
   theme_classic()
-fig7
+fig3a
 ```
 
 ```{r total number of studies investigating each behavioural assay of behaviour activity}
-fig6 <- bd %>%
+fig3b <- bd %>%
   separate_rows(behaviour_activity, sep = ",\\s*") %>%  
   count(behaviour_activity) %>%
    na.omit() %>%
@@ -342,12 +345,12 @@ fig6 <- bd %>%
   theme_classic() +
   coord_flip()
 
-fig6
+fig3b
 ```
 
 Note to not use graph of aggression assay 
 ```{r total number of studies investigating each behavioural assay of behaviour_aggression }
-fig7 <- bd %>%
+fig3c <- bd %>%
   separate_rows(behaviour_aggression, sep = ",\\s*") %>%  
   count(behaviour_aggression) %>%
   na.omit() %>%
@@ -360,12 +363,12 @@ fig7 <- bd %>%
   theme_classic() +
   coord_flip()
 
-fig7
+fig3c
 
 ```
 
 ```{r total number of studies investigating each behavioural assay of behavioural_sociality}
-fig8 <- bd %>%
+fig3d <- bd %>%
   separate_rows(behaviour_sociality, sep = ",\\s*") %>%  
   count(behaviour_sociality) %>%
   na.omit() %>%
@@ -378,12 +381,12 @@ fig8 <- bd %>%
   theme_classic() +
   coord_flip()
 
-fig8
+fig3d
 ```
 
 
 ```{r total number of studies investigating each behavioural assay of behavioural_foraging}
-fig9 <- bd %>%
+fig3e <- bd %>%
   separate_rows(behaviour_foraging, sep = ",\\s*") %>%  
   count(behaviour_foraging) %>%
   na.omit() %>%
@@ -396,12 +399,12 @@ fig9 <- bd %>%
   theme_classic() +
   coord_flip()
 
-fig9
+fig3e
 ```
 
 
 ```{r}
-fig10 <- bd %>%
+fig3f <- bd %>%
   separate_rows(behaviour_antipredator, sep = ",\\s*") %>%  
   count(behaviour_antipredator) %>%
   na.omit() %>%
@@ -414,9 +417,14 @@ fig10 <- bd %>%
   theme_classic() +
   coord_flip()
 
-fig10
+fig3f
 ```
 
+```{r creating a panel for behavioural mapping charts}
+fig3 <- ((fig3a | fig3b) /(fig3c | fig3d) / (fig3e | fig3f)  + plot_annotation(tag_levels = "A"))
+
+fig3
+```
 
 
 - Objective 4. To examine how are authors connected between countries and how is the literature connected between and within disciplines.
@@ -454,13 +462,72 @@ NetMatrix_authors_plot <- networkPlot(NetMatrix_authors,  n = 50,
                                       edgesize = 10, labelsize = 1.1)
 ```
 
+```{r country publications map}
 
-```{r country collaboration network}
+bibmap <- metaTagExtraction(bib_sco, Field = "AU1_CO", sep = ";") 
+bibmap <- metaTagExtraction(bibmap, Field = "AU_CO", sep = ";") 
+#save counts in a data frame
+bibmap %>% group_by(AU1_CO) %>% count() %>% filter(!is.na(AU1_CO)) -> firstcountrycounts
+#load map data
+world_map <- map_data("world") %>% 
+  filter(! long > 180) #remove countries with longitude >180 to make equal projection-like map without artifacts
+#table(world_map$region) #note that United Kingdom is UK here
+# Format country names to match regions on the world map
+firstcountrycounts$region <- str_to_title(firstcountrycounts$AU1_CO)
+firstcountrycounts$region[firstcountrycounts$region == "Usa"] <- "USA" #Fix "Usa" to "USA" :
+firstcountrycounts$region[firstcountrycounts$region == "United Kingdom"] <- "UK" #fix to "UK"
+#(firstcountrycounts$region) %in% world_map$region #check matching
+## colour all regions on the map:
+emptymap <- tibble(region = unique(world_map$region), n = rep(0,length(unique(world_map$region)))) #create table with all counts as 0
+fullmap <- left_join(emptymap, firstcountrycounts, by = "region") #join with actual counts table
+fullmap$n <- fullmap$n.x + fullmap$n.y # make new column for fixed counts
+fullmap$n[is.na(fullmap$n)] <- 0 #change NA to 0 for regions with no counts
+fig8a <- fullmap %>% 
+  ggplot(aes(fill = n, map_id = region)) +
+  geom_map(map = world_map) +
+  expand_limits(x = world_map$long, y = world_map$lat) +
+  coord_map("moll") +
+  theme_map(line_size = 0.5) + 
+  theme(legend.position="right") +
+  scale_fill_gradient(low = "#FEE08B", high = "#D53E4F",
+ limits = c(1, 12),
+      guide = guide_colorbar(direction = "vertical.")) +
+  guides(fill = guide_colourbar(barwidth = unit(15, units = "mm"), barheight = unit(20, units = "mm")))
+fig8a
+```
+
+```{r country collaboration network circle plot}
 bib_sco2 <- metaTagExtraction(bib_sco, Field = "AU_CO", sep = ";") #we need to extract countries from the affiliations first
 NetMatrix_country <- biblioNetwork(bib_sco2, analysis = "collaboration", network = "countries", sep = ";")
-NetMatrix_country_plot <-  networkPlot(NetMatrix_country, n = 50, 
-                                       Title = "Country collaboration", type = "auto", size=TRUE, 
-                                       remove.multiple=FALSE, labelsize=1.5)
+NetMatrix_country <- as.matrix(NetMatrix_country)
+
+
+# getting rid of lower triangle (as this is duplication of info)
+NetMatrix_country[lower.tri(NetMatrix_country)] <- 0 
+#colnames(NetMatrix_country) - change to title case:
+colnames(NetMatrix_country) <- str_to_title(colnames(NetMatrix_country))
+#rownames(NetMatrix_country) - change to title case:
+rownames(NetMatrix_country) <- str_to_title(rownames(NetMatrix_country))
+#Fix "Usa" to "USA" :
+colnames(NetMatrix_country)[colnames(NetMatrix_country) == "Usa"] <- "USA"
+rownames(NetMatrix_country)[rownames(NetMatrix_country) == "Usa"] <- "USA"
+#change "UNITED KINGDOM" to "UK" for easier plotting:
+colnames(NetMatrix_country)[colnames(NetMatrix_country) == "United Kingdom"] <- "UK"
+rownames(NetMatrix_country)[rownames(NetMatrix_country) == "United Kingdom"] <- "UK"
+colnames(NetMatrix_country)[7] <- "Newzealand" 
+rownames(NetMatrix_country)[7] <- "Newzealand"
+circos.clear()
+my.cols2 <- c(USA = "#DCDCDC", Australia = "#000000", Netherlands = "#A9A9A9", UK = "#2F4F4F", Brazil = "#C0C0C0", Canada = "slategray", Newzealand = "gainsboro", France = "#778899", Germany = "#808080",Italy = "#696969", Argentina = "#DCDCDC", China = "#000000", Belgium = "#A9A9A9", Sweden = "#2F4F4F", Iran = "#C0C0C0", Mexico = "#778899", Poland = "#A9A9A9")
+fig12<- chordDiagram(NetMatrix_country, annotationTrack = "grid", preAllocateTracks = 1, grid.col = my.cols2)
+circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
+  xlim = get.cell.meta.data("xlim")
+  ylim = get.cell.meta.data("ylim")
+  sector.name = get.cell.meta.data("sector.index")
+  circos.text(mean(xlim), ylim[1] + .1, sector.name, facing = "clockwise", niceFacing = TRUE, adj = c(0, 0.5))
+  circos.axis(h = "top", labels.cex = 0.5, major.tick.percentage = 0.2, sector.index = sector.name, track.index = 2)
+}, bg.border = NA)
+
+fig12
 
 ```
 
@@ -474,6 +541,17 @@ CR <- citations(bib_sco, field = "author", sep = ";")
 cbind(CR$Cited[1:10]) #ten most cited authors
 ``` 
 
-
+```{r bibliometric coupling network}
+NetMatrix_coupling <- biblioNetwork(bib_sco, analysis = "coupling", network = "references", sep = "; ")
+NetMatrix_coupling_plot <- networkPlot(NetMatrix_coupling, n = 20, 
+                                       Title = "Paper co-citation", type = "fruchterman", size=T, 
+                                       remove.multiple=FALSE, labelsize=0.8,edgesize = 5)
 ```
+
+
+```{r bibliometrix co-citation network, eval = TRUE, warning = FALSE}
+histResults <- histNetwork(bib_sco, sep = ";") 
+plot(histResults)
+```
+
 
