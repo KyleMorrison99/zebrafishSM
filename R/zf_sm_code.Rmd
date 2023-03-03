@@ -168,17 +168,18 @@ fig5
 
 
 
-```{r comaprison of highest and lowest waterbourne exposure across all pesticides}
+```{r making dosages consistent for dosage comparisons}
 pdo <- pdo %>%
   filter(!is.na(dosage_lowest)) %>% # remove rows with NA values
   mutate(dosage_lowest = as.numeric(dosage_lowest),
          dosage_lowest_unit = as.character(dosage_lowest_unit),
-         dosage_unit_ugl = case_when(
+         dosage_unit_consistent = case_when(
            dosage_lowest_unit == "mg/L" ~ "ug/L",
            dosage_lowest_unit == "ng/L" ~ "ug/L",
            dosage_lowest_unit == "g/L" ~ "ug/L",
           dosage_lowest_unit == "ppb" ~ "ug/L",
             dosage_lowest_unit == "ppm" ~ "ug/L",
+          dosage_lowest_unit == "ug/g" ~ "mg/kg",
            TRUE ~ dosage_lowest_unit
          ),
          dosage_lowest_convert_ugL = case_when(
@@ -196,11 +197,15 @@ pdo <- pdo %>%
            TRUE ~ dosage_highest
          ))
          
+
+```
+
+```{r comparison of lowest and highest dosages in waterbourne exposure methods}
 pdo_waterbourne <- pdo %>%
   pivot_longer(cols = c(dosage_lowest, dosage_highest), 
                names_to = "dosage_type",
                values_to = "dosage_value") %>% 
-  filter(route == "waterbourne", dosage_unit_ugl == "ug/L") %>% 
+  filter(route == "waterbourne", dosage_unit_ugl == "ug/L") %>%  # not we had to filter for those studies that gave concentration per litre
   mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed"))
 
 
@@ -212,11 +217,47 @@ fig6 <- ggplot(pdo_waterbourne, aes(x = dosage_type, y = log(dosage_value))) +
   theme_classic() 
 
 fig6
+
+# there is not enough data to represent graphically for other exposure routes
 ```
 
-```{r comparison of lowest and highest dosages}
+```{r comparison of lowest and highest dosages of waterbourne exposure to deltamethrin}
+pdo_waterbourne_deltamethrin <- pdo %>%
+  pivot_longer(cols = c(dosage_lowest, dosage_highest), 
+               names_to = "dosage_type",
+               values_to = "dosage_value") %>% 
+  filter(route == "waterbourne", dosage_unit_ugl == "ug/L", pesticide_investigated == "deltamethrin") %>%  # not we had to filter for those studies that gave concentration per litre
+  mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed"))
 
+
+fig7 <- ggplot(pdo_waterbourne_deltamethrin, aes(x = dosage_type, y = log(dosage_value))) +
+  geom_violin(fill = "gray", alpha = 0.5) +
+  geom_boxplot(width = 0.1, fill = "white", color = "black") +
+  geom_jitter(width = 0.1, height = 0.05) +
+  labs(title = "Waterborne Exposures by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage (ug/L))") +
+  theme_classic() 
+fig7
 ```
+
+
+```{r comparison of lowest and highest dosages of waterbourne exposure to rotenone}
+pdo_waterbourne_deltamethrin <- pdo %>%
+  pivot_longer(cols = c(dosage_lowest, dosage_highest), 
+               names_to = "dosage_type",
+               values_to = "dosage_value") %>% 
+  filter(route == "waterbourne", dosage_unit_ugl == "ug/L", pesticide_investigated == "deltamethrin") %>%  # not we had to filter for those studies that gave concentration per litre
+  mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed"))
+
+
+fig7 <- ggplot(pdo_waterbourne_deltamethrin, aes(x = dosage_type, y = log(dosage_value))) +
+  geom_violin(fill = "gray", alpha = 0.5) +
+  geom_boxplot(width = 0.1, fill = "white", color = "black") +
+  geom_jitter(width = 0.1, height = 0.05) +
+  labs(title = "Waterborne Exposures by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage (ug/L))") +
+  theme_classic() 
+fig7
+```
+
 
 - Objective 2.	To identify the specific behaviours that have been investigated in pesticide exposure experiments that use zebrafish as a model.
 
