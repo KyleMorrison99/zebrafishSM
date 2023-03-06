@@ -160,12 +160,12 @@ fig2c
 
 ```{r total route of exposure completed as a percentage}
 # Calculate total count for each category
-total_count <- pdo %>% count(route)
+total_route_count <- pdo %>% count(route)
 
 # Calculate proportion and percentage for each category
 route_pct <- pdo %>%
   count(route) %>%
-  mutate(proportion = n/sum(total_count$n),
+  mutate(proportion = n/sum(total_route_count$n),
          percentage = proportion*100)
 
 # Create bar plot with percentages
@@ -288,6 +288,8 @@ fig2g <- ggplot(pdo_waterbourne_rotenone, aes(x = dosage_type, y = log(dosage_va
 fig2g
 ```
 
+
+
 ```{r comparison of lowest and highest dosages of waterbourne exposure atrazine}
 pdo_waterbourne_atrazine <- pdo %>%
   pivot_longer(cols = c(dosage_lowest, dosage_highest), 
@@ -310,7 +312,7 @@ fig2h <- ggplot(pdo_waterbourne_atrazine, aes(x = dosage_type, y = log(dosage_va
 fig2h
 ```
 
-```{r comparison to lowest and highest dosages of waterbourne exopsure to glyphosate}
+```{r comparison to lowest and highest dosages of waterbourne exposure to glyphosate}
 pdo_waterbourne_glyphosate <- pdo %>%
   pivot_longer(cols = c(dosage_lowest, dosage_highest), 
                names_to = "dosage_type",
@@ -332,7 +334,7 @@ fig2i <- ggplot(pdo_waterbourne_glyphosate, aes(x = dosage_type, y = log(dosage_
 fig2i
 ```
 
-```{r comparison to lowest and highest dosages of waterbourne exopsure to chlropyrifo}
+```{r comparison to lowest and highest dosages of waterbourne exposure to chlropyrifo}
 pdo_waterbourne_chloropyrifo <- pdo %>%
   pivot_longer(cols = c(dosage_lowest, dosage_highest), 
                names_to = "dosage_type",
@@ -352,6 +354,63 @@ fig2j <- ggplot(pdo_waterbourne_chloropyrifo, aes(x = dosage_type, y = log(dosag
         axis.ticks.y = element_blank(),
         axis.text.y = element_text(size = 9, hjust = 0)) 
 fig2j
+```
+
+```{r total lifestage of exposure completed as a percentage}
+
+# Calculate total count for each category
+total_count <- sd %>% count(life_stage_exposure)
+
+# Calculate proportion and percentage for each category
+life_stage_pct <- sd %>%
+    separate_rows(life_stage_exposure, sep = ", ") %>% 
+  count(life_stage_exposure) %>%
+  mutate(proportion = n/sum(total_count$n),
+         percentage = proportion*100)
+
+# Create bar plot with percentages
+fig2k <- ggplot(life_stage_pct, aes(x = reorder(life_stage_exposure, percentage), y = percentage)) +
+  geom_bar(stat = "identity", fill = "#4169E1", color = "white") +
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.1) +
+  labs(title = "Percentage of Pesticides by Life Stage of Exposure",
+       x = "Life Stage of Exposure",
+       y = "Percentage") +
+   theme_minimal() +
+  theme(panel.grid.major.y = element_blank(),
+        axis.line.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.text.y = element_text(size = 9, hjust = 0)) +
+  coord_flip()
+
+fig2k
+```
+
+
+```{r}
+# Calculate total count for each category
+total_sex_count <- sd %>% count(sex)
+
+# Calculate proportion and percentage for each category
+sex_pct <- sd %>%
+  count(sex) %>%
+  mutate(proportion = n/sum(total_sex_count$n),
+         percentage = proportion*100)
+
+# Create bar plot with percentages
+fig2l <- ggplot(sex_pct, aes(x = reorder(sex, percentage), y = percentage)) +
+  geom_bar(stat = "identity", fill = "#4169E1", color = "white") +
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.1) +
+  labs(title = "Percentage of Pesticides by Route of Exposure",
+       x = "Route of Exposure",
+       y = "Percentage") +
+   theme_minimal() +
+  theme(panel.grid.major.y = element_blank(),
+        axis.line.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.text.y = element_text(size = 9, hjust = 0)) +
+  coord_flip()
+
+fig2l
 ```
 
 - Objective 2.	To identify the specific behaviours that have been investigated in pesticide exposure experiments that use zebrafish as a model.
@@ -605,11 +664,6 @@ circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
   circos.text(mean(xlim), ylim[1] + .1, sector.name, facing = "clockwise", niceFacing = TRUE, adj = c(0, 0.5))
   circos.axis(h = "top", labels.cex = 0.5, major.tick.percentage = 0.2, sector.index = sector.name, track.index = 2)
 }, bg.border = NA)
-
-```
-
-```{r}
-
 
 ```
 
