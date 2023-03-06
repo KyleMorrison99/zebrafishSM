@@ -448,7 +448,7 @@ fig3e <- bd %>%
   count(behaviour_foraging) %>%
   na.omit() %>%
   ggplot(aes(x = reorder(behaviour_foraging, n), y = n)) +
-  geom_bar(stat = "identity", fill = , color = "white", position = position_dodge(0.9)) +
+  geom_bar(stat = "identity", fill = "#4169E1", color = "white", position = position_dodge(0.9)) +
   geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 3) +
   labs(title = "Behavioural assays investigating Foraging Behaviour",
        x = "Foraging Assay",
@@ -495,18 +495,16 @@ fig3
 
 ```{r general bibliometric summaries}
 fig4a <- biblioAnalysis(bib_sco)
-summary(fig4a, k = 10, pause = F, width = 130)
 plot(fig4a)
 ```
 
-
 ```{r co-occurance matrix}
 NetMatrix_keywords <- biblioNetwork(bib_sco, analysis = "co-occurrences", network = "keywords", sep = ";")
-fig4b<- networkPlot(NetMatrix_keywords, normalize="association", n = 10, 
-                                       Title = "Keyword co-occurrences", type = "fruchterman", 
-                                       size.cex = TRUE, size = 10, remove.multiple = F, 
-                                       edgesize = 4, labelsize = 3, label.cex = TRUE, 
-                                       edges.min = 2, label.n = 9, alpha = 0.3)
+fig4b <- networkPlot(NetMatrix_keywords, normalize="association", n = 10, 
+                     Title = "Keyword Co-occurrences", type = "fruchterman", 
+                     size.cex = TRUE, size = 10, remove.multiple = F, 
+                     edgesize = 4, labelsize = 3, label.cex = TRUE, 
+                     edges.min = 2, label.n = 9, alpha = 0.3) 
 ```
 
 
@@ -553,7 +551,8 @@ fig4e <- fullmap %>%
   coord_map("moll") +
   theme_map(line_size = 0.5) + 
   theme(legend.position="right") +
-  scale_fill_gradient(low = "#FEE08B", high = "#D53E4F",
+  scale_fill_gradient(low = "#7BCCC4", high = "#084081",
+                    name = "Score", na.value = "gray50",
  limits = c(1, 12),
       guide = guide_colorbar(direction = "vertical.")) +
   guides(fill = guide_colourbar(barwidth = unit(15, units = "mm"), barheight = unit(20, units = "mm")))
@@ -561,28 +560,44 @@ fig4e
 ```
 
 ```{r country collaboration network circle plot}
-bib_sco2 <- metaTagExtraction(bib_sco, Field = "AU_CO", sep = ";") #we need to extract countries from the affiliations first
+# Extract countries from the affiliations
+bib_sco2 <- metaTagExtraction(bib_sco, Field = "AU_CO", sep = ";")
+
+# Create a network matrix of collaborations between countries
 NetMatrix_country <- biblioNetwork(bib_sco2, analysis = "collaboration", network = "countries", sep = ";")
+
+# Convert the network matrix to a standard matrix
 NetMatrix_country <- as.matrix(NetMatrix_country)
 
-
-# getting rid of lower triangle (as this is duplication of info)
+# Remove the lower triangle (as this is duplication of info)
 NetMatrix_country[lower.tri(NetMatrix_country)] <- 0 
-#colnames(NetMatrix_country) - change to title case:
+
+# Change column and row names to title case
 colnames(NetMatrix_country) <- str_to_title(colnames(NetMatrix_country))
-#rownames(NetMatrix_country) - change to title case:
 rownames(NetMatrix_country) <- str_to_title(rownames(NetMatrix_country))
-#Fix "Usa" to "USA" :
+
+# Change "Usa" to "USA"
 colnames(NetMatrix_country)[colnames(NetMatrix_country) == "Usa"] <- "USA"
 rownames(NetMatrix_country)[rownames(NetMatrix_country) == "Usa"] <- "USA"
-#change "UNITED KINGDOM" to "UK" for easier plotting:
+
+# Change "United Kingdom" to "UK" for easier plotting
 colnames(NetMatrix_country)[colnames(NetMatrix_country) == "United Kingdom"] <- "UK"
 rownames(NetMatrix_country)[rownames(NetMatrix_country) == "United Kingdom"] <- "UK"
-colnames(NetMatrix_country)[7] <- "Newzealand" 
-rownames(NetMatrix_country)[7] <- "Newzealand"
-circos.clear()
-my.cols2 <- c(USA = "#DCDCDC", Australia = "#000000", Netherlands = "#A9A9A9", UK = "#2F4F4F", Brazil = "#C0C0C0", Canada = "slategray", Newzealand = "gainsboro", France = "#778899", Germany = "#808080",Italy = "#696969", Argentina = "#DCDCDC", China = "#000000", Belgium = "#A9A9A9", Sweden = "#2F4F4F", Iran = "#C0C0C0", Mexico = "#778899", Poland = "#A9A9A9")
-fig4f<- chordDiagram(NetMatrix_country, annotationTrack = "grid", preAllocateTracks = 1, grid.col = my.cols2)
+
+# Change "Newzealand" to "New Zealand"
+colnames(NetMatrix_country)[colnames(NetMatrix_country) == "Newzealand"] <- "New Zealand"
+rownames(NetMatrix_country)[rownames(NetMatrix_country) == "Newzealand"] <- "New Zealand"
+
+# Define colors for each country
+my.cols2 <- c(USA = "#DCDCDC", Australia = "#000000", Netherlands = "#A9A9A9", UK = "#2F4F4F", Brazil = "#C0C0C0", Canada = "slategray", 
+              NewZealand = "gainsboro", France = "#778899", Germany = "#808080", Italy = "#696969", Argentina = "#DCDCDC", 
+              China = "#000000", Belgium = "#A9A9A9", Sweden = "#2F4F4F", Mexico = "#778899", Poland = "#A9A9A9",
+              Turkey = "#D2691E", Portugal = "#FF7F50")
+
+# Create a chord diagram of the network matrix
+fig4f <- chordDiagram(NetMatrix_country, annotationTrack = "grid", preAllocateTracks = 1, grid.col = my.cols2)
+
+# Add a track to label each sector with its name
 circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
   xlim = get.cell.meta.data("xlim")
   ylim = get.cell.meta.data("ylim")
@@ -591,7 +606,10 @@ circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
   circos.axis(h = "top", labels.cex = 0.5, major.tick.percentage = 0.2, sector.index = sector.name, track.index = 2)
 }, bg.border = NA)
 
-fig4f
+```
+
+```{r}
+
 
 ```
 
@@ -611,11 +629,4 @@ NetMatrix_coupling_plot <- networkPlot(NetMatrix_coupling, n = 20,
                                        Title = "Paper co-citation", type = "fruchterman", size=T, 
                                        remove.multiple=FALSE, labelsize=0.8,edgesize = 5)
 ```
-
-
-```{r bibliometrix co-citation network, eval = TRUE, warning = FALSE}
-histResults <- histNetwork(bib_sco, sep = ";") 
-plot(histResults)
-```
-
 
