@@ -187,6 +187,12 @@ fig2d
 
 
 
+```{r}
+fig2 <- ((fig2a | fig2b) /(fig2c | fig2d)  + plot_annotation(tag_levels = "A"))
+fig2
+```
+
+
 ```{r making dosages consistent for dosage comparisons}
 pdo <- pdo %>%
   filter(!is.na(dosage_lowest)) %>% # remove rows with NA values
@@ -400,8 +406,8 @@ sex_pct <- sd %>%
 fig2l <- ggplot(sex_pct, aes(x = reorder(sex, percentage), y = percentage)) +
   geom_bar(stat = "identity", fill = "#4169E1", color = "white") +
   geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.1) +
-  labs(title = "Percentage of Pesticides by Route of Exposure",
-       x = "Route of Exposure",
+  labs(title = "Percentage of Pesticides by Sex of Exposure",
+       x = "Sex of Exposure",
        y = "Percentage") +
    theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
@@ -414,6 +420,10 @@ fig2l
 ```
 
 
+```{r}
+fig3 <- ((fig2k | fig2l)  + plot_annotation(tag_levels = "A"))
+fig3
+```
 
 - Objective 2.	To identify the specific behaviours that have been investigated in pesticide exposure experiments that use zebrafish as a model.
 
@@ -553,22 +563,22 @@ fig3
 
 
 ```{r heat map to show which behavours have been investigated in which pesticide target class }
-fd <- separate_rows(fd, life_stage_exposure, sep = ",", convert = TRUE)
-fd <- separate_rows(fd, pesticide_target_class, sep = ",", convert = TRUE)
+fd_bc <- separate_rows(fd, behavioural_class, sep = ",\\s*", convert = TRUE)
+fd_bcpt <- separate_rows(fd_bc, pesticide_target_class, sep = ",", convert = TRUE)
 
-fd_summary <- fd %>%
-  mutate(life_stage_exposure = str_trim(life_stage_exposure),
+fd_summary <- fd_bcpt %>%
+  mutate(behavioural_class = str_trim(behavioural_class),
          pesticide_target_class = str_trim(pesticide_target_class)) %>%
-  group_by(life_stage_exposure, pesticide_target_class) %>%
+  group_by(behavioural_class, pesticide_target_class) %>%
   summarise(count = n()) %>%
   ungroup() 
 
 # Create a heatmap using ggplot2
-ggplot(fd_summary, aes(x = pesticide_target_class, y = life_stage_exposure, fill = count)) +
+fig7 <- ggplot(fd_summary, aes(x = pesticide_target_class, y = behavioural_class, fill = count)) +
   geom_tile(color = "white") +
   scale_fill_gradient(low = "#BFEFFF", high = "#0047AB") +
   geom_text(aes(label = count), color = "black", size = 4) +  # Add text labels
-  labs(x = "Pesticide Target Class", y = "Life Stage Exposure", fill = "Count") +
+  labs(x = "Pesticide Target Class", y = "Behavioural Class", fill = "Count") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 12),
         axis.text.y = element_text(size = 12),
@@ -577,14 +587,15 @@ ggplot(fd_summary, aes(x = pesticide_target_class, y = life_stage_exposure, fill
         legend.title = element_text(size = 14, color = "black", face = "bold"))
 
 
+
 ```
 
-```{r}
-fd <- separate_rows(fd, behavioural_class, sep = ",", convert = TRUE)
-fd <- separate_rows(fd, pesticide_chemical_class, sep = ",", convert = TRUE)
+```{r heat map to show which behavours have been investigated in which pesticide chemical class}
+fd_bc <- separate_rows(fd, behavioural_class, sep = ",", convert = TRUE)
+fd_bcpc <- separate_rows(fd_bc, pesticide_chemical_class, sep = ",", convert = TRUE)
 
 # Get the top 5 most numerous pesticide chemical classes
-fd_summary <- fd %>%
+fd_summary <- fd_bcpc %>%
   mutate(behavioural_class = str_trim(behavioural_class),
          pesticide_target_class = str_trim(pesticide_chemical_class)) %>%
   group_by(behavioural_class, pesticide_chemical_class) %>%
@@ -604,7 +615,7 @@ fd_summary_top5 <- fd_summary %>%
   filter(pesticide_chemical_class %in% top_pesticide_classes)
 
 # Create a heatmap using ggplot2
-ggplot(fd_summary_top5, aes(x = pesticide_chemical_class, y = behavioural_class, fill = count)) +
+fig8 <- ggplot(fd_summary_top5, aes(x = pesticide_chemical_class, y = behavioural_class, fill = count)) +
   geom_tile(color = "white") +
   scale_fill_gradient(low = "#BFEFFF", high = "#0047AB") +
   geom_text(aes(label = ifelse(count > 0, count, "")), color = "black", size = 4) +  # Add text labels
@@ -620,22 +631,32 @@ ggplot(fd_summary_top5, aes(x = pesticide_chemical_class, y = behavioural_class,
 ```
 
 ```{r}
-fd <- separate_rows(fd, life_stage_exposure, sep = ",", convert = TRUE)
-fd <- separate_rows(fd, pesticide_target_class, sep = ",", convert = TRUE)
+fd_lse <- separate_rows(fd, life_stage_exposure, sep = ",", convert = TRUE)
+fd_lsepc <- separate_rows(fd_lse, pesticide_chemical_class, sep = ",", convert = TRUE)
 
-fd_summary <- fd %>%
+fd_summary <- fd_lsepc %>%
   mutate(life_stage_exposure = str_trim(life_stage_exposure),
-         pesticide_target_class = str_trim(pesticide_target_class)) %>%
-  group_by(life_stage_exposure, pesticide_target_class) %>%
+         pesticide_chemical_class = str_trim(pesticide_chemical_class)) %>%
+  group_by(life_stage_exposure, pesticide_chemical_class) %>%
   summarise(count = n()) %>%
-  ungroup() 
+  ungroup()
 
-# Create a heatmap using ggplot2
-ggplot(fd_summary, aes(x = pesticide_target_class, y = life_stage_exposure, fill = count)) +
+top_pesticide_classes <- fd_summary %>%
+  filter(!is.na(pesticide_chemical_class)) %>%
+  group_by(pesticide_chemical_class) %>%
+  summarise(count = sum(count)) %>%
+  ungroup() %>%
+  top_n(5, count) %>%
+  pull(pesticide_chemical_class)
+
+fd_summary_top5 <- fd_summary %>%
+  filter(pesticide_chemical_class %in% top_pesticide_classes)
+
+fig9 <- ggplot(fd_summary_top5, aes(x = pesticide_chemical_class, y = life_stage_exposure, fill = count)) +
   geom_tile(color = "white") +
   scale_fill_gradient(low = "#BFEFFF", high = "#0047AB") +
-  geom_text(aes(label = count), color = "black", size = 4) +  # Add text labels
-  labs(x = "Pesticide Target Class", y = "Life Stage Exposure", fill = "Count") +
+  geom_text(aes(label = ifelse(count > 0, count, "")), color = "black", size = 4) +
+  labs(x = "Pesticide Chemical Class", y = "Life Stage Exposure", fill = "Count") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 12),
         axis.text.y = element_text(size = 12),
@@ -644,6 +665,12 @@ ggplot(fd_summary, aes(x = pesticide_target_class, y = life_stage_exposure, fill
         legend.title = element_text(size = 14, color = "black", face = "bold"))
 
 
+```
+
+```{r}
+fig10 <- ((fig7 | fig8) /(fig9)   + plot_annotation(tag_levels = "A"))
+
+fig10
 ```
 
 - Objective 4. To examine how are authors connected between countries and how is the literature connected between and within disciplines.
