@@ -88,13 +88,18 @@ fig1 <- fd %>%
   geom_col(width = 0.7, fill = "#4169E1") +
   geom_text(aes(label = n), vjust = -0.2, size = 4) +
   theme_minimal() +
-  labs(x = "Year", y = "Article count") +
+  labs(x = "Year", y = "Article Count") +
   theme(legend.position = "none", 
-        axis.title.x = element_text(size = 10),
-        axis.text.x = element_text(angle = 45, hjust = 1),
-        panel.grid.major.y= element_line(color = "gray"),
-        panel.grid.minor.y = element_blank())
- fig1
+    axis.title.x = element_text(size = 12, face = "bold"),
+    axis.title.y = element_text(size = 12, face = "bold"),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
+    axis.text.y = element_text(size = 10),
+    panel.grid.major.y = element_line(color = "gray"),
+    panel.grid.minor.y = element_blank(),
+    plot.title = element_text(size = 16, face = "bold")) +
+  ggtitle("Number of Articles by Publication Year")
+
+fig1
 ```
 
 
@@ -102,21 +107,24 @@ fig1 <- fd %>%
 
 
 ```{r plot for total of individual pesticides used in pesticide exposure studies}
-
 fig2a <- pd %>%
   separate_rows(pesticide_investigated, sep = ", ") %>% 
   count(pesticide_investigated) %>%
   ggplot(aes(x = n, y = reorder(pesticide_investigated, n))) +
   geom_bar(stat = "identity", fill = "#4169E1", color = "white", position = position_dodge(0.9)) +
-  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 3) + 
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 4) + 
   labs(title = "Total Number of Pesticides Investigated",
        x = "Count",
        y = "Pesticide") +
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
-        axis.line.y = element_blank(),
-        axis.ticks.y = element_blank(),
-        axis.text.y = element_text(size = 9, hjust = 0))
+    axis.line.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.x = element_text(size = 9),
+    axis.text.y = element_text(size = 9, hjust = 0),
+    plot.title = element_text(size = 14, face = "bold")
+  )
+
 fig2a
 ```
 
@@ -131,10 +139,14 @@ fig2b <- pd %>%
        x = "Count",
        y = "Pesticide Target Class") +
   theme_minimal() +
-  theme(panel.grid.major.y = element_blank(),
-        axis.line.y = element_blank(),
-        axis.ticks.y = element_blank(),
-        axis.text.y = element_text(size = 9, hjust = 0))
+  theme(
+    panel.grid.major.y = element_blank(),
+    axis.line.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_text(size = 9, hjust = 0),
+    axis.title.x = element_text(size = 10),
+    plot.title = element_text(size = 12, face = "bold")
+  )
 
 fig2b
 ```
@@ -159,7 +171,6 @@ fig2c
 ```
 
 ```{r total route of exposure completed as a percentage}
-# Calculate total count for each category
 total_route_count <- pdo %>% count(route)
 
 # Calculate proportion and percentage for each category
@@ -180,7 +191,8 @@ fig2d <- ggplot(route_pct, aes(x = reorder(route, percentage), y = percentage)) 
         axis.line.y = element_blank(),
         axis.ticks.y = element_blank(),
         axis.text.y = element_text(size = 9, hjust = 0)) +
-  coord_flip()
+  coord_flip() + 
+  ylim(0, 100)
 
 fig2d
 ```
@@ -233,17 +245,18 @@ pdo_waterbourne <- pdo %>%
   filter(route == "waterbourne", dosage_unit_consistent == "ug/L") %>%  # not we had to filter for those studies that gave concentration per litre
   mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed"))
 
-
 fig2e <- ggplot(pdo_waterbourne, aes(x = dosage_type, y = log(dosage_value))) +
-  geom_violin(fill = "#4169E1", alpha = 0.3, trim = FALSE) +
-  geom_boxplot(width = 0.1, fill = "white", color = "#4169E1", outlier.shape = NA) +
-  geom_jitter(width = 0.1, height = 0.05, color = "#4169E1", alpha = 0.5) +
+  geom_violin(fill = "#4169E1", alpha = 0.2, color = NA, trim = FALSE) +
+  geom_boxplot(width = 0.05, fill = "white", color = "#4169E1", outlier.shape = NA) +
+  geom_jitter(width = 0.1, height = 0.05, color = "#4169E1", alpha = 0.8) +
   labs(title = "Waterborne Exposures by Dosage in ug/L", x = "Waterborne exposure", y = "log(Dosage (ug/L))") +
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
         axis.line.y = element_blank(),
         axis.ticks.y = element_blank(),
-        axis.text.y = element_text(size = 9, hjust = 0))
+        axis.text.y = element_text(size = 9, hjust = 0),
+        axis.text.x = element_text(angle = 0, vjust = 0.5, hjust = 0.5))
+
 fig2e
 
 # there is not enough data to represent graphically for other exposure routes
@@ -259,8 +272,8 @@ pdo_waterbourne_deltamethrin <- pdo %>%
 
 
 fig2f <- ggplot(pdo_waterbourne_deltamethrin, aes(x = dosage_type, y = log(dosage_value))) +
-   geom_violin(fill = "#4169E1", alpha = 0.3, trim = FALSE) +
-  geom_boxplot(width = 0.1, fill = "white", color = "#4169E1", outlier.shape = NA) +
+   geom_violin(fill = "#4169E1", alpha = 0.2, color = NA, trim = FALSE) +
+  geom_boxplot(width = 0.05, fill = "white", color = "#4169E1", outlier.shape = NA) +
   geom_jitter(width = 0.1, height = 0.05, color = "#4169E1", alpha = 0.5) +
   labs(title = "Waterborne Exposures of Deltamethrin by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage (ug/L))")  +
   theme_minimal() +
@@ -280,10 +293,9 @@ pdo_waterbourne_rotenone<- pdo %>%
   filter(route == "waterbourne", dosage_unit_consistent == "ug/L", pesticide_investigated == "rotenone") %>%  # not we had to filter for those studies that gave concentration per litre
   mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed"))
 
-
 fig2g <- ggplot(pdo_waterbourne_rotenone, aes(x = dosage_type, y = log(dosage_value))) +
-   geom_violin(fill = "#4169E1", alpha = 0.3, trim = FALSE) +
-  geom_boxplot(width = 0.1, fill = "white", color = "#4169E1", outlier.shape = NA) +
+  geom_violin(fill = "#4169E1", alpha = 0.3, trim = FALSE, color = NA) +
+  geom_boxplot(width = 0.05, fill = "white", color = "#4169E1", outlier.shape = NA) +
   geom_jitter(width = 0.1, height = 0.05, color = "#4169E1", alpha = 0.5) +
   labs(title = "Waterborne Exposures of Rotenone by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage (ug/L))")  +
   theme_minimal() +
@@ -291,7 +303,9 @@ fig2g <- ggplot(pdo_waterbourne_rotenone, aes(x = dosage_type, y = log(dosage_va
         axis.line.y = element_blank(),
         axis.ticks.y = element_blank(),
         axis.text.y = element_text(size = 9, hjust = 0)) 
+
 fig2g
+
 ```
 
 
@@ -304,18 +318,18 @@ pdo_waterbourne_atrazine <- pdo %>%
   filter(route == "waterbourne", dosage_unit_consistent == "ug/L", pesticide_investigated == "atrazine") %>%  # not we had to filter for those studies that gave concentration per litre
   mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed"))
 
-
 fig2h <- ggplot(pdo_waterbourne_atrazine, aes(x = dosage_type, y = log(dosage_value))) +
-   geom_violin(fill = "#4169E1", alpha = 0.3, trim = FALSE) +
-  geom_boxplot(width = 0.1, fill = "white", color = "#4169E1", outlier.shape = NA) +
+   geom_violin(fill = "#4169E1", alpha = 0.3, trim = FALSE, color = "NA") +
+  geom_boxplot(width = 0.05, fill = "white", color = "#4169E1", outlier.shape = NA) +
   geom_jitter(width = 0.1, height = 0.05, color = "#4169E1", alpha = 0.5) +
-  labs(title = "Waterborne Exposures of Atrazine by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage (ug/L))")  +
+  labs(title = "Waterborne Exposures of Atrazine by Dosage in ug/L", x = "Waterborne exposure", y = "log(Dosage (ug/L))")  +
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
         axis.line.y = element_blank(),
         axis.ticks.y = element_blank(),
         axis.text.y = element_text(size = 9, hjust = 0))  
 fig2h
+
 ```
 
 ```{r comparison to lowest and highest dosages of waterbourne exposure to glyphosate}
@@ -326,10 +340,9 @@ pdo_waterbourne_glyphosate <- pdo %>%
   filter(route == "waterbourne", dosage_unit_consistent == "ug/L", pesticide_investigated == "glyphosate") %>%  # not we had to filter for those studies that gave concentration per litre
   mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed"))
 
-
 fig2i <- ggplot(pdo_waterbourne_glyphosate, aes(x = dosage_type, y = log(dosage_value))) +
- geom_violin(fill = "#4169E1", alpha = 0.3, trim = FALSE) +
-  geom_boxplot(width = 0.1, fill = "white", color = "#4169E1", outlier.shape = NA) +
+ geom_violin(fill = "#4169E1", alpha = 0.3, trim = FALSE, color = NA) +
+  geom_boxplot(width = 0.05, fill = "white", color = "#4169E1", outlier.shape = NA) +
   geom_jitter(width = 0.1, height = 0.05, color = "#4169E1", alpha = 0.5) +
   labs(title = "Waterborne Exposures of Glyphosate by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage (ug/L))")  +
   theme_minimal() +
@@ -338,6 +351,7 @@ fig2i <- ggplot(pdo_waterbourne_glyphosate, aes(x = dosage_type, y = log(dosage_
         axis.ticks.y = element_blank(),
         axis.text.y = element_text(size = 9, hjust = 0))  
 fig2i
+
 ```
 
 ```{r comparison to lowest and highest dosages of waterbourne exposure to chlropyrifo}
@@ -348,10 +362,9 @@ pdo_waterbourne_chloropyrifo <- pdo %>%
   filter(route == "waterbourne", dosage_unit_consistent == "ug/L", pesticide_investigated == "chloropyrifo") %>%  # not we had to filter for those studies that gave concentration per litre
   mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed"))
 
-
 fig2j <- ggplot(pdo_waterbourne_chloropyrifo, aes(x = dosage_type, y = log(dosage_value))) +
-  geom_violin(fill = "#4169E1", alpha = 0.3, trim = FALSE) +
-  geom_boxplot(width = 0.1, fill = "white", color = "#4169E1", outlier.shape = NA) +
+  geom_violin(fill = "#4169E1", alpha = 0.3, trim = FALSE, color = NA) +
+  geom_boxplot(width = 0.05, fill = "white", color = "#4169E1", outlier.shape = NA) +
   geom_jitter(width = 0.1, height = 0.05, color = "#4169E1", alpha = 0.5) +
   labs(title = "Waterborne Exposures of Chloropyrifos by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage (ug/L))")  +
   theme_minimal() +
@@ -380,13 +393,16 @@ fig2k <- ggplot(life_stage_pct, aes(x = reorder(life_stage_exposure, percentage)
   geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.1) +
   labs(title = "Percentage of Pesticides by Life Stage of Exposure",
        x = "Life Stage of Exposure",
-       y = "Percentage") +
-   theme_minimal() +
+       y = "Percentage",
+       fontsize = 14) +
+  theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
         axis.line.y = element_blank(),
         axis.ticks.y = element_blank(),
-        axis.text.y = element_text(size = 9, hjust = 0)) +
-  coord_flip()
+        axis.text.y = element_text(size = 9, hjust = 0),
+        axis.title = element_text(size = 12)) +
+  coord_flip() + 
+  ylim(0, 90)
 
 fig2k
 ```
@@ -414,7 +430,8 @@ fig2l <- ggplot(sex_pct, aes(x = reorder(sex, percentage), y = percentage)) +
         axis.line.y = element_blank(),
         axis.ticks.y = element_blank(),
         axis.text.y = element_text(size = 9, hjust = 0)) +
-  coord_flip()
+  coord_flip() + 
+  ylim(0, 50)
 
 fig2l
 ```
@@ -587,7 +604,7 @@ fig7 <- ggplot(fd_summary, aes(x = pesticide_target_class, y = behavioural_class
         legend.title = element_text(size = 14, color = "black", face = "bold"))
 
 
-
+fig7
 ```
 
 ```{r heat map to show which behavours have been investigated in which pesticide chemical class}
@@ -626,11 +643,11 @@ fig8 <- ggplot(fd_summary_top5, aes(x = pesticide_chemical_class, y = behavioura
         axis.title = element_text(size = 16, color = "black", face = "bold"),
         legend.text = element_text(size = 12),
         legend.title = element_text(size = 14, color = "black", face = "bold"))
-
+fig8
 
 ```
 
-```{r}
+```{r heat map to show which life stages of exposure have been exposed to each pesticide chemical class}
 fd_lse <- separate_rows(fd, life_stage_exposure, sep = ",", convert = TRUE)
 fd_lsepc <- separate_rows(fd_lse, pesticide_chemical_class, sep = ",", convert = TRUE)
 
@@ -664,7 +681,7 @@ fig9 <- ggplot(fd_summary_top5, aes(x = pesticide_chemical_class, y = life_stage
         legend.text = element_text(size = 12),
         legend.title = element_text(size = 14, color = "black", face = "bold"))
 
-
+fig9
 ```
 
 ```{r}
