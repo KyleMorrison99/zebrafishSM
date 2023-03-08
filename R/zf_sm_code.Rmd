@@ -1,6 +1,6 @@
 ---
 title: "zf_sm_code"
-authors: "Kyle Morrison, Yefeng Yang, Manuela Santana, Malgorazata Lagisz and, Shinichi Nakagawa"
+authors: "Kyle Morrison, Manuela Santana, Yefeng Yang, Malgorazata Lagisz and, Shinichi Nakagawa"
 output: html_document
 date: "2023-03-01"
 ---
@@ -591,7 +591,7 @@ fd_summary <- fd_bcpt %>%
   ungroup() 
 
 # Create a heatmap using ggplot2
-fig7 <- ggplot(fd_summary, aes(x = pesticide_target_class, y = behavioural_class, fill = count)) +
+fig4a <- ggplot(fd_summary, aes(x = pesticide_target_class, y = behavioural_class, fill = count)) +
   geom_tile(color = "white") +
   scale_fill_gradient(low = "#BFEFFF", high = "#0047AB") +
   geom_text(aes(label = count), color = "black", size = 4) +  # Add text labels
@@ -604,7 +604,7 @@ fig7 <- ggplot(fd_summary, aes(x = pesticide_target_class, y = behavioural_class
         legend.title = element_text(size = 14, color = "black", face = "bold"))
 
 
-fig7
+fig4a
 ```
 
 ```{r heat map to show which behavours have been investigated in which pesticide chemical class}
@@ -632,7 +632,7 @@ fd_summary_top5 <- fd_summary %>%
   filter(pesticide_chemical_class %in% top_pesticide_classes)
 
 # Create a heatmap using ggplot2
-fig8 <- ggplot(fd_summary_top5, aes(x = pesticide_chemical_class, y = behavioural_class, fill = count)) +
+fig4b <- ggplot(fd_summary_top5, aes(x = pesticide_chemical_class, y = behavioural_class, fill = count)) +
   geom_tile(color = "white") +
   scale_fill_gradient(low = "#BFEFFF", high = "#0047AB") +
   geom_text(aes(label = ifelse(count > 0, count, "")), color = "black", size = 4) +  # Add text labels
@@ -643,7 +643,7 @@ fig8 <- ggplot(fd_summary_top5, aes(x = pesticide_chemical_class, y = behavioura
         axis.title = element_text(size = 16, color = "black", face = "bold"),
         legend.text = element_text(size = 12),
         legend.title = element_text(size = 14, color = "black", face = "bold"))
-fig8
+fig4b
 
 ```
 
@@ -669,7 +669,7 @@ top_pesticide_classes <- fd_summary %>%
 fd_summary_top5 <- fd_summary %>%
   filter(pesticide_chemical_class %in% top_pesticide_classes)
 
-fig9 <- ggplot(fd_summary_top5, aes(x = pesticide_chemical_class, y = life_stage_exposure, fill = count)) +
+fig4c <- ggplot(fd_summary_top5, aes(x = pesticide_chemical_class, y = life_stage_exposure, fill = count)) +
   geom_tile(color = "white") +
   scale_fill_gradient(low = "#BFEFFF", high = "#0047AB") +
   geom_text(aes(label = ifelse(count > 0, count, "")), color = "black", size = 4) +
@@ -681,13 +681,51 @@ fig9 <- ggplot(fd_summary_top5, aes(x = pesticide_chemical_class, y = life_stage
         legend.text = element_text(size = 12),
         legend.title = element_text(size = 14, color = "black", face = "bold"))
 
-fig9
+fig4c
 ```
 
 ```{r}
-fig10 <- ((fig7 | fig8) /(fig9)   + plot_annotation(tag_levels = "A"))
+fd_lse <- separate_rows(fd, life_stage_exposure, sep = ",", convert = TRUE)
+fd_lsetc <- separate_rows(fd_lse, pesticide_target_class, sep = ",", convert = TRUE)
 
-fig10
+fd_summary <- fd_lsetc %>%
+  mutate(life_stage_exposure = str_trim(life_stage_exposure),
+         pesticide_target_class = str_trim(pesticide_target_class)) %>%
+  group_by(life_stage_exposure, pesticide_target_class) %>%
+  summarise(count = n()) %>%
+  ungroup()
+
+top_pesticide_classes <- fd_summary %>%
+  filter(!is.na(pesticide_target_class)) %>%
+  group_by(pesticide_target_class) %>%
+  summarise(count = sum(count)) %>%
+  ungroup() %>%
+  top_n(5, count) %>%
+  pull(pesticide_target_class)
+
+fd_summary_top5 <- fd_summary %>%
+  filter(pesticide_target_class %in% top_pesticide_classes)
+
+fig4d <- ggplot(fd_summary_top5, aes(x = pesticide_target_class, y = life_stage_exposure, fill = count)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient(low = "#BFEFFF", high = "#0047AB") +
+  geom_text(aes(label = ifelse(count > 0, count, "")), color = "black", size = 4) +
+  labs(x = "Pesticide Target Class", y = "Life Stage Exposure", fill = "Count") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 12),
+        axis.text.y = element_text(size = 12),
+        axis.title = element_text(size = 16, color = "black", face = "bold"),
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14, color = "black", face = "bold"))
+fig4d
+
+```
+
+
+```{r}
+fig4 <- ((fig4a | fig4b) /(fig4c  | fig4d )   + plot_annotation(tag_levels = "A"))
+
+fig4
 ```
 
 - Objective 4. To examine how are authors connected between countries and how is the literature connected between and within disciplines.
@@ -788,10 +826,26 @@ colnames(NetMatrix_country)[colnames(NetMatrix_country) == "Newzealand"] <- "New
 rownames(NetMatrix_country)[rownames(NetMatrix_country) == "Newzealand"] <- "New Zealand"
 
 # Define colors for each country
-my.cols2 <- c(USA = "#DCDCDC", Australia = "#000000", Netherlands = "#A9A9A9", UK = "#2F4F4F", Brazil = "#C0C0C0", Canada = "slategray", 
-              NewZealand = "gainsboro", France = "#778899", Germany = "#808080", Italy = "#696969", Argentina = "#DCDCDC", 
-              China = "#000000", Belgium = "#A9A9A9", Sweden = "#2F4F4F", Mexico = "#778899", Poland = "#A9A9A9",
-              Turkey = "#D2691E", Portugal = "#FF7F50")
+my.cols2 <- c(
+  USA = "#377eb8",
+  Australia = "#e41a1c",
+  Netherlands = "#4daf4a",
+  UK = "#984ea3",
+  Brazil = "#ff7f00",
+  Canada = "#a65628",
+  NewZealand = "#f781bf",
+  France = "#999999",
+  Germany = "#ffff33",
+  Italy = "#a65628",
+  Argentina = "#377eb8",
+  China = "#e41a1c",
+  Belgium = "#4daf4a",
+  Sweden = "#984ea3",
+  Mexico = "#f781bf",
+  Poland = "#999999",
+  Turkey = "#ff7f00",
+  Portugal = "#ffff33"
+)
 
 # Create a chord diagram of the network matrix
 fig4f <- chordDiagram(NetMatrix_country, annotationTrack = "grid", preAllocateTracks = 1, grid.col = my.cols2)
