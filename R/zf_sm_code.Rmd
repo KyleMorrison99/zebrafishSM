@@ -108,22 +108,23 @@ fig1
 
 ```{r plot for total of individual pesticides used in pesticide exposure studies}
 fig2a <- pd %>%
-  separate_rows(pesticide_investigated, sep = ", ") %>% 
+  separate_rows(pesticide_investigated, sep = ", ") %>%
   count(pesticide_investigated) %>%
+  filter(n > 1) %>%
   ggplot(aes(x = n, y = reorder(pesticide_investigated, n))) +
   geom_bar(stat = "identity", fill = "#4169E1", color = "white", position = position_dodge(0.9)) +
-  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 4) + 
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 4) +
   labs(title = "Total Number of Pesticides Investigated",
-       x = "Count",
-       y = "Pesticide") +
-  theme_minimal() +
-  theme(panel.grid.major.y = element_blank(),
+    x = "Count",
+    y = "Pesticide") +
+    theme_minimal() +
+    theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
     axis.text.x = element_text(size = 9),
     axis.text.y = element_text(size = 9, hjust = 0),
-    plot.title = element_text(size = 14, face = "bold")
-  )
+    plot.title = element_blank()
+    )
 
 fig2a
 ```
@@ -145,17 +146,18 @@ fig2b <- pd %>%
     axis.ticks.y = element_blank(),
     axis.text.y = element_text(size = 9, hjust = 0),
     axis.title.x = element_text(size = 10),
-    plot.title = element_text(size = 12, face = "bold")
+    plot.title = element_blank()
   )
 
 fig2b
 ```
 
 
-```{r total for chemical class}
+```{r total for chemical class} 
 fig2c <- pd %>%
   separate_rows(pesticide_chemical_class, sep = ", ") %>%  
   count(pesticide_chemical_class) %>%
+  filter(n >1) %>% 
   ggplot(aes(x = n, y = reorder(pesticide_chemical_class, n))) +
   geom_bar(stat = "identity", fill = "#4169E1", color = "white", position = position_dodge(0.9)) +
   geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 3) +
@@ -166,7 +168,9 @@ fig2c <- pd %>%
   theme(panel.grid.major.y = element_blank(),
         axis.line.y = element_blank(),
         axis.ticks.y = element_blank(),
-        axis.text.y = element_text(size = 9, hjust = 0))
+        axis.text.y = element_text(size = 9, hjust = 0),
+    plot.title = element_blank()
+  )
 fig2c
 ```
 
@@ -182,7 +186,7 @@ route_pct <- pdo %>%
 # Create bar plot with percentages
 fig2d <- ggplot(route_pct, aes(x = reorder(route, percentage), y = percentage)) +
   geom_bar(stat = "identity", fill = "#4169E1", color = "white") +
-  geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.1) +
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2) +
   labs(title = "Percentage of Pesticides by Route of Exposure",
        x = "Route of Exposure",
        y = "Percentage") +
@@ -190,7 +194,8 @@ fig2d <- ggplot(route_pct, aes(x = reorder(route, percentage), y = percentage)) 
   theme(panel.grid.major.y = element_blank(),
         axis.line.y = element_blank(),
         axis.ticks.y = element_blank(),
-        axis.text.y = element_text(size = 9, hjust = 0)) +
+        axis.text.y = element_text(size = 9, hjust = 0),
+    plot.title = element_blank()) +
   coord_flip() + 
   ylim(0, 100)
 
@@ -200,7 +205,7 @@ fig2d
 
 
 ```{r}
-fig2 <- ((fig2a | fig2b) /(fig2c | fig2d)  + plot_annotation(tag_levels = "A"))
+fig2 <- ((fig2a | fig2b) /(fig2c | fig2d)  + plot_annotation(tag_levels = "A")) # note that we filter 2a and 2c for those greater than 1
 fig2
 ```
 
@@ -349,7 +354,8 @@ fig2i <- ggplot(pdo_waterbourne_glyphosate, aes(x = dosage_type, y = log(dosage_
   theme(panel.grid.major.y = element_blank(),
         axis.line.y = element_blank(),
         axis.ticks.y = element_blank(),
-        axis.text.y = element_text(size = 9, hjust = 0))  
+        axis.text.y = element_text(size = 9, hjust = 0),
+        )  
 fig2i
 
 ```
@@ -400,9 +406,10 @@ fig2k <- ggplot(life_stage_pct, aes(x = reorder(life_stage_exposure, percentage)
         axis.line.y = element_blank(),
         axis.ticks.y = element_blank(),
         axis.text.y = element_text(size = 9, hjust = 0),
-        axis.title = element_text(size = 12)) +
+        axis.title = element_text(size = 12),
+        plot.title = element_blank()) +
   coord_flip() + 
-  ylim(0, 90)
+  ylim(0, 100)
 
 fig2k
 ```
@@ -429,16 +436,17 @@ fig2l <- ggplot(sex_pct, aes(x = reorder(sex, percentage), y = percentage)) +
   theme(panel.grid.major.y = element_blank(),
         axis.line.y = element_blank(),
         axis.ticks.y = element_blank(),
-        axis.text.y = element_text(size = 9, hjust = 0)) +
+        axis.text.y = element_text(size = 9, hjust = 0),
+            plot.title = element_blank()) +
   coord_flip() + 
-  ylim(0, 50)
+  ylim(0, 100)
 
 fig2l
 ```
 
 
 ```{r}
-fig3 <- ((fig2k | fig2l)  + plot_annotation(tag_levels = "A"))
+fig3 <- ((fig2k) /(fig2l) + plot_annotation(tag_levels = "A"))
 fig3
 ```
 
@@ -458,7 +466,9 @@ fig3a <- bd %>%
   theme(panel.grid.major.y = element_blank(),
         axis.line.y = element_blank(),
         axis.ticks.y = element_blank(),
-        axis.text.y = element_text(size = 9, hjust = 0)) 
+        axis.text.y = element_text(size = 9, hjust = 0),
+            plot.title = element_blank()
+) 
 fig3a
 ```
 
@@ -477,8 +487,9 @@ theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
         axis.line.y = element_blank(),
         axis.ticks.y = element_blank(),
-        axis.text.y = element_text(size = 9, hjust = 0)) +
-  coord_flip()
+        axis.text.y = element_text(size = 9, hjust = 0),
+        plot.title = element_blank()) +
+        coord_flip()
 
 fig3b
 ```
@@ -499,8 +510,9 @@ theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
         axis.line.y = element_blank(),
         axis.ticks.y = element_blank(),
-        axis.text.y = element_text(size = 9, hjust = 0)) +
-  coord_flip()
+        axis.text.y = element_text(size = 9, hjust = 0),
+        plot.title = element_blank()) +
+        coord_flip()
  
 
 fig3c
@@ -522,8 +534,9 @@ fig3d <- bd %>%
   theme(panel.grid.major.y = element_blank(),
         axis.line.y = element_blank(),
         axis.ticks.y = element_blank(),
-        axis.text.y = element_text(size = 9, hjust = 0)) +
-  coord_flip()
+        axis.text.y = element_text(size = 9, hjust = 0),
+        plot.title = element_blank()) +
+        coord_flip()
  
 
 fig3d
@@ -545,8 +558,9 @@ fig3e <- bd %>%
   theme(panel.grid.major.y = element_blank(),
         axis.line.y = element_blank(),
         axis.ticks.y = element_blank(),
-        axis.text.y = element_text(size = 9, hjust = 0)) +
-  coord_flip()
+        axis.text.y = element_text(size = 9, hjust = 0),
+        plot.title = element_blank()) +
+        coord_flip()
 fig3e
 ```
 
@@ -566,8 +580,9 @@ fig3f <- bd %>%
   theme(panel.grid.major.y = element_blank(),
         axis.line.y = element_blank(),
         axis.ticks.y = element_blank(),
-        axis.text.y = element_text(size = 9, hjust = 0)) +
-  coord_flip()
+        axis.text.y = element_text(size = 9, hjust = 0),
+        plot.title = element_blank()) +
+        coord_flip()
 
 fig3f
 ```
@@ -597,7 +612,7 @@ fig4a <- ggplot(fd_summary, aes(x = pesticide_target_class, y = behavioural_clas
   geom_text(aes(label = count), color = "black", size = 4) +  # Add text labels
   labs(x = "Pesticide Target Class", y = "Behavioural Class", fill = "Count") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 12),
+  theme(axis.text.x = element_text(angle = 0, vjust = 0.5, hjust=0.5, size = 12),
         axis.text.y = element_text(size = 12),
         axis.title = element_text(size = 16, color = "black", face = "bold"),
         legend.text = element_text(size = 12),
@@ -638,7 +653,7 @@ fig4b <- ggplot(fd_summary_top5, aes(x = pesticide_chemical_class, y = behaviour
   geom_text(aes(label = ifelse(count > 0, count, "")), color = "black", size = 4) +  # Add text labels
   labs(x = "Pesticide Chemical Class", y = "Behavioural Class", fill = "Count") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 12),
+  theme(axis.text.x = element_text(angle = 70, vjust = 0.5, hjust=0.5, size = 12),
         axis.text.y = element_text(size = 12),
         axis.title = element_text(size = 16, color = "black", face = "bold"),
         legend.text = element_text(size = 12),
