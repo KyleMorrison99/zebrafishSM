@@ -653,7 +653,7 @@ fig4b <- ggplot(fd_summary_top5, aes(x = pesticide_chemical_class, y = behaviour
   geom_text(aes(label = ifelse(count > 0, count, "")), color = "black", size = 4) +  # Add text labels
   labs(x = "Pesticide Chemical Class", y = "Behavioural Class", fill = "Count") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 70, vjust = 0.5, hjust=0.5, size = 12),
+  theme(axis.text.x = element_text(angle = 0, vjust = 0.5, hjust=0.5, size = 12),
         axis.text.y = element_text(size = 12),
         axis.title = element_text(size = 16, color = "black", face = "bold"),
         legend.text = element_text(size = 12),
