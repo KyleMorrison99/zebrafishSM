@@ -17,7 +17,7 @@ In this Rmarkdown we provide the following workflow:
 
 - Objective 4. To examine how are authors connected between countries and how is the literature connected between and within disciplines. 
 
-```{r setup, , results="hide"}
+```{r setup, results="hide"}
 rm(list = ls())
 knitr::opts_chunk$set(echo = TRUE)
 pacman::p_load(tidyverse,
