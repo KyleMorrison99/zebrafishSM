@@ -53,36 +53,10 @@ bib_sco <- convert2df(here("data","scopus.bib"), dbsource = "scopus", format = "
 # not to self to create a the bibliometric information 
 ```
 
+## fig 1- study time time trends
+```{r}
 
-```{r joining data}
-# Left join study details to bibliometrics
-bib_sd <- left_join(bib, sd, by = "study_id")
-
-# Left join pesticide details to previous join
-bib_sd_pd <- left_join(bib_sd, pd, by = "study_id")
-
-# Left join pesticide dosage to previous join
-bib_sd_pd_pdo <- left_join(bib_sd_pd, pdo, by = "study_id")
-
-# Left join behaviour details to previous join
-fd <- left_join(bib_sd_pd_pdo, bd, by = "study_id")
-
-# view(fd)
-```
-
-```{r clean final data}
-# removing timestamps and initals extaction
-
-fd <- fd %>% 
-           select(-starts_with("timestamp"), -starts_with("initials_extractor"))
-
-# view(fd)
-```
-
-
-```{r fig 1 time trends}
-
-fig1 <- fd %>% 
+fig1 <- bib %>% 
   count(publication_year) %>%
   ggplot(aes(x = publication_year, y = n)) +
   geom_col(width = 0.7, fill = "#4169E1") +
@@ -103,14 +77,14 @@ fig1
 ```
 
 
-- Objective 1.	To investigate the types of pesticides and pesticide classes, both in terms of chemical and target, that have been used in experiments examining the effects of pesticide exposure on zebrafish behaviour.
+#  Objective 1.	To investigate the types of pesticides and pesticide classes, both in terms of chemical and target, that have been used in experiments examining the effects of pesticide exposure on zebrafish behaviour.
 
-
-```{r plot for total of individual pesticides used in pesticide exposure studies}
+## fig2a - plot for total of individual pesticides used in pesticide exposure studies
+```{r}
 fig2a <- pd %>%
   separate_rows(pesticide_investigated, sep = ", ") %>%
   count(pesticide_investigated) %>%
-  filter(n > 1) %>%
+ #  filter(n > 1) %>%
   ggplot(aes(x = n, y = reorder(pesticide_investigated, n))) +
   geom_bar(stat = "identity", fill = "#4169E1", color = "white", position = position_dodge(0.9)) +
   geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 4) +
@@ -129,7 +103,8 @@ fig2a <- pd %>%
 fig2a
 ```
 
-```{r total for of each pesticide target class used in pesticide exposure studies}
+## fig2b - total for each pesticide target class used in pesticide exposure studies
+```{r}
 fig2b <- pd %>%
   separate_rows(pesticide_target_class, sep = ", ") %>%  
   count(pesticide_target_class) %>%
@@ -152,8 +127,8 @@ fig2b <- pd %>%
 fig2b
 ```
 
-
-```{r total for chemical class} 
+## fig2c - total for chemical class 
+```{r} 
 fig2c <- pd %>%
   separate_rows(pesticide_chemical_class, sep = ", ") %>%  
   count(pesticide_chemical_class) %>%
@@ -174,7 +149,8 @@ fig2c <- pd %>%
 fig2c
 ```
 
-```{r total route of exposure completed as a percentage}
+## fig2d - total route of exposure completed as a percentage
+```{r}
 total_route_count <- pdo %>% count(route)
 
 # Calculate proportion and percentage for each category
@@ -203,14 +179,16 @@ fig2d
 ```
 
 
-
+##fig2 
 ```{r}
-fig2 <- ((fig2a | fig2b) /(fig2c | fig2d)  + plot_annotation(tag_levels = "A")) # note that we filter 2a and 2c for those greater than 1
+fig2 <- ((fig2a)  | (fig2b / fig2c)  + plot_annotation(tag_levels = "A")) # note that we filter 2a and 2c for those greater than 1
 fig2
+fig2d 
 ```
 
 
-```{r making dosages consistent for dosage comparisons}
+# making dosages consistent for dosage comparisons
+```{r}
 pdo <- pdo %>%
   filter(!is.na(dosage_lowest)) %>% # remove rows with NA values
   mutate(dosage_lowest = as.numeric(dosage_lowest),
@@ -242,14 +220,16 @@ pdo <- pdo %>%
 
 ```
 
-```{r comparison of lowest and highest dosages in waterbourne exposure methods}
+## fig2e - comparison of lowest and highest dosages in waterbourne exposure methods
+```{r }
 pdo_waterbourne <- pdo %>%
   pivot_longer(cols = c(dosage_lowest, dosage_highest), 
                names_to = "dosage_type",
                values_to = "dosage_value") %>% 
-  filter(route == "waterbourne", dosage_unit_consistent == "ug/L") %>%  # not we had to filter for those studies that gave concentration per litre
-  mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed"))
-
+  filter(route == "waterbourne", dosage_unit_consistent == "ug/L",
+         dosage_number > 1) %>%  #  we had to filter for those studies that gave concentration per litre and exclude those with 1 dosage
+  mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed")) 
+ 
 fig2e <- ggplot(pdo_waterbourne, aes(x = dosage_type, y = log(dosage_value))) +
   geom_violin(fill = "#4169E1", alpha = 0.2, color = NA, trim = FALSE) +
   geom_boxplot(width = 0.05, fill = "white", color = "#4169E1", outlier.shape = NA) +
@@ -267,12 +247,13 @@ fig2e
 # there is not enough data to represent graphically for other exposure routes
 ```
 
-```{r comparison of lowest and highest dosages of waterbourne exposure to deltamethrin}
+## fig2f - comparison of lowest and highest dosages of waterbourne exposure to deltamethrin
+```{r}
 pdo_waterbourne_deltamethrin <- pdo %>%
   pivot_longer(cols = c(dosage_lowest, dosage_highest), 
                names_to = "dosage_type",
                values_to = "dosage_value") %>% 
-  filter(route == "waterbourne", dosage_unit_consistent == "ug/L", pesticide_investigated == "deltamethrin") %>%  # not we had to filter for those studies that gave concentration per litre
+  filter(route == "waterbourne", dosage_unit_consistent == "ug/L", pesticide_investigated == "deltamethrin") %>%  # we had to filter for those studies that gave concentration per litre
   mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed"))
 
 
@@ -289,13 +270,13 @@ fig2f <- ggplot(pdo_waterbourne_deltamethrin, aes(x = dosage_type, y = log(dosag
 fig2f
 ```
 
-
-```{r comparison of lowest and highest dosages of waterbourne exposure to rotenone}
+## fig2g - comparison of lowest and highest dosages of waterbourne exposure to rotenone
+```{r}
 pdo_waterbourne_rotenone<- pdo %>%
   pivot_longer(cols = c(dosage_lowest, dosage_highest), 
                names_to = "dosage_type",
                values_to = "dosage_value") %>% 
-  filter(route == "waterbourne", dosage_unit_consistent == "ug/L", pesticide_investigated == "rotenone") %>%  # not we had to filter for those studies that gave concentration per litre
+  filter(route == "waterbourne", dosage_unit_consistent == "ug/L", pesticide_investigated == "rotenone") %>%  # we had to filter for those studies that gave concentration per litre
   mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed"))
 
 fig2g <- ggplot(pdo_waterbourne_rotenone, aes(x = dosage_type, y = log(dosage_value))) +
@@ -313,14 +294,14 @@ fig2g
 
 ```
 
+## fig2h - comparison of lowest and highest dosages of waterbourne exposure atrazine
 
-
-```{r comparison of lowest and highest dosages of waterbourne exposure atrazine}
+```{r}
 pdo_waterbourne_atrazine <- pdo %>%
   pivot_longer(cols = c(dosage_lowest, dosage_highest), 
                names_to = "dosage_type",
                values_to = "dosage_value") %>% 
-  filter(route == "waterbourne", dosage_unit_consistent == "ug/L", pesticide_investigated == "atrazine") %>%  # not we had to filter for those studies that gave concentration per litre
+  filter(route == "waterbourne", dosage_unit_consistent == "ug/L", pesticide_investigated == "atrazine") %>%  #  we had to filter for those studies that gave concentration per litre
   mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed"))
 
 fig2h <- ggplot(pdo_waterbourne_atrazine, aes(x = dosage_type, y = log(dosage_value))) +
@@ -337,7 +318,8 @@ fig2h
 
 ```
 
-```{r comparison to lowest and highest dosages of waterbourne exposure to glyphosate}
+## fig2i - comparison to lowest and highest dosages of waterbourne exposure to glyphosate
+```{r}
 pdo_waterbourne_glyphosate <- pdo %>%
   pivot_longer(cols = c(dosage_lowest, dosage_highest), 
                names_to = "dosage_type",
@@ -384,13 +366,13 @@ fig2j
 ```{r total lifestage of exposure completed as a percentage}
 
 # Calculate total count for each category
-total_count <- sd %>% count(life_stage_exposure)
+total_count_lse <- sd %>% count(life_stage_exposure)
 
 # Calculate proportion and percentage for each category
 life_stage_pct <- sd %>%
     separate_rows(life_stage_exposure, sep = ", ") %>% 
   count(life_stage_exposure) %>%
-  mutate(proportion = n/sum(total_count$n),
+  mutate(proportion = n/sum(total_count_lse$n),
          percentage = proportion*100)
 
 # Create bar plot with percentages
@@ -595,10 +577,12 @@ fig3
 
 
 ```{r heat map to show which behavours have been investigated in which pesticide target class }
-fd_bc <- separate_rows(fd, behavioural_class, sep = ",\\s*", convert = TRUE)
-fd_bcpt <- separate_rows(fd_bc, pesticide_target_class, sep = ",", convert = TRUE)
+bd_pd <- left_join(bd, pd, by = "study_id")
 
-fd_summary <- fd_bcpt %>%
+bd_pd1 <- separate_rows(bd_pd, behavioural_class, sep = ",\\s*", convert = TRUE)
+bd_pd1<- separate_rows(bd_pd1, pesticide_target_class, sep = ",\\s*", convert = TRUE)
+
+bd_pd_summary1 <- bd_pd1 %>%
   mutate(behavioural_class = str_trim(behavioural_class),
          pesticide_target_class = str_trim(pesticide_target_class)) %>%
   group_by(behavioural_class, pesticide_target_class) %>%
@@ -606,7 +590,7 @@ fd_summary <- fd_bcpt %>%
   ungroup() 
 
 # Create a heatmap using ggplot2
-fig4a <- ggplot(fd_summary, aes(x = pesticide_target_class, y = behavioural_class, fill = count)) +
+fig4a <- ggplot(bd_pd_summary1, aes(x = pesticide_target_class, y = behavioural_class, fill = count)) +
   geom_tile(color = "white") +
   scale_fill_gradient(low = "#BFEFFF", high = "#0047AB") +
   geom_text(aes(label = count), color = "black", size = 4) +  # Add text labels
@@ -623,18 +607,18 @@ fig4a
 ```
 
 ```{r heat map to show which behavours have been investigated in which pesticide chemical class}
-fd_bc <- separate_rows(fd, behavioural_class, sep = ",", convert = TRUE)
-fd_bcpc <- separate_rows(fd_bc, pesticide_chemical_class, sep = ",", convert = TRUE)
+bd_pd2 <- separate_rows(bd_pd, behavioural_class, sep = ",\\s*", convert = TRUE)
+bd_pd2 <- separate_rows(bd_pd2, pesticide_chemical_class, sep = ",", convert = TRUE)
 
 # Get the top 5 most numerous pesticide chemical classes
-fd_summary <- fd_bcpc %>%
+bd_pd_summary2 <- bd_pd2 %>%
   mutate(behavioural_class = str_trim(behavioural_class),
          pesticide_target_class = str_trim(pesticide_chemical_class)) %>%
   group_by(behavioural_class, pesticide_chemical_class) %>%
   summarise(count = n()) %>%
   ungroup() 
 
-top_pesticide_classes <- fd_summary %>%
+top_pesticide_classes <- bd_pd_summary2 %>%
   filter(!is.na(pesticide_chemical_class)) %>%
   group_by(pesticide_chemical_class) %>%
   summarise(count = sum(count)) %>%
@@ -643,11 +627,11 @@ top_pesticide_classes <- fd_summary %>%
   pull(pesticide_chemical_class)
 
 # Subset the data to include only the top 5 classes
-fd_summary_top5 <- fd_summary %>%
+bd_pd_summary_top5 <- bd_pd_summary2 %>%
   filter(pesticide_chemical_class %in% top_pesticide_classes)
 
 # Create a heatmap using ggplot2
-fig4b <- ggplot(fd_summary_top5, aes(x = pesticide_chemical_class, y = behavioural_class, fill = count)) +
+fig4b <- ggplot(bd_pd_summary_top5, aes(x = pesticide_chemical_class, y = behavioural_class, fill = count)) +
   geom_tile(color = "white") +
   scale_fill_gradient(low = "#BFEFFF", high = "#0047AB") +
   geom_text(aes(label = ifelse(count > 0, count, "")), color = "black", size = 4) +  # Add text labels
@@ -663,17 +647,20 @@ fig4b
 ```
 
 ```{r heat map to show which life stages of exposure have been exposed to each pesticide chemical class}
-fd_lse <- separate_rows(fd, life_stage_exposure, sep = ",", convert = TRUE)
-fd_lsepc <- separate_rows(fd_lse, pesticide_chemical_class, sep = ",", convert = TRUE)
 
-fd_summary <- fd_lsepc %>%
+sd_pd <- left_join(sd, pd, by = "study_id")
+
+sd_pd1 <- separate_rows(sd_pd, life_stage_exposure, sep = ",", convert = TRUE)
+sd_pd1 <- separate_rows(sd_pd1, pesticide_chemical_class, sep = ",", convert = TRUE)
+
+sd_pd_summary1 <- sd_pd1 %>%
   mutate(life_stage_exposure = str_trim(life_stage_exposure),
          pesticide_chemical_class = str_trim(pesticide_chemical_class)) %>%
   group_by(life_stage_exposure, pesticide_chemical_class) %>%
   summarise(count = n()) %>%
   ungroup()
 
-top_pesticide_classes <- fd_summary %>%
+top_pesticide_classes <- sd_pd_summary1 %>%
   filter(!is.na(pesticide_chemical_class)) %>%
   group_by(pesticide_chemical_class) %>%
   summarise(count = sum(count)) %>%
@@ -681,10 +668,10 @@ top_pesticide_classes <- fd_summary %>%
   top_n(5, count) %>%
   pull(pesticide_chemical_class)
 
-fd_summary_top5 <- fd_summary %>%
+sd_pd_summary1_top5 <- sd_pd_summary1 %>%
   filter(pesticide_chemical_class %in% top_pesticide_classes)
 
-fig4c <- ggplot(fd_summary_top5, aes(x = pesticide_chemical_class, y = life_stage_exposure, fill = count)) +
+fig4c <- ggplot(sd_pd_summary1_top5, aes(x = pesticide_chemical_class, y = life_stage_exposure, fill = count)) +
   geom_tile(color = "white") +
   scale_fill_gradient(low = "#BFEFFF", high = "#0047AB") +
   geom_text(aes(label = ifelse(count > 0, count, "")), color = "black", size = 4) +
@@ -700,17 +687,17 @@ fig4c
 ```
 
 ```{r}
-fd_lse <- separate_rows(fd, life_stage_exposure, sep = ",", convert = TRUE)
-fd_lsetc <- separate_rows(fd_lse, pesticide_target_class, sep = ",", convert = TRUE)
+sd_pd2 <- separate_rows(sd_pd, life_stage_exposure, sep = ",", convert = TRUE)
+sd_pd2 <- separate_rows(sd_pd2, pesticide_target_class, sep = ",", convert = TRUE)
 
-fd_summary <- fd_lsetc %>%
+sd_pd_summary2 <- sd_pd2 %>%
   mutate(life_stage_exposure = str_trim(life_stage_exposure),
          pesticide_target_class = str_trim(pesticide_target_class)) %>%
   group_by(life_stage_exposure, pesticide_target_class) %>%
   summarise(count = n()) %>%
   ungroup()
 
-top_pesticide_classes <- fd_summary %>%
+top_pesticide_classes <- sd_pd_summary2 %>%
   filter(!is.na(pesticide_target_class)) %>%
   group_by(pesticide_target_class) %>%
   summarise(count = sum(count)) %>%
@@ -718,10 +705,10 @@ top_pesticide_classes <- fd_summary %>%
   top_n(5, count) %>%
   pull(pesticide_target_class)
 
-fd_summary_top5 <- fd_summary %>%
+sd_pd_summary2_top5 <- sd_pd_summary2 %>%
   filter(pesticide_target_class %in% top_pesticide_classes)
 
-fig4d <- ggplot(fd_summary_top5, aes(x = pesticide_target_class, y = life_stage_exposure, fill = count)) +
+fig4d <- ggplot(sd_pd_summary2_top5, aes(x = pesticide_target_class, y = life_stage_exposure, fill = count)) +
   geom_tile(color = "white") +
   scale_fill_gradient(low = "#BFEFFF", high = "#0047AB") +
   geom_text(aes(label = ifelse(count > 0, count, "")), color = "black", size = 4) +
