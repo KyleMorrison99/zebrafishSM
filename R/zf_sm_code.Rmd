@@ -72,7 +72,7 @@ fig1 <- bib %>%
     plot.title = element_text(size = 16, face = "bold")) +
   ggtitle("Number of Articles by Publication Year")
 
-fig1
+# fig1
 ```
 
 
@@ -81,7 +81,7 @@ fig1
 ## fig2a - plot for total of individual pesticides used in pesticide exposure studies
 ```{r}
 fig2a <- pd %>%
-  separate_rows(pesticide_investigated, sep = ",\\s*") %>%
+  separate_rows(pesticide_investigated, sep = ", ") %>%
   count(pesticide_investigated) %>%
   ggplot(aes(x = n, y = reorder(pesticide_investigated, n))) +
   geom_bar(stat = "identity", fill = "#4169E1", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
@@ -94,10 +94,12 @@ fig2a <- pd %>%
         axis.text.x = element_text(size = 11),
         axis.text.y = element_text(size = 11, hjust = 0.5, angle = 0),
         axis.title = element_text(size = 12),
-        plot.title = element_blank())
+        plot.title = element_blank()) +
+  coord_cartesian(xlim = c(0, 11))
 
 
-fig2a
+
+ fig2a
 ```
 
 ## fig2b - total for each pesticide target class used in pesticide exposure studies
@@ -120,7 +122,7 @@ geom_bar(stat = "identity", fill = "#4169E1", color = "white", alpha = 0.8, posi
     plot.title = element_blank()
   )
 
-fig2b
+ fig2b
 ```
 
 ## fig2c - total for chemical class 
@@ -142,7 +144,7 @@ fig2c <- pd %>%
         axis.text.y = element_text(size = 9, hjust = 0),
     plot.title = element_blank()
   )
-fig2c
+# fig2c
 ```
 
 ## fig2d - total route of exposure completed as a percentage
@@ -178,7 +180,7 @@ fig2d
 
 ##fig2 
 ```{r}
-fig2 <- ((fig2a)  | (fig2b / fig2c)  + plot_annotation(tag_levels = "A")) # note that we filter 2a and 2c for those greater than 1
+fig2 <- ((fig2a)  | (fig2b / fig2c)  + plot_annotation(tag_levels = "A")) # note that we filter  2c for those greater than 1
 fig2
 fig2d 
 ```
@@ -598,11 +600,12 @@ fig4a <- ggplot(bd_pd_summary1, aes(x = pesticide_target_class, y = behavioural_
   geom_text(aes(label = count), color = "black", size = 4) +  # Add text labels
   labs(x = "Pesticide Target Class", y = "Behavioural Class", fill = "Count") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 0, vjust = 0.5, hjust=0.5, size = 12),
-        axis.text.y = element_text(size = 12),
-        axis.title = element_text(size = 16, color = "black", face = "bold"),
-        legend.text = element_text(size = 12),
-        legend.title = element_text(size = 14, color = "black", face = "bold"))
+ theme(panel.grid.major.y = element_blank(),
+        axis.line.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.text.y = element_text(size = 9, hjust = 0),
+        plot.title = element_blank(),
+          legend.position = "none")
 
 
 fig4a
@@ -626,7 +629,7 @@ top_pesticide_classes <- bd_pd_summary2 %>%
   group_by(pesticide_chemical_class) %>%
   summarise(count = sum(count)) %>%
   ungroup() %>%
-  top_n(5, count) %>%
+  top_n(4, count) %>%
   pull(pesticide_chemical_class)
 
 # Subset the data to include only the top 5 classes
@@ -640,11 +643,12 @@ fig4b <- ggplot(bd_pd_summary_top5, aes(x = pesticide_chemical_class, y = behavi
   geom_text(aes(label = ifelse(count > 0, count, "")), color = "black", size = 4) +  # Add text labels
   labs(x = "Pesticide Chemical Class", y = "Behavioural Class", fill = "Count") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 0, vjust = 0.5, hjust=0.5, size = 12),
-        axis.text.y = element_text(size = 12),
-        axis.title = element_text(size = 16, color = "black", face = "bold"),
-        legend.text = element_text(size = 12),
-        legend.title = element_text(size = 14, color = "black", face = "bold"))
+ theme(panel.grid.major.y = element_blank(),
+        axis.line.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.text.y = element_text(size = 9, hjust = 0),
+        plot.title = element_blank(),
+          legend.position = "none")
 fig4b
 
 ```
@@ -669,7 +673,7 @@ top_pesticide_classes <- sd_pd_summary1 %>%
   group_by(pesticide_chemical_class) %>%
   summarise(count = sum(count)) %>%
   ungroup() %>%
-  top_n(5, count) %>%
+  top_n(4, count) %>%
   pull(pesticide_chemical_class)
 
 sd_pd_summary1_top5 <- sd_pd_summary1 %>%
@@ -681,11 +685,12 @@ fig4c <- ggplot(sd_pd_summary1_top5, aes(x = pesticide_chemical_class, y = life_
   geom_text(aes(label = ifelse(count > 0, count, "")), color = "black", size = 4) +
   labs(x = "Pesticide Chemical Class", y = "Life Stage Exposure", fill = "Count") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 0, vjust = 0.5, hjust=0.5, size = 12),
-        axis.text.y = element_text(size = 12),
-        axis.title = element_text(size = 16, color = "black", face = "bold"),
-        legend.text = element_text(size = 12),
-        legend.title = element_text(size = 14, color = "black", face = "bold"))
+  theme(panel.grid.major.y = element_blank(),
+        axis.line.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.text.y = element_text(size = 9, hjust = 0),
+        plot.title = element_blank(),
+           legend.position = "none")
 
 fig4c
 ```
@@ -719,11 +724,12 @@ fig4d <- ggplot(sd_pd_summary2_top5, aes(x = pesticide_target_class, y = life_st
   geom_text(aes(label = ifelse(count > 0, count, "")), color = "black", size = 4) +
   labs(x = "Pesticide Target Class", y = "Life Stage Exposure", fill = "Count") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 0, vjust = 0.5, hjust=0.5, size = 12),
-        axis.text.y = element_text(size = 12),
-        axis.title = element_text(size = 16, color = "black", face = "bold"),
-        legend.text = element_text(size = 12),
-        legend.title = element_text(size = 14, color = "black", face = "bold"))
+  theme(panel.grid.major.y = element_blank(),
+        axis.line.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.text.y = element_text(size = 9, hjust = 0),
+        plot.title = element_blank(),
+           legend.position = "none")
 fig4d
 
 ```
@@ -766,7 +772,7 @@ plot(fig5c$map)
 NetMatrix_authors <- biblioNetwork(bib_sco, analysis = "collaboration",  network = "authors", sep = ";")
 fig5d <- networkPlot(NetMatrix_authors,  n = 50, 
                                       Title = "Author collaboration", 
-                                      type = "auto", size = 2, size.cex = TRUE, 
+                                      type = "auto", size = 4, size.cex = TRUE, 
                                       edgesize = 10, labelsize = 1.1)
 ```
 
@@ -867,9 +873,132 @@ circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
   ylim = get.cell.meta.data("ylim")
   sector.name = get.cell.meta.data("sector.index")
   circos.text(mean(xlim), ylim[1] + .1, sector.name, facing = "clockwise", niceFacing = TRUE, adj = c(0, 0.5))
-  circos.axis(h = "top", labels.cex = 0.5, major.tick.percentage = 0.2, sector.index = sector.name, track.index = 2)
+  circos.axis(h = "top", labels.cex = 0.5, major.tick.length = 0.2, sector.index = sector.name, track.index = 2)
 }, bg.border = NA)
 
+```
+
+
+
+```{r}
+# Extract countries from the affiliations
+bib_sco2 <- metaTagExtraction(bib_sco, Field = "AU_CO", sep = ";")
+
+# Create a network matrix of collaborations between continents
+NetMatrix_continent <- biblioNetwork(bib_sco2, analysis = "collaboration", network = "countries", sep = ";")
+
+# Convert the network matrix to a standard matrix
+NetMatrix_continent <- as.matrix(NetMatrix_continent)
+
+# Remove the lower triangle (as this is duplication of info)
+NetMatrix_continent[lower.tri(NetMatrix_continent)] <- 0 
+
+# Change column and row names to title case
+colnames(NetMatrix_continent) <- str_to_title(colnames(NetMatrix_continent))
+rownames(NetMatrix_continent) <- str_to_title(rownames(NetMatrix_continent))
+
+NetMatrix_continent <- NetMatrix_country
+
+
+# Change "Usa" to "North America"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "USA"] <- "North America"
+
+#rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Usa"] <- "North America
+
+
+
+
+# Change "China" to "Asia"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "China"] <- "Asia"
+
+#rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "China"] <- "Asia"
+
+# Change "Brazil" to "South America"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Brazil"] <- "South America"
+#rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Brazil"] <- "South America"
+
+# Change "Ecuador" to "South America"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Ecuador"] <- "South America"
+#rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Ecuador"] <- "South America"
+
+# Change "Chile" to "South America"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Chile"] <- "South America"
+#rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Chile"] <- "South America"
+
+
+# Change "United Kingdom" to "Europe" 
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) =="UK"] <- "Europe"
+#rownames(NetMatrix_continent)[rownames(NetMatrix_continent) =="United Kingdom"] <- "Europe"
+
+# Change "Romania" to "Europe"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Romania"] <- "Europe"
+#rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Romania"] <- "Europe"
+
+# Change "Germany" to "Europe"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Germany"] <- "Europe"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Germany"] <- "Europe"
+
+#Change "France" to "Europe"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "France"] <- "Europe"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "France"] <- "Europe"
+
+#Change "Spain" to "Europe"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Spain"] <- "Europe"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Spain"] <- "Europe"
+
+#Change "Portugal" to "Europe"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Portugal"] <- "Europe"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Portugal"] <- "Europe"
+
+#Change "Portugal" to "Europe"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Sweden"] <- "Europe"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Sweden"] <- "Europe"
+
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Italy"] <- "Europe"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Italy"] <- "Europe"
+
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Netherlands"] <- "Europe"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Netherlands"] <- "Europe"
+
+# colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Switzerland"] <- "Europe"
+# rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Switzerland"] <- "Europe"
+
+
+
+# Define colors for each country
+my.cols2 <- c(
+  USA = "#377eb8",
+  Australia = "#e41a1c",
+  Netherlands = "#4daf4a",
+  UK = "#984ea3",
+  Brazil = "#ff7f00",
+  Canada = "#a65628",
+  NewZealand = "#f781bf",
+  France = "#999999",
+  Germany = "#ffff33",
+  Italy = "#a65628",
+  Argentina = "#377eb8",
+  China = "#e41a1c",
+  Belgium = "#4daf4a",
+  Sweden = "#984ea3",
+  Mexico = "#f781bf",
+  Poland = "#999999",
+  Turkey = "#ff7f00",
+  Portugal = "#ffff33", 
+  Switzerland = "red"
+)
+
+# Create a chord diagram of the network matrix
+fig5G <- chordDiagram(NetMatrix_continent, annotationTrack = "grid", preAllocateTracks = 1)
+
+# Add a track to label each sector with its name
+circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
+  xlim = get.cell.meta.data("xlim")
+  ylim = get.cell.meta.data("ylim")
+  sector.name = get.cell.meta.data("sector.index")
+  circos.text(mean(xlim), ylim[1] + .1, sector.name, facing = "clockwise", niceFacing = TRUE, adj = c(0, 0.5))
+  circos.axis(h = "top", labels.cex = 0.5, major.tick.length = 0.2, sector.index = sector.name, track.index = 2)
+}, bg.border = NA)
 ```
 
 
