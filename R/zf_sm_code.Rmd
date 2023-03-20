@@ -45,7 +45,7 @@ Bibliographic data records are exported from Scopus (including cited references 
 
 ```{r load data}
 bib <- read_csv(here("data", "zf_sm_bibliometrics.csv"), skip = 0)
-sd <- read_csv(here("data","zf_sm_study_details.csv"), skip = 0)
+sd <- read_csv(here("data","zf_sm_study_details.csv"), skip = 0) 
 pd <- read_csv(here("data", "zf_sm_pesticide_details.csv"), skip = 0)
 pdo <-read_csv(here("data","zf_sm_pesticide_dosage.csv"), skip = 0)
 bd <- read_csv(here("data", "zf_sm_behaviour_details.csv"), skip = 0)
@@ -838,31 +838,32 @@ rownames(NetMatrix_country)[rownames(NetMatrix_country) == "Usa"] <- "USA"
 colnames(NetMatrix_country)[colnames(NetMatrix_country) == "United Kingdom"] <- "UK"
 rownames(NetMatrix_country)[rownames(NetMatrix_country) == "United Kingdom"] <- "UK"
 
-# Change "Newzealand" to "New Zealand"
-colnames(NetMatrix_country)[colnames(NetMatrix_country) == "Newzealand"] <- "New Zealand"
-rownames(NetMatrix_country)[rownames(NetMatrix_country) == "Newzealand"] <- "New Zealand"
-
 # Define colors for each country
 my.cols2 <- c(
   USA = "#377eb8",
-  Australia = "#e41a1c",
-  Netherlands = "#4daf4a",
-  UK = "#984ea3",
-  Brazil = "#ff7f00",
-  Canada = "#a65628",
-  NewZealand = "#f781bf",
-  France = "#999999",
-  Germany = "#ffff33",
-  Italy = "#a65628",
-  Argentina = "#377eb8",
   China = "#e41a1c",
-  Belgium = "#4daf4a",
-  Sweden = "#984ea3",
-  Mexico = "#f781bf",
-  Poland = "#999999",
-  Turkey = "#ff7f00",
-  Portugal = "#ffff33"
+  Brazil = "#4daf4a",
+  Switzerland = "#984ea3",
+  Norway = "#ff7f00",
+  Mexico = "#a65628",
+  Ecuador = "#f781bf",
+  UK = "#ffff33",
+  Philippines = "#a65628",
+  Netherlands = "#377eb8",
+  Italy = "#e41a1c",
+  Sweden = "#4daf4a",
+  Portugal = "#984ea3", 
+  Korea = "#f781bf",
+  France = "#999999",
+  Chile = "#ff7f00",
+  Spain = "#ffff33", 
+  Cananda = "#a6cee3",
+  India = "#1f78b4",
+  Germany = "#b2df8a",
+  Turkey = "#33a02c",
+  Romania = "#fb9a99"
 )
+
 
 # Create a chord diagram of the network matrix
 fig5f <- chordDiagram(NetMatrix_country, annotationTrack = "grid", preAllocateTracks = 1, grid.col = my.cols2)
@@ -878,118 +879,13 @@ circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
 
 ```
 
-
-
+## fig5g collaboration matrix with self citation removed
 ```{r}
-# Extract countries from the affiliations
-bib_sco2 <- metaTagExtraction(bib_sco, Field = "AU_CO", sep = ";")
 
-# Create a network matrix of collaborations between continents
-NetMatrix_continent <- biblioNetwork(bib_sco2, analysis = "collaboration", network = "countries", sep = ";")
-
-# Convert the network matrix to a standard matrix
-NetMatrix_continent <- as.matrix(NetMatrix_continent)
-
-# Remove the lower triangle (as this is duplication of info)
-NetMatrix_continent[lower.tri(NetMatrix_continent)] <- 0 
-
-# Change column and row names to title case
-colnames(NetMatrix_continent) <- str_to_title(colnames(NetMatrix_continent))
-rownames(NetMatrix_continent) <- str_to_title(rownames(NetMatrix_continent))
-
-NetMatrix_continent <- NetMatrix_country
-
-
-# Change "Usa" to "North America"
-colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "USA"] <- "North America"
-
-#rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Usa"] <- "North America
-
-
-
-
-# Change "China" to "Asia"
-colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "China"] <- "Asia"
-
-#rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "China"] <- "Asia"
-
-# Change "Brazil" to "South America"
-colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Brazil"] <- "South America"
-#rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Brazil"] <- "South America"
-
-# Change "Ecuador" to "South America"
-colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Ecuador"] <- "South America"
-#rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Ecuador"] <- "South America"
-
-# Change "Chile" to "South America"
-colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Chile"] <- "South America"
-#rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Chile"] <- "South America"
-
-
-# Change "United Kingdom" to "Europe" 
-colnames(NetMatrix_continent)[colnames(NetMatrix_continent) =="UK"] <- "Europe"
-#rownames(NetMatrix_continent)[rownames(NetMatrix_continent) =="United Kingdom"] <- "Europe"
-
-# Change "Romania" to "Europe"
-colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Romania"] <- "Europe"
-#rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Romania"] <- "Europe"
-
-# Change "Germany" to "Europe"
-colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Germany"] <- "Europe"
-rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Germany"] <- "Europe"
-
-#Change "France" to "Europe"
-colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "France"] <- "Europe"
-rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "France"] <- "Europe"
-
-#Change "Spain" to "Europe"
-colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Spain"] <- "Europe"
-rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Spain"] <- "Europe"
-
-#Change "Portugal" to "Europe"
-colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Portugal"] <- "Europe"
-rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Portugal"] <- "Europe"
-
-#Change "Portugal" to "Europe"
-colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Sweden"] <- "Europe"
-rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Sweden"] <- "Europe"
-
-colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Italy"] <- "Europe"
-rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Italy"] <- "Europe"
-
-colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Netherlands"] <- "Europe"
-rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Netherlands"] <- "Europe"
-
-# colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Switzerland"] <- "Europe"
-# rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Switzerland"] <- "Europe"
-
-
-
-# Define colors for each country
-my.cols2 <- c(
-  USA = "#377eb8",
-  Australia = "#e41a1c",
-  Netherlands = "#4daf4a",
-  UK = "#984ea3",
-  Brazil = "#ff7f00",
-  Canada = "#a65628",
-  NewZealand = "#f781bf",
-  France = "#999999",
-  Germany = "#ffff33",
-  Italy = "#a65628",
-  Argentina = "#377eb8",
-  China = "#e41a1c",
-  Belgium = "#4daf4a",
-  Sweden = "#984ea3",
-  Mexico = "#f781bf",
-  Poland = "#999999",
-  Turkey = "#ff7f00",
-  Portugal = "#ffff33", 
-  Switzerland = "red"
-)
+diag(NetMatrix_country) <- 0
 
 # Create a chord diagram of the network matrix
-fig5G <- chordDiagram(NetMatrix_continent, annotationTrack = "grid", preAllocateTracks = 1)
+fig5g <- chordDiagram(NetMatrix_country, annotationTrack = "grid", preAllocateTracks = 1, grid.col = my.cols2)
 
 # Add a track to label each sector with its name
 circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
@@ -999,6 +895,109 @@ circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
   circos.text(mean(xlim), ylim[1] + .1, sector.name, facing = "clockwise", niceFacing = TRUE, adj = c(0, 0.5))
   circos.axis(h = "top", labels.cex = 0.5, major.tick.length = 0.2, sector.index = sector.name, track.index = 2)
 }, bg.border = NA)
+```
+
+## fig 5h contitnent collaboration 
+```{r}
+
+# Change "Usa" to "North America"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "USA"] <- "North America"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "USA"] <- "North America"
+# Change "Usa" to "North America"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Canada"] <- "North America"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Canada"] <- "North America"
+# Change "Mexico" to "North America"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Mexico"] <- "North America"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Mexico"] <- "North America"
+# Change China to Asia
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "China"] <- "Asia"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "China"] <- "Asia"
+# Change India to Asia
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "India"] <- "Asia"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "India"] <- "Asia"
+# Change Phillipines to Asia
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Philippines"] <- "Asia"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Philippines"] <- "Asia"
+# Change "Brazil" to "South America"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Brazil"] <- "South America"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Brazil"] <- "South America"
+# Change "Ecuador" to "South America"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Ecuador"] <- "South America"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Ecuador"] <- "South America"
+# Change "Chile" to "South America"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Chile"] <- "South America"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Chile"] <- "South America"
+# Change "United Kingdom" to "Europe" 
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) =="UK"] <- "Europe"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) =="UK"] <- "Europe"
+# Change "Romania" to "Europe"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Romania"] <- "Europe"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Romania"] <- "Europe"
+# Change "Germany" to "Europe"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Germany"] <- "Europe"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Germany"] <- "Europe"
+#Change "France" to "Europe"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "France"] <- "Europe"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "France"] <- "Europe"
+#Change "Spain" to "Europe"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Spain"] <- "Europe"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Spain"] <- "Europe"
+#Change "Portugal" to "Europe"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Portugal"] <- "Europe"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Portugal"] <- "Europe"
+#Change "Sweden" to "Europe"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Sweden"] <- "Europe"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Sweden"] <- "Europe"
+#Change "Italy" to "Europe"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Italy"] <- "Europe"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Italy"] <- "Europe"
+#Change "Netherlands" to "Europe"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Netherlands"] <- "Europe"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Netherlands"] <- "Europe"
+#Change "Norway" to "Europe"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Norway"] <- "Europe"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Norway"] <- "Europe"
+#Change "Norway" to "Europe"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Switzerland"] <- "Europe"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Switzerland"] <- "Europe"
+#Change "Norway" to "Europe"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Czech Republic"] <- "Europe"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Czech Republic"] <- "Europe"
+
+
+# collapsing
+merge_matrix <- t(rowsum(t(NetMatrix_continent), group = colnames(NetMatrix_continent), na.rm = T))
+merge_matrix2 <- rowsum(merge_matrix, group = rownames(merge_matrix))
+# remove diagonal elements
+diag(merge_matrix2) <- 0
+# chord plot
+chordDiagramFromMatrix(merge_matrix2)
+
+# Define colors for each continent
+my.cols2 <- c(
+  Asia = "#1f78b4",
+  Europe = "#377eb8",
+  NorthAmerica = "#5ab4ac",
+  Oceania = "#8da0cb",
+  SouthAmerica = "#bebada"
+)
+
+
+# Create a chord diagram of the network matrix
+fig5h <- chordDiagram(merge_matrix2, annotationTrack = "grid", preAllocateTracks = 1)
+# Add a track to label each sector with its name
+circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
+  xlim = get.cell.meta.data("xlim")
+  ylim = get.cell.meta.data("ylim")
+  sector.name = get.cell.meta.data("sector.index")
+  circos.text(mean(xlim), ylim[1] + .1, sector.name, facing = "clockwise", niceFacing = TRUE, adj = c(0, 0.5))
+  circos.axis(h = "top", labels.cex = 0.5, major.tick.length = 0.2, sector.index = sector.name, track.index = 2)
+}, bg.border = NA)
+```
+```
+```{r}
+fig5 <- ((fig5e | fig5f) /(fig5g  | fig5h))
+fig5
 ```
 
 
