@@ -299,7 +299,7 @@ pdo_waterbourne_atrazine <- pdo %>%
   pivot_longer(cols = c(dosage_lowest, dosage_highest), 
                names_to = "dosage_type",
                values_to = "dosage_value") %>% 
-  filter(route == "waterbourne", dosage_unit_consistent == "ug/L", pesticide_investigated == "atrazine") %>%  #  we had to filter for those studies that gave concentration per litre
+  filter(route == "waterbourne", dosage_unit_consistent == "ug/L", pesticide_investigated == "atrazine") %>%  # we had to filter for those studies that gave concentration per litre
   mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed"))
 
 fig2h <- ggplot(pdo_waterbourne_atrazine, aes(x = dosage_type, y = log(dosage_value))) +
@@ -322,7 +322,7 @@ pdo_waterbourne_glyphosate <- pdo %>%
   pivot_longer(cols = c(dosage_lowest, dosage_highest), 
                names_to = "dosage_type",
                values_to = "dosage_value") %>% 
-  filter(route == "waterbourne", dosage_unit_consistent == "ug/L", pesticide_investigated == "glyphosate") %>%  # not we had to filter for those studies that gave concentration per litre
+  filter(route == "waterbourne", dosage_unit_consistent == "ug/L", pesticide_investigated == "glyphosate") %>%  # we had to filter for those studies that gave concentration per litre
   mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed"))
 
 fig2i <- ggplot(pdo_waterbourne_glyphosate, aes(x = dosage_type, y = log(dosage_value))) +
@@ -346,7 +346,7 @@ pdo_waterbourne_chloropyrifo <- pdo %>%
   pivot_longer(cols = c(dosage_lowest, dosage_highest), 
                names_to = "dosage_type",
                values_to = "dosage_value") %>% 
-  filter(route == "waterbourne", dosage_unit_consistent == "ug/L", pesticide_investigated == "chloropyrifo") %>%  # not we had to filter for those studies that gave concentration per litre
+  filter(route == "waterbourne", dosage_unit_consistent == "ug/L", pesticide_investigated == "chloropyrifo") %>%  #we had to filter for those studies that gave concentration per litre
   mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed"))
 
 fig2j <- ggplot(pdo_waterbourne_chloropyrifo, aes(x = dosage_type, y = log(dosage_value))) +
@@ -897,9 +897,9 @@ circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
 }, bg.border = NA)
 ```
 
-## fig 5h contitnent collaboration 
+## fig 5h continent collaboration 
 ```{r}
-
+NetMatrix_continent <- NetMatrix_country
 # Change "Usa" to "North America"
 colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "USA"] <- "North America"
 rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "USA"] <- "North America"
@@ -957,10 +957,10 @@ rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Netherlands"] <-
 #Change "Norway" to "Europe"
 colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Norway"] <- "Europe"
 rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Norway"] <- "Europe"
-#Change "Norway" to "Europe"
+#Change "Switzerland" to "Europe"
 colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Switzerland"] <- "Europe"
 rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Switzerland"] <- "Europe"
-#Change "Norway" to "Europe"
+#Change "Czech Republic" to "Europe"
 colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Czech Republic"] <- "Europe"
 rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Czech Republic"] <- "Europe"
 
@@ -975,11 +975,11 @@ chordDiagramFromMatrix(merge_matrix2)
 
 # Define colors for each continent
 my.cols2 <- c(
-  Asia = "#1f78b4",
-  Europe = "#377eb8",
-  NorthAmerica = "#5ab4ac",
-  Oceania = "#8da0cb",
-  SouthAmerica = "#bebada"
+  Asia = "#0072B2",
+  Europe = "#E69F00",
+  NorthAmerica = "#F0E442",
+  Oceania = "#009E73",
+  SouthAmerica = "#D55E00"
 )
 
 
@@ -990,11 +990,13 @@ circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
   xlim = get.cell.meta.data("xlim")
   ylim = get.cell.meta.data("ylim")
   sector.name = get.cell.meta.data("sector.index")
-  circos.text(mean(xlim), ylim[1] + .1, sector.name, facing = "clockwise", niceFacing = TRUE, adj = c(0, 0.5))
+  circos.text(mean(xlim), ylim[1] + 0.2, sector.name, facing = "clockwise", niceFacing = TRUE, adj = c(0, 0.5))
   circos.axis(h = "top", labels.cex = 0.5, major.tick.length = 0.2, sector.index = sector.name, track.index = 2)
 }, bg.border = NA)
+
 ```
-```
+
+'' fig 5i - collaborations between pesticide ch
 ```{r}
 fig5 <- ((fig5e | fig5f) /(fig5g  | fig5h))
 fig5
