@@ -72,7 +72,7 @@ fig1 <- bib %>%
     plot.title = element_text(size = 16, face = "bold")) +
   ggtitle("Number of Articles by Publication Year")
 
-# fig1
+ fig1
 ```
 
 
@@ -144,7 +144,7 @@ fig2c <- pd %>%
         axis.text.y = element_text(size = 9, hjust = 0),
     plot.title = element_blank()
   )
-# fig2c
+fig2c
 ```
 
 ## fig2d - total route of exposure completed as a percentage
@@ -425,7 +425,6 @@ fig2l <- ggplot(sex_pct, aes(x = reorder(sex, percentage), y = percentage)) +
 
 fig2l
 ```
-
 
 ```{r}
 fig2.1 <- ((fig2k) /(fig2l) + plot_annotation(tag_levels = "A"))
