@@ -182,7 +182,6 @@ fig2d
 ```{r}
 fig2 <- ((fig2a)  | (fig2b / fig2c)  + plot_annotation(tag_levels = "A")) # note that we filter  2c for those greater than 1
 fig2
-fig2d 
 ```
 
 
@@ -219,6 +218,7 @@ pdo <- pdo %>%
 
 ```
 
+
 ## fig2e - comparison of lowest and highest dosages in waterbourne exposure methods
 ```{r }
 pdo_waterbourne <- pdo %>%
@@ -233,7 +233,7 @@ fig2e <- ggplot(pdo_waterbourne, aes(x = dosage_type, y = log(dosage_value))) +
   geom_violin(fill = "#4169E1", alpha = 0.2, color = NA, trim = FALSE) +
   geom_boxplot(width = 0.05, fill = "white", color = "#4169E1", outlier.shape = NA) +
   geom_jitter(width = 0.1, height = 0.05, color = "#4169E1", alpha = 0.8) +
-  labs(title = "Waterborne Exposures by Dosage in ug/L", x = "Waterborne exposure", y = "log(Dosage (ug/L))") +
+  labs(title = "Waterborne Exposures by Dosage in ug/L", x = "Waterborne Exposure", y = "log(Dosage (ug/L))") +
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
         axis.line.y = element_blank(),
@@ -340,7 +340,7 @@ fig2i
 
 ```
 
-## fig 2j - comparison to lowest and highest dosages of waterbourne exposure to chlropyrifo
+## fig 2j - comparison to lowest and highest dosages of waterbourne exposure to chlopyrifo
 ```{r}
 pdo_waterbourne_chloropyrifo <- pdo %>%
   pivot_longer(cols = c(dosage_lowest, dosage_highest), 
@@ -735,9 +735,10 @@ fig4d
 
 
 ```{r}
-fig4 <- ((fig4a | fig4b) /(fig4c  | fig4d )   + plot_annotation(tag_levels = "A"))
-
-fig4
+fig4.1 <- (fig4a / fig4b)  + plot_annotation(tag_levels = "A")
+fig4.2 <- (fig4c  / fig4d) + plot_annotation(tag_levels = "A")
+fig4.1
+fig4.2
 ```
 
 # Objective 3. To examine how are authors connected between countries and how is the literature connected between and within disciplines.
@@ -995,11 +996,6 @@ circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
 
 ```
 
-'' fig 5i - collaborations between pesticide ch
-```{r}
-fig5 <- ((fig5e | fig5f) /(fig5g  | fig5h))
-fig5
-```
 
 
 ```{r most cited articles and authors}
