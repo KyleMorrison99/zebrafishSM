@@ -545,7 +545,7 @@ fig3e <- bd %>%
 fig3e
 ```
 
-## fig3f - total number of studies investigating each behavioural assay of anti predator behaviour
+## fig3f - total number of studies investigating each behavioural assay of anti-predator behaviour
 ```{r}
 fig3f <- bd %>%
   separate_rows(behaviour_antipredator, sep = ",\\s*") %>%  
@@ -568,10 +568,27 @@ fig3f <- bd %>%
 fig3f
 ```
 
-```{r creating a panel for behavioural mapping charts}
-fig3 <- ((fig3a | fig3b) /(fig3c | fig3d) / (fig3e | fig3f)  + plot_annotation(tag_levels = "A"))
+## fig3g - total number of studies investigating each behavioural assay of Anxiety or Boldness behaviour
+```{r}
+fig3g <- bd %>%
+  separate_rows(behaviour_anxiety, sep = ",\\s*") %>%  
+  count(behaviour_anxiety) %>%
+  na.omit() %>%
+  ggplot(aes(x = reorder(behaviour_anxiety, n), y = n)) +
+    geom_bar(stat = "identity", fill = "#4169E1", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 4, hjust = 0.5) +
+  labs(title = "Behavioural assays investigating Boldness or Anxiety Behaviour",
+       x = "Boldness or Anxiety Assay",
+       y = "Count") +
+    theme_minimal() +
+  theme(panel.grid.major.y = element_blank(),
+        axis.line.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.text.y = element_text(size = 9, hjust = 0),
+        plot.title = element_blank()) +
+        coord_flip()
 
-fig3
+fig3g
 ```
 
 
@@ -764,7 +781,7 @@ plot(fig5c$map)
 
 ```
 
-## fig 5d - author collaboration network
+## fig 5d - author collaboration network - this is now done of vosviewer
 ```{r}
 NetMatrix_authors <- biblioNetwork(bib_sco, analysis = "collaboration",  network = "authors", sep = ";")
 fig5d <- networkPlot(NetMatrix_authors,  n = 50, 
@@ -994,7 +1011,7 @@ circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
 ```
 
 
-
+now done on vosviewer 
 ```{r most cited articles and authors}
 
 CR <- citations(bib_sco, field = "article", sep = ";") #list of most cited articles
@@ -1004,6 +1021,9 @@ CR <- citations(bib_sco, field = "author", sep = ";")
 cbind(CR$Cited[1:10]) #ten most cited authors
 ``` 
 
+
+
+this is now being done on vosviewer 
 ```{r bibliometric coupling network}
 NetMatrix_coupling <- biblioNetwork(bib_sco, analysis = "coupling", network = "references", sep = "; ")
 NetMatrix_coupling_plot <- networkPlot(NetMatrix_coupling, n = 20, 
