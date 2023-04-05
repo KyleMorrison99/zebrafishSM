@@ -9,13 +9,11 @@ Mapping the Behavioral Impacts of Pesticide Exposure on Zebrafish: A Systematic 
 
 In this Rmarkdown we provide the following workflow:
 
-- Objective 1.	To investigate the types of pesticides and pesticide classes, both in terms of chemical and target, that have been used in experiments examining the effects of pesticide exposure on zebrafish behaviour.
+- Objective 1.	To investigate the types of pesticides and pesticide classes, both in terms of chemical structure and target organism, that have been used in studies examining the effects of pesticide exposure on non-larval zebrafish behaviour.
 
 - Objective 2.	To identify the specific behaviours that have been investigated in pesticide exposure experiments that use zebrafish as a model.
 
-- Objective 3.	To identify similarities and differences in research patterns and terminology across different disciplines.
-
-- Objective 4. To examine how are authors connected between countries and how is the literature connected between and within disciplines. 
+- Objective 3.	To assess the research outputs of different countries and investigate the level of collaboration between authors amongst different countries. 
 
 ```{r setup, results="hide"}
 rm(list = ls())
@@ -69,8 +67,7 @@ fig1 <- bib %>%
     axis.text.y = element_text(size = 10),
     panel.grid.major.y = element_line(color = "gray"),
     panel.grid.minor.y = element_blank(),
-    plot.title = element_text(size = 16, face = "bold")) +
-  ggtitle("Number of Articles by Publication Year")
+    plot.title = element_text(size = 16, face = "bold")) 
 
  fig1
 ```
