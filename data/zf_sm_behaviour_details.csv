@@ -5,7 +5,7 @@ Timestamp,study_id,behavioural_class,behaviour_social,behaviour_activity ,behavi
 30/01/2023 9:51,s_004,"Activity or Movement, Aggression, Sociality","social, non-social",Normal locomotor activity,NA,NA,Aggression with conspecific(s) video or mirror of self ,Affiliation with a live conspecific(s) where they are free to interact,NA,NA,NA,NA
 30/01/2023 13:59,s_005,"Sociality, Boldness or anxiety, Antipredator","social, non-social",NA,NA,NA,NA,Affiliation with a live conspecific(s) where they are free to interact,NA,Novel tank or novel tank diving or exploration or open-field,NA,Response to a simulated predator
 30/01/2023 15:00,s_006,"Cognition and/or learning, Boldness or anxiety","social, non-social",NA,NA,NA,Aggression with conspecific(s) video or mirror of self ,Affiliation with a live conspecific(s) behind a barrier,Habituation task,Novel tank or novel tank diving or exploration or open-field,NA,NA
-,s_007,"Activity or Movement, Boldness or anxiety",non-social,"Normal locomotor activity, Boldness or anxiety ",,NA,NA,NA,NA,"Black-white arena, Novel tank or novel tank diving or exploration or open-field",NA,NA
+,s_007,"Activity or Movement, Boldness or anxiety",non-social,"Normal locomotor activity, Boldness or anxiety ",NA,NA,NA,NA,NA,"Black-white arena, Novel tank or novel tank diving or exploration or open-field",NA,NA
 30/01/2023 15:18,s_008,Activity or Movement,non-social,Normal locomotor activity,NA,NA,NA,NA,NA,NA,NA,NA
 30/01/2023 15:22,s_009,"Sociality, Activity or Movement ",social,Normal locomotor activity,NA,NA,NA,Affiliation with a live conspecific(s) where they are free to interact,NA,NA,NA,NA
 30/01/2023 15:32,s_010,Activity or Movement,non-social,"Normal locomotor activity, Abnormal movement",NA,NA,NA,NA,NA,NA,NA,NA
@@ -48,7 +48,7 @@ Timestamp,study_id,behavioural_class,behaviour_social,behaviour_activity ,behavi
 ,s_047,"Activity or Movement, Sociality","non-social, social ",Normal locomotor activity,NA,NA,NA,Affiliation with a live conspecific(s) behind a barrier,NA,NA,NA,NA
 ,s_048,Boldness or anxiety,non-social,NA,NA,NA,NA,NA,NA,Locomotor activity within this context,NA,NA
 3/02/2023 13:59,s_049,Activity or Movement,non-social,Chemical Avoidance,NA,NA,NA,NA,NA,NA,NA,NA
-3/02/2023 14:14,s_050,"Activity or Movement, circadian rhythm",non-social,Normal locomotor activity,NA,NA,NA,NA,NA,NA,NA,NA
+3/02/2023 14:14,s_050,Activity or Movement,non-social,Normal locomotor activity,NA,NA,NA,NA,NA,NA,NA,NA
 3/02/2023 14:24,s_051,Boldness or anxiety,non-social,NA,NA,NA,NA,NA,NA,Novel tank or novel tank diving or exploration or open-field,NA,NA
 3/02/2023 14:32,s_052,Activity or Movement,non-social,Normal locomotor activity,NA,NA,NA,NA,NA,NA,NA,NA
 ,s_053,"Boldness or anxiety, Sociality ","non-social, social ",NA,NA,NA,NA,Affiliation with a live conspecific(s) where they are free to interact,NA,Novel tank or novel tank diving or exploration or open-field,NA,NA
@@ -81,3 +81,4 @@ Timestamp,study_id,behavioural_class,behaviour_social,behaviour_activity ,behavi
 8/02/2023 13:09,s_080,Boldness or anxiety,non-social,NA,NA,NA,NA,NA,NA,Novel tank or novel tank diving or exploration or open-field,NA,NA
 ,s_081,Activity or Movement,"non-social, social ",Normal locomotor activity,NA,NA,NA,NA,NA,NA,Foraging on a live food source,NA
 ,s_082,Boldness or anxiety,non-social ,NA,NA,NA,NA,NA,NA,Novel tank or novel tank diving or exploration or open-field,NA,NA
+,s_083,Activity or Movement,"non-social, social ",Chemical Avoidance ,NA,NA,NA,NA,NA,NA,NA,NA
