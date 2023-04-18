@@ -82,6 +82,7 @@ fig2 <- bib %>%
 fig3a <- pd %>%
   separate_rows(pesticide_investigated, sep = ", ") %>%
   count(pesticide_investigated) %>%
+  filter(n>1) %>% 
   ggplot(aes(x = n, y = reorder(pesticide_investigated, n))) +
   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
   geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 3) +
@@ -870,7 +871,7 @@ figs27 <- fullmap %>%
   theme(legend.position="right") +
   scale_fill_gradient(low = "#7BCCC4", high = "#084081",
                     name = "Score", na.value = "gray50",
- limits = c(1, 25),
+ limits = c(0.1, 25),
       guide = guide_colorbar(direction = "vertical.")) +
   guides(fill = guide_colourbar(barwidth = unit(15, units = "mm"), barheight = unit(20, units = "mm")))
 figs27
@@ -1027,6 +1028,10 @@ rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Switzerland"] <-
 #Change "Czech Republic" to "Europe"
 colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Czech Republic"] <- "Europe"
 rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Czech Republic"] <- "Europe"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Korea"] <- "Asia"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Korea"] <- "Asia"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Turkey"] <- "Europe"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Turkey"] <- "Europe"
 
 
 # collapsing
