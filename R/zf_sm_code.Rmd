@@ -85,7 +85,7 @@ fig3a <- pd %>%
   filter(n>1) %>% 
   ggplot(aes(x = n, y = reorder(pesticide_investigated, n))) +
   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
-  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 3) +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 5) +
   labs(x = "Count", y = "Pesticide") +
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
@@ -94,8 +94,8 @@ fig3a <- pd %>%
         axis.title.x = element_text(size = 15),
         axis.title.y = element_text(size = 15),
         axis.text.x = element_text(size = 15, hjust = 0),
-        axis.text.y = element_text(size = 13, hjust = 1),
-        axis.title = element_text(size = 12),
+        axis.text.y = element_text(size = 15, hjust = 1),
+        axis.title = element_text(size = 15),
         plot.title = element_blank()) +
         coord_cartesian(xlim = c(0, 11))
 
@@ -1041,16 +1041,6 @@ merge_matrix2 <- rowsum(merge_matrix, group = rownames(merge_matrix))
 diag(merge_matrix2) <- 0
 # chord plot
 chordDiagramFromMatrix(merge_matrix2)
-
-# Define colors for each continent
-my.cols2 <- c(
-  Asia = "#F8F0F0",
-  Europe = "#E69F00",
-  NorthAmerica = "#F0E442",
-  Oceania = "#009E73",
-  SouthAmerica = "#D55E00"
-)
-
 
 # Create a chord diagram of the network matrix
 fig6b <- chordDiagram(merge_matrix2, annotationTrack = "grid", preAllocateTracks = 1)
