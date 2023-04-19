@@ -1,11 +1,17 @@
 ---
-title: "zf_sm_code"
+title: "Mapping the Behavioural Impacts of Pesticide Exposures on Zebrafish: A Systematic Evidence Map and Bibliometric Analysis "
 authors: "Kyle Morrison, Manuela Santana, Yefeng Yang, Malgorazata Lagisz and, Shinichi Nakagawa"
-output: html_document
-date: "2023-03-01"
----
+subtitle: Supplemental file s2
+output: 
+  rmdformats::robobook:
+    code_folding: show
+    code_download: true
+    toc_depth: 4
+editor_options: 
+  chunk_output_type: console
+  
 
-Mapping the Behavioral Impacts of Pesticide Exposure on Zebrafish: A Systematic Evidence Map and Bibliometric Analysis
+---
 
 In this Rmarkdown we provide the following workflow:
 
@@ -16,6 +22,10 @@ In this Rmarkdown we provide the following workflow:
 - Objective 3.	To identify the specific behaviours that have been investigated in pesticide exposure experiments that use zebrafish as a model.
 
 - Objective 4.	To assess the research outputs of different countries and investigate the level of collaboration between authors amongst different countries. 
+
+# **Load packages and data**
+
+## Load packages
 
 ```{r setup, results="hide"}
 rm(list = ls())
@@ -39,11 +49,12 @@ pacman::p_load(tidyverse,
 ```
 
 
+## Load data
 All extracted data is stored in five separate **.csv** files representing different aspects of the data (extracted via structured predefined Google Forms - one per table). 
 
 Bibliographic data records are exported from Scopus (including cited references field) in .bib format and locally saved as **scopus.bib**.    
 
-```{r load data}
+```{r}
 bib <- read_csv(here("data", "zf_sm_bibliometrics.csv"), skip = 0)
 sd <- read_csv(here("data","zf_sm_study_details.csv"), skip = 0) 
 pd <- read_csv(here("data", "zf_sm_pesticide_details.csv"), skip = 0)
@@ -52,6 +63,7 @@ bd <- read_csv(here("data", "zf_sm_behaviour_details.csv"), skip = 0)
 bib_sco <- convert2df(here("data","scopus.bib"), dbsource = "scopus", format = "bibtex")
 ```
 
+# Time trends 
 ## fig 2- study time time trends
 ```{r}
 
@@ -71,7 +83,8 @@ fig2 <- bib %>%
     panel.grid.minor.y = element_blank(),
     plot.title = element_text(size = 16, face = "bold")) 
 
- fig2
+#fig2
+#ggsave(here("figures", "fig2_time_trends.pdf"), width = 10, height = 8, units = "cm", scale = 2, dpi = 300, device = cairo_pdf)
 ```
 
 
