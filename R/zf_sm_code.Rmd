@@ -12,6 +12,17 @@ editor_options:
   
 
 ---
+```{r setup, include = FALSE}
+# knitr setting
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE, 
+  tidy = TRUE,
+  cache = TRUE,
+  echo=TRUE
+)
+```
+
 
 In this Rmarkdown we provide the following workflow:
 
@@ -37,14 +48,13 @@ pacman::p_load(tidyverse,
                formatR,
                forcats,
                ggplot2,
-               hrbrthemes,
-               patchwork,
+               hrbrthemes, # for ggplot2
+               patchwork, # for ggplot2
                bibliometrix,
-               igraph,
+               igraph, 
                tidyr,
-               viridis,
                circlize,
-               cowplot,
+               cowplot, 
                mapproj)
 ```
 
@@ -55,33 +65,54 @@ All extracted data is stored in five separate **.csv** files representing differ
 Bibliographic data records are exported from Scopus (including cited references field) in .bib format and locally saved as **scopus.bib**.    
 
 ```{r}
-bib <- read_csv(here("data", "zf_sm_bibliometrics.csv"), skip = 0)
-sd <- read_csv(here("data","zf_sm_study_details.csv"), skip = 0) 
-pd <- read_csv(here("data", "zf_sm_pesticide_details.csv"), skip = 0)
-pdo <-read_csv(here("data","zf_sm_pesticide_dosage.csv"), skip = 0)
-bd <- read_csv(here("data", "zf_sm_behaviour_details.csv"), skip = 0)
-bib_sco <- convert2df(here("data","scopus.bib"), dbsource = "scopus", format = "bibtex")
+# Load data set containing background information on each study
+bib <- read_csv(here("data", "zf_sm_bibliometrics.csv"), skip = 0) # 83 rows 9 columns 
+
+# Load data set containing information on the design of each study 
+sd <- read_csv(here("data","zf_sm_study_details.csv"), skip = 0) #  83 rows 10 columns 
+
+# Load data set containing details of each pesticide used in each exposure studies
+pd <- read_csv(here("data", "zf_sm_pesticide_details.csv"), skip = 0) # 83 rows 9 columns 
+
+# Load data set containing details of dosage and duration of pesticide exposure 
+pdo <-read_csv(here("data","zf_sm_pesticide_dosage.csv"), skip = 0) # 108 rows 12 columns 
+
+# Load data set containing details of behaviorus measured in response to pesticide exposure 
+bd <- read_csv(here("data", "zf_sm_behaviour_details.csv"), skip = 0) # 83 rows 13 columns 
+
+# Load bibliometric information extracted from scopus 
+bib_sco <- convert2df(here("data","scopus.bib"), dbsource = "scopus", format = "bibtex") # 79 rows 38 columns 
 ```
 
-# Time trends 
+# Objective 0: General literature characteristics
 ## fig 2- study time time trends
 ```{r}
 
-fig2 <- bib %>% 
+# Count the number of articles by year
+fig2 <- bib %>%
   count(publication_year) %>%
+  
+  # Create a bar chart with publication year on x-axis and count on y-axis
   ggplot(aes(x = publication_year, y = n)) +
-   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
+  
+  # Customize the appearance of the bars
+  geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
+  
+  # Add labels to the bars
   geom_text(aes(label = n), position = position_stack(vjust = 0.5), fontface = "bold", color = "white", size = 5, hjust = 0.5) +
+  
+  # Customize the appearance of the plot
   theme_minimal() +
   labs(x = "Year", y = "Article Count") +
-  theme(legend.position = "none", 
-    axis.title.x = element_text(size = 15, face = "bold"),
-    axis.title.y = element_text(size = 15, face = "bold"),
-    axis.text.x = element_text(angle = 45, hjust = 1, size = 13),
-    axis.text.y = element_text(size = 10),
-    panel.grid.major.y = element_line(color = "gray"),
-    panel.grid.minor.y = element_blank(),
-    plot.title = element_text(size = 16, face = "bold")) 
+  theme(legend.position = "none",
+        axis.title.x = element_text(size = 15, face = "bold"),
+        axis.title.y = element_text(size = 15, face = "bold"),
+        axis.text.x = element_text(angle = 45, hjust = 1, size = 13),
+        axis.text.y = element_text(size = 10),
+        panel.grid.major.y = element_line(color = "gray"),
+        panel.grid.minor.y = element_blank(),
+        plot.title = element_text(size = 16, face = "bold"))
+ 
 
 #fig2
 #ggsave(here("figures", "fig2_time_trends.pdf"), width = 10, height = 8, units = "cm", scale = 2, dpi = 300, device = cairo_pdf)
@@ -92,13 +123,34 @@ fig2 <- bib %>%
 
 ## fig3a - plot for total of individual pesticides used in pesticide exposure studies
 ```{r}
-fig3a <- pd %>%
+# Separate rows with multiple pesticides, count their occurrence, and combined all pesticide that occured once as "other"
+total_pesticide_count <- pd %>%
   separate_rows(pesticide_investigated, sep = ", ") %>%
   count(pesticide_investigated) %>%
-  filter(n>1) %>% 
-  ggplot(aes(x = n, y = reorder(pesticide_investigated, n))) +
+  mutate(pesticide_investigated = ifelse(n == 1, "other", as.character(pesticide_investigated))) %>%
+# other includes # "other" includes tribotyltin, terbutylazine, sodium fluride, pyrimethonil, pyraclostrobin, propiconazole, prochloraz, parathion, paclobutazol, monocotophos, methylbenzoate, methylbenzoate, methomyl, mecroprop, linuron, endosulfan, diuron, difenoconazole, dicamba, cyprodinil, chlorothalonil, carbofuran, carbaryl, broflanilide and boscalid. 
+  group_by(pesticide_investigated) %>%
+  summarise(n = sum(n))
+  
+  pesticide_pct <- total_pesticide_count %>%
+  mutate(proportion = n/sum(total_pesticide_count$n),
+         percentage = proportion*100)
+  
+  # Create a bar chart with the count of pesticides on the x-axis and pesticides on the y-axis
+fig3a <-  ggplot(total_pesticide_count, aes(x = n, y = reorder(pesticide_investigated, n))) +
+  
+  # Customize the appearance of the bars
   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
+  
+  # Add labels to the bars for absolute count 
   geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 5) +
+  
+
+  # Add labels to the bars for percentage 
+ geom_text(data = pesticide_pct, aes(label = paste0(round(percentage), "%")), 
+            position = position_dodge(width = 0.9), hjust = -0.2, size = 5, color = "black", fontface = "bold") +
+  
+  # Customize the appearance of the plot
   labs(x = "Count", y = "Pesticide") +
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
@@ -110,154 +162,211 @@ fig3a <- pd %>%
         axis.text.y = element_text(size = 15, hjust = 1),
         axis.title = element_text(size = 15),
         plot.title = element_blank()) +
-        coord_cartesian(xlim = c(0, 11))
+        coord_cartesian(xlim = c(0, 25))
 
 
 
- fig3a
+
+fig3a
+#ggsave(here("figures", "fig3a_pesticide_count.pdf"), width = 8, height = 10, units = "cm", scale = 2, dpi = 300, device = cairo_pdf)
 ```
 
 ## fig3b - total for each pesticide target class used in pesticide exposure studies
 ```{r}
-fig3b <- pd %>%
+# Separate rows with multiple pesticides and count their occurrence
+total_target_class_count <- pd %>%
   separate_rows(pesticide_target_class, sep = ",\\s*") %>%  
-  count(pesticide_target_class) %>%
-  ggplot(aes(x = n, y = reorder(pesticide_target_class, n))) +
-geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 5) +
-  labs(title = "Total Number of Pesticides by Target Class",
-       x = "Count",
-       y = "Pesticide Target Class") +
+  count(pesticide_target_class) 
+  
+  target_class_pct <- total_target_class_count %>%
+  mutate(proportion = n/sum(total_target_class_count$n),
+         percentage = proportion*100)
+   # Create a bar chart with the count of target classes  on the x-axis and pesticides target class  on the y-axis
+ fig3b <- ggplot(total_target_class_count, aes(x = n, y = reorder(pesticide_target_class, n))) +
+  
+  # Customize the appearance of the bars
+  geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) + 
+  
+  # Add labels to the bars for absolute count
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 5) +
+  
+  # Add labels to the bars for percentage 
+ geom_text(data = target_class_pct, aes(label = paste0(round(percentage), "%")), 
+            position = position_dodge(width = 0.9), hjust = -0.2, size = 5, color = "black", fontface = "bold") +
+    
+  # Customize the appearance of the plot
+  labs(x = "Count", y = "Pesticide Target Class") +
   theme_minimal() +
-  theme(
-    panel.grid.major.y = element_blank(),
+  theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
     axis.text.x = element_text(size = 15, hjust = 0),
     axis.text.y = element_text(size = 15, hjust = 1),
     axis.title.x = element_text(size = 15),
     axis.title.y = element_text(size = 15),
-    plot.title = element_blank()
-  )
+    plot.title = element_blank())
 
- fig3b
+fig3b
+#ggsave(here("figures", "fig3b_pesticide_target_count.pdf"), width = 8, height = 10, units = "cm", scale = 2, dpi = 300, device = cairo_pdf)
 ```
 
 ## fig3c - total for chemical class 
 ```{r} 
+# Separate rows with multiple pesticides and count their occurrence, then filter for cases with more than one occurrence
 fig3c <- pd %>%
   separate_rows(pesticide_chemical_class, sep = ",\\s*") %>%  
   count(pesticide_chemical_class) %>%
-  filter(n >1) %>% 
+  filter(n > 1) %>% 
+  
+  # Create a bar chart with the count of chemical classes on the x-axis and pesticides chemical class on the y-axis
   ggplot(aes(x = n, y = reorder(pesticide_chemical_class, n))) +
+  
+  # Customize the appearance of the bars
   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
+  
+  # Add labels to the bars
   geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 5) +
-  labs(title = "Total Number of Pesticides by Chemical Class",
-       x = "Count",
-       y = "Pesticide Chemical Class") +
+  
+  # Customize the appearance of the plot
+  labs(x = "Count", y = "Pesticide Chemical Class") +
   theme_minimal() +
-  theme(
-    panel.grid.major.y = element_blank(),
+  theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
     axis.text.x = element_text(size = 15, hjust = 0),
     axis.text.y = element_text(size = 15, hjust = 1),
     axis.title.x = element_text(size = 15),
     axis.title.y = element_text(size = 15),
-    plot.title = element_blank()
-  )
+    plot.title = element_blank())
 
-fig3c
+# fig3c
+#ggsave(here("figures", "fig3c_pesticide_chemical_count.pdf"), width = 8, height = 10, units = "cm", scale = 2, dpi = 300, device = cairo_pdf
 ```
 
 ##fig3 combined 
 ```{r}
-fig3 <- ((fig3a)  | (fig3b / fig3c)  + plot_annotation(tag_levels = "A")) # note that we filter  2c for those greater than 1
-fig3
+# Combine three plots into a single plot using a grid layout
+fig3 <- ((fig3a) | (fig3b / fig3c) + plot_annotation(tag_levels = "A"))
+
+# fig3
+#ggsave(here("figures", "fig3_pesticide_count_combined.pdf"), width = 8, height = 10, units = "cm", scale = 2, dpi = 300, device = cairo_pdf)
 ```
 
 Objective 2. To investigate pesticide exposure study designs such as concentration and duration of exposure, life stages of zebrafish used in each study and the sample sizes used.
 
 ## figs3 - total route of exposure completed as a percentage
 ```{r}
+# Count the total occurrence of each route in the data set
 total_route_count <- pdo %>% count(route)
 
-# Calculate proportion and percentage for each category
+# Count the proportion and percentage of each route in the data set
 route_pct <- pdo %>%
   count(route) %>%
   mutate(proportion = n/sum(total_route_count$n),
          percentage = proportion*100)
 
-# Create bar plot with percentages
+# Create a bar chart with the percentage of pesticides by route of exposure on the x-axis and the routes of exposure on the y-axis
 figs3 <- ggplot(route_pct, aes(x = reorder(route, percentage), y = percentage)) +
+  
+  # Customize the appearance of the bars
   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
+  
+  # Add labels to the bars
   geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 5, fontface = "bold") +
+  
+  # Customize the appearance of the plot
   labs(title = "Percentage of Pesticides by Route of Exposure",
        x = "Route of Exposure",
        y = "Percentage") +
-   theme_minimal() +
+  theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
         axis.text.x = element_text(size = 15, hjust = 0),
         axis.text.y = element_text(size = 15, hjust = 1),
         axis.title.x = element_text(size = 15),
         axis.title.y = element_text(size = 15),
-       plot.title = element_blank()) +
-       coord_flip() + 
-       ylim(0, 100)
+        plot.title = element_blank()) +
+  
+  # Flip the x and y axes and set the y-axis limits to 0-100
+  coord_flip() + 
+  ylim(0, 100)
 
 
-figs3
+# figs3
+#ggsave(here("figures", "figs3_pesticide_chemical_count.pdf"), width = 8, height = 10, units = "cm", scale = 2, dpi = 300, device = cairo_pdf
 ```
 
-
-# making dosages consistent for dosage comparisons
+making dosages consistent for dosage comparisons
 ```{r}
 pdo <- pdo %>%
-  filter(!is.na(dosage_lowest)) %>% # remove rows with NA values
+  # Remove rows with NA values
+  filter(!is.na(dosage_lowest)) %>%
+  # Convert dosage_lowest to numeric and dosage_lowest_unit to character
   mutate(dosage_lowest = as.numeric(dosage_lowest),
          dosage_lowest_unit = as.character(dosage_lowest_unit),
+         
+         # Standardize dosage_unit_consistent based on dosage_lowest_unit
          dosage_unit_consistent = case_when(
            dosage_lowest_unit == "mg/L" ~ "ug/L",
            dosage_lowest_unit == "ng/L" ~ "ug/L",
            dosage_lowest_unit == "g/L" ~ "ug/L",
-          dosage_lowest_unit == "ppb" ~ "ug/L",
-            dosage_lowest_unit == "ppm" ~ "ug/L",
-          dosage_lowest_unit == "ug/g" ~ "mg/kg",
-           TRUE ~ dosage_lowest_unit
-         ),
+           dosage_lowest_unit == "ppb" ~ "ug/L",
+           dosage_lowest_unit == "ppm" ~ "ug/L",
+           dosage_lowest_unit == "ug/g" ~ "mg/kg",
+           TRUE ~ dosage_lowest_unit),
+         
+         # Convert dosage_lowest to ug/L based on dosage_lowest_unit
          dosage_lowest_convert_ugL = case_when(
            dosage_lowest_unit == "mg/L" ~ dosage_lowest * 1000,
            dosage_lowest_unit == "ng/L" ~ dosage_lowest / 1000,
            dosage_lowest_unit == "g/L" ~ dosage_lowest/1000000,
            dosage_lowest_unit == "ppm" ~ dosage_lowest/1000,
-           TRUE ~ dosage_lowest
-         ),dosage_highest = as.numeric(dosage_highest),
+           TRUE ~ dosage_lowest),
+         
+         # Convert dosage_highest to numeric and dosage_highest_unit to character
+         dosage_highest = as.numeric(dosage_highest),
+         
+         # Convert dosage_highest to ug/L based on dosage_highest_unit
          dosage_highest_convert_ugL = case_when(
            dosage_highest_unit == "mg/L" ~ dosage_highest * 1000,
            dosage_highest_unit == "ng/L" ~ dosage_highest / 1000,
            dosage_highest_unit == "g/L" ~ dosage_highest/1000000,
            dosage_highest_unit == "ppm" ~ dosage_highest/1000,
-           TRUE ~ dosage_highest
-         ))
-         
-
+           TRUE ~ dosage_highest))
 ```
 
 
 ## fig4 - comparison of lowest and highest dosages in waterbourne exposure methods
 ```{r }
+# Pivot the dataset to a longer format, separating out the dosage type (lowest or highest) and value into separate columns
 pdo_waterbourne <- pdo %>%
   pivot_longer(cols = c(dosage_lowest, dosage_highest), 
                names_to = "dosage_type",
                values_to = "dosage_value") %>% 
+  
+  # Filter for waterborne routes with consistent dosage units and a dosage number greater than 1
   filter(route == "waterbourne", dosage_unit_consistent == "ug/L",
-         dosage_number > 1) %>%  #  we had to filter for those studies that gave concentration per litre and exclude those with 1 dosage
+         dosage_number > 1) %>%  
+  
+  # Rename the dosage type column for better labeling in the plot
   mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed")) 
- 
+
+# Create the plot with dosage type (i.e., lowest or highest dose) on the x-axis and dosage value on the y-axis
 fig4 <- ggplot(pdo_waterbourne, aes(x = dosage_type, y = log(dosage_value))) +
+  
+  # Add a violin plot 
   geom_violin(fill = "#5F85AE", alpha =0.2, color = NA, trim = FALSE) +
+
+  # Add a boxplot 
   geom_boxplot(width = 0.05, fill = "white", color = "#5F85AE", outlier.shape = NA) +
+
+  # Add jittered points .
   geom_jitter(width = 0.1, height = 0.05, color = "#5F85AE", alpha = 0.8) +
+
+  
+  # Add axis and plot labels
   labs(title = "Waterborne Exposures by Dosage in ug/L", x = "Waterborne Exposure", y = "log(Dosage (ug/L))") +
+  
+  # Customize plot theme
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
@@ -268,35 +377,52 @@ fig4 <- ggplot(pdo_waterbourne, aes(x = dosage_type, y = log(dosage_value))) +
     axis.title.y = element_text(size = 15),
     plot.title = element_blank())
 
-fig4
-
+# fig4
+#ggsave(here("figures", "fig4_pesticide_dosage.pdf"), width = 8, height = 10, units = "cm", scale = 2, dpi = 300, device = cairo_pdf)
 ```
 
 ## figs4 - comparison of lowest and highest dosages of waterbourne exposure to deltamethrin
 ```{r}
+# Pivot the data set to a longer format, separating out the dosage type (lowest or highest) and value into separate columns
 pdo_waterbourne_deltamethrin <- pdo %>%
   pivot_longer(cols = c(dosage_lowest, dosage_highest), 
                names_to = "dosage_type",
                values_to = "dosage_value") %>% 
-  filter(route == "waterbourne", dosage_unit_consistent == "ug/L", pesticide_investigated == "deltamethrin") %>%  # we had to filter for those studies that gave concentration per litre
+  
+  # Filter for waterborne routes with consistent dosage units and only deltamethrin pesticide investigated
+  filter(route == "waterbourne", dosage_unit_consistent == "ug/L", pesticide_investigated == "deltamethrin") %>% 
+
+  # Rename the dosage type column for better labeling in the plot
   mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest Dosage Exposed", "Highest Dosage Exposed"))
 
-
+# Create the plot with dosage type (i.e., lowest or highest dose) on the x-axis and dosage value on the y-axis
 figs4 <- ggplot(pdo_waterbourne_deltamethrin, aes(x = dosage_type, y = log(dosage_value))) +
-   geom_violin(fill = "#5F85AE", alpha = 0.2, color = NA, trim = FALSE) +
+  
+  # Add a violin plot 
+  geom_violin(fill = "#5F85AE", alpha = 0.2, color = NA, trim = FALSE) +
+  
+  # Add a boxplot 
   geom_boxplot(width = 0.05, fill = "white", color = "#5F85AE", outlier.shape = NA) +
+  
+  # Add jittered points
   geom_jitter(width = 0.1, height = 0.05, color = "#5F85AE", alpha = 0.5) +
-  labs(title = "Waterborne Exposures of Deltamethrin by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage (ug/L))")  +
+  
+  # Add axis and plot labels
+  labs(title = "Waterborne Exposures of Deltamethrin by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage (ug/L))") +
+  
+  # Customize plot theme
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
-    axis.line.y = element_blank(),
-    axis.ticks.y = element_blank(),
-    axis.text.x = element_text(size = 15),
-    axis.text.y = element_text(size = 15, hjust = 1),
-    axis.title.x = element_text(size = 15),
-    axis.title.y = element_text(size = 15),
-    plot.title = element_blank())
-figs4
+        axis.line.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.text.x = element_text(size = 15),
+        axis.text.y = element_text(size = 15, hjust = 1),
+        axis.title.x = element_text(size = 15),
+        axis.title.y = element_text(size = 15),
+        plot.title = element_blank())
+
+# figs4
+
 ```
 
 ## figs5 - comparison of lowest and highest dosages of waterbourne exposure to rotenone
@@ -826,7 +952,7 @@ figs20
 ```
 
 
-# Objective 3. To examine how are authors connected between countries and how is the literature connected between and within disciplines.
+# Objective 4. To examine how are authors connected between countries and how is the literature connected between and within disciplines.
 
 ## figs24 - general bibliometric summaries
 ```{r}
