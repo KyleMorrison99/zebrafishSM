@@ -138,7 +138,7 @@ total_pesticide_count <- pd %>%
          percentage = proportion*100)
   
 # Create a bar chart with the count of pesticides on the x-axis and pesticides on the y-axis
-fig3a <-  ggplot(total_pesticide_count, aes(x = n, y = reorder(pesticide_investigated, n))) +
+fig3a <-  ggplot(pesticide_pct, aes(x = reorder(pesticide_investigated, n), y = percentage)) +
   
   # Customize the appearance of the bars
   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
@@ -152,7 +152,7 @@ fig3a <-  ggplot(total_pesticide_count, aes(x = n, y = reorder(pesticide_investi
             position = position_dodge(width = 0.9), hjust = -0.2, size = 5, color = "black", fontface = "bold") +
   
   # Customize the appearance of the plot
-  labs(x = "Count", y = "Pesticide") +
+  labs(x = "Pesticide", y = "Percentage") +
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
         axis.line.y = element_blank(),
@@ -163,7 +163,8 @@ fig3a <-  ggplot(total_pesticide_count, aes(x = n, y = reorder(pesticide_investi
         axis.text.y = element_text(size = 15, hjust = 1),
         axis.title = element_text(size = 15),
         plot.title = element_blank()) +
-        coord_cartesian(xlim = c(0, 25))
+        coord_flip() +
+        ylim(0,50)
 
 
  fig3a
@@ -183,7 +184,7 @@ total_target_class_count <- pd %>%
          percentage = proportion*100)
   
 # Create a bar chart with the count of target classes  on the x-axis and pesticides target class  on the y-axis
-fig3b <- ggplot(total_target_class_count, aes(x = n, y = reorder(pesticide_target_class, n))) +
+fig3b <- ggplot(target_class_pct, aes(reorder(pesticide_target_class, n), y = percentage)) +
   
   # Customize the appearance of the bars
   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) + 
@@ -196,7 +197,7 @@ fig3b <- ggplot(total_target_class_count, aes(x = n, y = reorder(pesticide_targe
             position = position_dodge(width = 0.9), hjust = -0.2, size = 5, color = "black", fontface = "bold") +
     
   # Customize the appearance of the plot
-  labs(x = "Count", y = "Pesticide Target Class") +
+  labs(x = "Pesticide Target Class", y = "Percentage") +
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
@@ -205,7 +206,9 @@ fig3b <- ggplot(total_target_class_count, aes(x = n, y = reorder(pesticide_targe
     axis.text.y = element_text(size = 15, hjust = 1),
     axis.title.x = element_text(size = 15),
     axis.title.y = element_text(size = 15),
-    plot.title = element_blank())
+    plot.title = element_blank()) +
+    coord_flip() +
+    ylim(0,100)
 
  fig3b
 #ggsave(here("figures", "fig3b_pesticide_target_count.pdf"), width = 8, height = 10, units = "cm", scale = 2, dpi = 300, device = cairo_pdf)
@@ -228,7 +231,7 @@ total_chemical_class_count <- pd %>%
          percentage = proportion*100)
   
   # Create a bar chart with the count of chemical classes on the x-axis and pesticides chemical class on the y-axis
- fig3c <-  ggplot(total_chemical_class_count, aes(x = n, y = reorder(pesticide_chemical_class, n))) +
+ fig3c <-  ggplot(chemical_class_pct, aes(x = reorder(pesticide_chemical_class,n), y = percentage)) +
   
   # Customize the appearance of the bars
   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
@@ -242,7 +245,7 @@ total_chemical_class_count <- pd %>%
             position = position_dodge(width = 0.9), hjust = -0.2, size = 5, color = "black", fontface = "bold") +
    
   # Customize the appearance of the plot
-  labs(x = "Count", y = "Pesticide Chemical Class") +
+  labs(x = "Pesticide Chemical Class", y = "Percentage") +
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
@@ -252,7 +255,9 @@ total_chemical_class_count <- pd %>%
     axis.title.x = element_text(size = 15),
     axis.title.y = element_text(size = 15),
     plot.title = element_blank()) +
-    coord_cartesian(xlim = c(0, 30))
+    coord_flip() +
+    ylim(0, 50)
+    
 
  fig3c
 #ggsave(here("figures", "fig3c_pesticide_chemical_count.pdf"), width = 8, height = 10, units = "cm", scale = 2, dpi = 300, device = cairo_pdf
@@ -294,9 +299,7 @@ figs3 <- ggplot(route_pct, aes(x = reorder(route, percentage), y = percentage)) 
   geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 5, fontface = "bold") +
   
   # Customize the appearance of the plot
-  labs(title = "Percentage of Pesticides by Route of Exposure",
-       x = "Route of Exposure",
-       y = "Percentage") +
+  labs(x = "Route of Exposure", y = "Percentage") +
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
         axis.text.x = element_text(size = 15, hjust = 0),
@@ -304,10 +307,8 @@ figs3 <- ggplot(route_pct, aes(x = reorder(route, percentage), y = percentage)) 
         axis.title.x = element_text(size = 15),
         axis.title.y = element_text(size = 15),
         plot.title = element_blank()) +
-  
-  # Flip the x and y axes and set the y-axis limits to 0-100
-  coord_flip() + 
-  ylim(0, 100)
+        coord_flip() + 
+        ylim(0, 100)
 
 
 figs3
@@ -632,14 +633,22 @@ life_stage_pct <- sd %>%
   mutate(proportion = n/sum(total_count_lse$n),
          percentage = proportion*100)
 
-# Create bar plot with percentages
+ # Create a bar chart with the count on the x-axis and life stage of exposure  on the y-axis
 figs9 <- ggplot(life_stage_pct, aes(x = reorder(life_stage_exposure, percentage), y = percentage)) +
+  
+  # Customize the appearance of the bars 
    geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
+  
+  # Add labels to the bars for percentage 
   geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 5, fontface = "bold") +
-  labs(title = "Percentage of Pesticides by Life Stage of Exposure",
-       x = "Life Stage of Exposure",
-       y = "Percentage",
-       fontsize = 14) +
+  
+   # Add absolute count to bars
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 5) +
+  
+  # Add axis and plot labels 
+  labs( x = "Life Stage of Exposure", y = "Percentage", fontsize = 14) +
+  
+  # Customize the plot theme 
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
@@ -666,13 +675,22 @@ sex_pct <- sd %>%
   mutate(proportion = n/sum(total_sex_count$n),
          percentage = proportion*100)
 
-# Create bar plot with percentages
+# Create a bar chart with the count  on the x-axis and behaviorual class on the y-axis
 figs10 <- ggplot(sex_pct, aes(x = reorder(sex, percentage), y = percentage)) +
- geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
+  
+  # Customize the appearance of the bars 
+  geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
+  
+  # Add labels to the bars for percentage 
   geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 5, fontface = "bold") +
-  labs(title = "Percentage of Pesticides by Sex of Exposure",
-       x = "Sex of Exposure",
-       y = "Percentage") +
+  
+  # Add absolute count to bars
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 5) +
+  
+  # Add axis and plot labels 
+  labs(x = "Sex of Exposure", y = "Percentage") +
+  
+  # Customize the plot theme 
    theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
@@ -693,16 +711,34 @@ figs10
 
 ## fig5 - total number of studies investigating each broad behaviour class
 ```{r}
-fig5 <- bd %>%
+
+# Calculate total count for each category
+total_behaviour_class_count <- bd %>% 
   separate_rows(behavioural_class, sep = ",\\s*") %>%  
-  count(behavioural_class) %>%
-  ggplot(aes(x = n, y = reorder(behavioural_class, n))) +
+  count(behavioural_class)
+
+# Calculate proportion and percentage for each category
+behav_class_pct <- total_behaviour_class_count %>%
+  mutate(proportion = n/sum(total_behaviour_class_count$n),
+         percentage = proportion*100)
+
+# Create a bar chart with the count on the x-axis and Behavioural class  assay on the y-axis
+ fig5 <-  ggplot(behav_class_pct, aes(x = reorder(behavioural_class, percentage), y = percentage)) +
+    
+  # Customize the appearance of the bars 
   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
+    
+  # Add labels to the bars for percentage 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 5, fontface = "bold", color = "black") +
+    
+  # Add labels to the bars for absolute count  
   geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 5, hjust = 0.5, fontface = "bold") +
-  labs(title = "Total Number of studies investigating each Behavioural Class",
-       x = "Count",
-       y = "Behavioural Class") +
-   theme_minimal() +
+    
+  # Add axis and plot labels
+  labs(x = "Behavioural Class", y = "Percentage") +
+    
+  # Customize the plot theme 
+  theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
@@ -710,24 +746,45 @@ fig5 <- bd %>%
     axis.text.y = element_text(size = 15, hjust = 1),
     axis.title.x = element_text(size = 15),
     axis.title.y = element_text(size = 15),
-    plot.title = element_blank())
+    plot.title = element_blank()) +
+   coord_flip() + 
+   ylim(0, 50)
+  
+  
 fig5
 ```
 
 
 ## figs11 - total number of studies investigating each behavioural assay of behaviour activity
 ```{r}
-figs11 <- bd %>%
+# Calculate count for each assay in behavioral activity 
+total_behaviour_activity_count <- bd %>% 
   separate_rows(behaviour_activity, sep = ",\\s*") %>%  
-  count(behaviour_activity) %>%
-   na.omit() %>%
-  ggplot(aes(x = reorder(behaviour_activity, n), y = n)) +
+  count(behaviour_activity) %>% 
+  na.omit()
+
+# Calculate proportion and percentage for each category
+behav_activity_pct <- total_behaviour_activity_count %>%
+  mutate(proportion = n/sum(total_behaviour_activity_count$n),
+         percentage = proportion*100)
+
+# Create a bar chart with the count on the x-axis and Behavioural activity assay on the y-axis
+figs11 <-  ggplot(behav_activity_pct, aes(x = reorder(behaviour_activity, n), y = percentage)) +
+  
+  # Customize the appearance of the bars 
   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
-  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 5, hjust = 0.5, fontface = "bold") +
-  labs(title = "Behavioural assays investigating Activity",
-       x = "Activity Assay",
-       y = "Count") +
-theme_minimal() +
+  
+ # Add labels to the bars for percentage 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 5, fontface = "bold",     color = "black") +
+    
+  # Add labels to the bars for absolute count  
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 5, hjust = 0.5, fontface =   "bold") +
+  
+  # Add axis and plot labels
+  labs(x = "Activity Assay", y = "Percentage") +
+  
+  # Customize the plot theme
+  theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
@@ -736,25 +793,43 @@ theme_minimal() +
     axis.title.x = element_text(size = 15),
     axis.title.y = element_text(size = 15),
     plot.title = element_blank()) +
-        coord_flip()
+    coord_flip() +
+  ylim(0, 100)
 
 figs11
 ```
 
 ## figs12 - total number of studies investigating each behavioural assay of behaviour_aggression
 ```{r}
-figs12 <- bd %>%
+# Calculate count for each assay in aggression behavior
+total_behaviour_aggression_count <- bd %>% 
   separate_rows(behaviour_aggression, sep = ",\\s*") %>%  
-  count(behaviour_aggression) %>%
-  na.omit() %>%
-  ggplot(aes(x = reorder(behaviour_aggression, n), y = n)) +
+  count(behaviour_aggression) %>% 
+  na.omit()
+
+# Calculate proportion and percentage for each category
+behav_aggression_pct <- total_behaviour_aggression_count %>%
+  mutate(proportion = n/sum(total_behaviour_aggression_count$n),
+         percentage = proportion*100)
+
+# Create a bar chart with the count on the x-axis and aggression behavior assay on the y-axis
+figs12 <-  ggplot(behav_aggression_pct, aes(x = reorder(behaviour_aggression, n), y = percentage)) +
+  
+  # Customize the appearance of the bars 
   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
-  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 5, hjust = 0.5, fontface = "bold") +
-  labs(title = "Behavioural assays investigating Aggression",
-       x = "Aggression Assay",
-       y = "Count") +
-theme_minimal() +
-theme(panel.grid.major.y = element_blank(),
+  
+ # Add labels to the bars for percentage 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 5, fontface = "bold",     color = "black") +
+    
+  # Add labels to the bars for absolute count  
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 5, hjust = 0.5, fontface =   "bold") +
+  
+  # Add axis and plot labels
+  labs(x = "Aggression Behavior Assay", y = "Percentage") +
+  
+  # Customize the plot theme
+  theme_minimal() +
+  theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
     axis.text.x = element_text(size = 15),
@@ -762,24 +837,42 @@ theme(panel.grid.major.y = element_blank(),
     axis.title.x = element_text(size = 15),
     axis.title.y = element_text(size = 15),
     plot.title = element_blank()) +
-        coord_flip()
- 
+    coord_flip() +
+  ylim(0, 120)
 
 figs12
+
 ```
 
 ## figs13 - total number of studies investigating each behavioural assay of behavioural_sociality
 ```{r}
-figs13 <- bd %>%
+# Calculate count for each assay in social behavior
+total_behaviour_sociality_count <- bd %>% 
   separate_rows(behaviour_sociality, sep = ",\\s*") %>%  
-  count(behaviour_sociality) %>%
-  na.omit() %>%
-  ggplot(aes(x = reorder(behaviour_sociality, n), y = n)) +
+  count(behaviour_sociality) %>% 
+  na.omit()
+
+# Calculate proportion and percentage for each category
+behav_sociality_pct <- total_behaviour_sociality_count %>%
+  mutate(proportion = n/sum(total_behaviour_sociality_count$n),
+         percentage = proportion*100)
+
+# Create a bar chart with the count on the x-axis and social behavior assay on the y-axis
+figs13 <-  ggplot(behav_sociality_pct, aes(x = reorder(behaviour_sociality, n), y = percentage)) +
+  
+  # Customize the appearance of the bars 
   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
-  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 5, hjust = 0.5, fontface = "bold") +
-  labs(title = "Behavioural assays investigating Sociality",
-       x = "Sociality Assay",
-       y = "Count") +
+  
+ # Add labels to the bars for percentage 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 5, fontface = "bold",     color = "black") +
+    
+  # Add labels to the bars for absolute count  
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 5, hjust = 0.5, fontface =   "bold") +
+  
+  # Add axis and plot labels
+  labs(x = "Social Behavior Assay", y = "Percentage") +
+  
+  # Customize the plot theme
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
@@ -789,24 +882,42 @@ figs13 <- bd %>%
     axis.title.x = element_text(size = 15),
     axis.title.y = element_text(size = 15),
     plot.title = element_blank()) +
-        coord_flip()
- 
+    coord_flip() +
+    ylim(0, 100)
 
 figs13
+
 ```
 
 ## figs14 - total number of studies investigating each behavioural assay of behavioural_foraging
 ```{r}
-figs14 <- bd %>%
+# Calculate count for each assay in foraging behavior
+total_behaviour_foraging_count <- bd %>% 
   separate_rows(behaviour_foraging, sep = ",\\s*") %>%  
-  count(behaviour_foraging) %>%
-  na.omit() %>%
-  ggplot(aes(x = reorder(behaviour_foraging, n), y = n)) +
-    geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
-  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 4, hjust = 0.5,  fontface = "bold") +
-  labs(title = "Behavioural assays investigating Foraging Behaviour",
-       x = "Foraging Assay",
-       y = "Count") +
+  count(behaviour_foraging) %>% 
+  na.omit()
+
+# Calculate proportion and percentage for each category
+behav_foraging_pct <- total_behaviour_foraging_count %>%
+  mutate(proportion = n/sum(total_behaviour_foraging_count$n),
+         percentage = proportion*100)
+
+# Create a bar chart with the count on the x-axis and foraging behavior assay on the y-axis
+figs14 <-  ggplot(behav_foraging_pct, aes(x = reorder(behaviour_foraging, n), y = percentage)) +
+  
+  # Customize the appearance of the bars 
+  geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
+  
+ # Add labels to the bars for percentage 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 5, fontface = "bold",     color = "black") +
+    
+  # Add labels to the bars for absolute count  
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 5, hjust = 0.5, fontface =   "bold") +
+  
+  # Add axis and plot labels
+  labs(x = "Foraging Behavior Assay", y = "Percentage") +
+  
+  # Customize the plot theme
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
@@ -816,70 +927,114 @@ figs14 <- bd %>%
     axis.title.x = element_text(size = 15),
     axis.title.y = element_text(size = 15),
     plot.title = element_blank()) +
-        coord_flip()
+    coord_flip() +
+    ylim(0, 100)
+
 figs14
+
 ```
 
 ## figs15 - total number of studies investigating each behavioural assay of anti-predator behaviour
 ```{r}
-figs15 <- bd %>%
+# Calculate count for each assay in antipredator behavior
+total_behaviour_antipredator_count <- bd %>% 
   separate_rows(behaviour_antipredator, sep = ",\\s*") %>%  
-  count(behaviour_antipredator) %>%
-  na.omit() %>%
-  ggplot(aes(x = reorder(behaviour_antipredator, n), y = n)) +
-    geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
-  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 4, hjust = 0.5, fontface = "bold") +
-  labs(title = "Behavioural assays investigating Anti-Predator Behaviour",
-       x = "Antipredator Assay",
-       y = "Count") +
-    theme_minimal() +
-theme(panel.grid.major.y = element_blank(),
-    axis.line.y = element_blank(),
-    axis.ticks.y = element_blank(),
-    axis.text.x = element_text(size = 15),
-    axis.text.y = element_text(size = 15, hjust = 1),
-    axis.title.x = element_text(size = 15),
-    axis.title.y = element_text(size = 15),
-    plot.title = element_blank()) +
-        coord_flip()
+  count(behaviour_antipredator) %>% 
+  na.omit()
+
+# Calculate proportion and percentage for each category
+behav_antipredator_pct <- total_behaviour_antipredator_count %>%
+  mutate(proportion = n/sum(total_behaviour_antipredator_count$n),
+         percentage = proportion*100)
+
+# Create a bar chart with the count on the x-axis and antipredator behavior assay on the y-axis
+figs15 <- ggplot(behav_antipredator_pct, aes(x = reorder(behaviour_antipredator, n), y = percentage)) +
+  
+  # Customize the appearance of the bars 
+  geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
+  
+  # Add labels to the bars for percentage 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 5, fontface = "bold", color = "black") +
+    
+  # Add labels to the bars for absolute count  
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 5, hjust = 0.5, fontface = "bold") +
+  
+  # Add axis and plot labels
+  labs(x = "Antipredator Behavior Assay", y = "Percentage") +
+  
+  # Customize the plot theme
+  theme_minimal() +
+  theme(panel.grid.major.y = element_blank(),
+        axis.line.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.text.x = element_text(size = 15),
+        axis.text.y = element_text(size = 15, hjust = 1),
+        axis.title.x = element_text(size = 15),
+        axis.title.y = element_text(size = 15),
+        plot.title = element_blank()) +
+  coord_flip() +
+  ylim(0, 100)
 
 figs15
+
 ```
 
 ## figs16 - total number of studies investigating each behavioural assay of Anxiety or Boldness behaviour
 ```{r}
-figs16 <- bd %>%
+# Calculate count for each assay in anxiety behavior
+total_behaviour_anxiety_count <- bd %>% 
   separate_rows(behaviour_anxiety, sep = ",\\s*") %>%  
-  count(behaviour_anxiety) %>%
-  na.omit() %>%
-  ggplot(aes(x = reorder(behaviour_anxiety, n), y = n)) +
-    geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
+  count(behaviour_anxiety) %>% 
+  na.omit()
+
+# Calculate proportion and percentage for each category
+behav_anxiety_pct <- total_behaviour_anxiety_count %>%
+  mutate(proportion = n/sum(total_behaviour_anxiety_count$n),
+         percentage = proportion*100)
+
+# Create a bar chart with the count on the x-axis and anxiety behavior assay on the y-axis
+figs16 <- ggplot(behav_anxiety_pct, aes(x = reorder(behaviour_anxiety, n), y = percentage)) +
+  
+  # Customize the appearance of the bars 
+  geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
+  
+  # Add labels to the bars for percentage 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 5, fontface = "bold", color = "black") +
+    
+  # Add labels to the bars for absolute count  
   geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 5, hjust = 0.5, fontface = "bold") +
-  labs(title = "Behavioural assays investigating Boldness or Anxiety Behaviour",
-       x = "Boldness or Anxiety Assay",
-       y = "Count") +
-    theme_minimal() +
+  
+  # Add axis and plot labels
+  labs(x = "Anxiety Behavior Assay", y = "Percentage") +
+  
+  # Customize the plot theme
+  theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
-    axis.line.y = element_blank(),
-    axis.ticks.y = element_blank(),
-    axis.text.x = element_text(size = 15),
-    axis.text.y = element_text(size = 15, hjust = 1),
-    axis.title.x = element_text(size = 15),
-    axis.title.y = element_text(size = 15),
-    plot.title = element_blank()) +
-        coord_flip()
+        axis.line.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.text.x = element_text(size = 15),
+        axis.text.y = element_text(size = 15, hjust = 1),
+        axis.title.x = element_text(size = 15),
+        axis.title.y = element_text(size = 15),
+        plot.title = element_blank()) +
+        coord_flip() +
+        ylim(0, 80)
 
 figs16
+
 ```
 
 
 ## figs17 - heat map to show which behavours have been investigated in which pesticide target class
 ```{r}
+# Join the "bd" and "pd" data frames by "study_id"
 bd_pd <- left_join(bd, pd, by = "study_id")
 
+# Separate rows in "bd_pd" by "behavioural_class" and "pesticide_target_class" columns
 bd_pd1 <- separate_rows(bd_pd, behavioural_class, sep = ",\\s*", convert = TRUE)
 bd_pd1<- separate_rows(bd_pd1, pesticide_target_class, sep = ",\\s*", convert = TRUE)
 
+# Group by "behavioural_class" and "pesticide_target_class" and summarize count
 bd_pd_summary1 <- bd_pd1 %>%
   mutate(behavioural_class = str_trim(behavioural_class),
          pesticide_target_class = str_trim(pesticide_target_class)) %>%
@@ -887,21 +1042,29 @@ bd_pd_summary1 <- bd_pd1 %>%
   summarise(count = n()) %>%
   ungroup() 
 
-# Create a heatmap using ggplot2
+# Create a heatmap with pesticide target class on the x-axis and behavioural class on the y-axis
 figs17 <- ggplot(bd_pd_summary1, aes(x = pesticide_target_class, y = behavioural_class, fill = count)) +
+  
+  #Create and fill each tile 
   geom_tile(color = "white") +
   scale_fill_gradient(low = "#F0F4F8", high = "#446487") +
-  geom_text(aes(label = count), color = "black", size = 4) +  # Add text labels
+  
+  # Add labels to the bars for absolute count  
+  geom_text(aes(label = count), color = "black", size = 4) + 
+  
+  # Add axis and plot labels
   labs(x = "Pesticide Target Class", y = "Behavioural Class", fill = "Count") +
+  
+  # Customize the plot theme
   theme_minimal() +
- theme(panel.grid.major.y = element_blank(),
-    axis.line.y = element_blank(),
-    axis.ticks.y = element_blank(),
-    axis.text.x = element_text(size = 15),
-    axis.text.y = element_text(size = 15, hjust = 1),
-    axis.title.x = element_text(size = 15),
-    axis.title.y = element_text(size = 15),
-    plot.title = element_blank())
+  theme(panel.grid.major.y = element_blank(),
+        axis.line.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.text.x = element_text(size = 15),
+        axis.text.y = element_text(size = 15, hjust = 1),
+        axis.title.x = element_text(size = 15),
+        axis.title.y = element_text(size = 15),
+        plot.title = element_blank())
 
 
 figs17
@@ -912,7 +1075,7 @@ figs17
 bd_pd2 <- separate_rows(bd_pd, behavioural_class, sep = ",\\s*", convert = TRUE)
 bd_pd2 <- separate_rows(bd_pd2, pesticide_chemical_class, sep = ",", convert = TRUE)
 
-# Get the top 5 most numerous pesticide chemical classes
+# Get the top 3 most numerous pesticide chemical classes
 bd_pd_summary2 <- bd_pd2 %>%
   mutate(behavioural_class = str_trim(behavioural_class),
          pesticide_target_class = str_trim(pesticide_chemical_class)) %>%
@@ -925,21 +1088,29 @@ top_pesticide_classes <- bd_pd_summary2 %>%
   group_by(pesticide_chemical_class) %>%
   summarise(count = sum(count)) %>%
   ungroup() %>%
-  top_n(3, count) %>% # filtered for the top three 
+  top_n(3, count) %>% 
   pull(pesticide_chemical_class)
 
 # Subset the data to include only the top 5 classes
-bd_pd_summary_top5 <- bd_pd_summary2 %>%
+bd_pd_summary_top3 <- bd_pd_summary2 %>%
   filter(pesticide_chemical_class %in% top_pesticide_classes)
 
 # Create a heatmap using ggplot2
-figs18 <- ggplot(bd_pd_summary_top5, aes(x = pesticide_chemical_class, y = behavioural_class, fill = count)) +
+figs18 <- ggplot(bd_pd_summary_top3, aes(x = pesticide_chemical_class, y = behavioural_class, fill = count)) +
+  
+  #Create and fill each tile 
   geom_tile(color = "white") +
   scale_fill_gradient(low = "#F0F4F8", high = "#446487") +
-  geom_text(aes(label = ifelse(count > 0, count, "")), color = "black", size = 4) +  # Add text labels
+  
+  # Add labels to the bars for absolute count 
+  geom_text(aes(label = ifelse(count > 0, count, "")), color = "black", size = 4) +  
+  
+  # Add axis and plot labels
   labs(x = "Pesticide Chemical Class", y = "Behavioural Class", fill = "Count") +
+  
+  # Customize the plot theme
   theme_minimal() +
- theme(panel.grid.major.y = element_blank(),
+  theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
     axis.text.x = element_text(size = 15),
@@ -1252,8 +1423,10 @@ rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Switzerland"] <-
 #Change "Czech Republic" to "Europe"
 colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Czech Republic"] <- "Europe"
 rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Czech Republic"] <- "Europe"
+
 colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Korea"] <- "Asia"
 rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Korea"] <- "Asia"
+
 colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Turkey"] <- "Europe"
 rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Turkey"] <- "Europe"
 
