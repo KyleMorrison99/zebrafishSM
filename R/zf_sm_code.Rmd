@@ -9,7 +9,7 @@ output:
     toc_depth: 4
 editor_options: 
   chunk_output_type: console
-  
+---
 
 In this Rmarkdown we provide the following workflow:
 
@@ -25,7 +25,7 @@ In this Rmarkdown we provide the following workflow:
 
 ## Load packages
 
-```{r, results="hide"}
+```{r}
 rm(list = ls())
 knitr::opts_chunk$set(echo = TRUE)
 pacman::p_load(tidyverse,
@@ -51,7 +51,7 @@ All extracted data is stored in five separate **.csv** files representing differ
 
 Bibliographic data records are exported from Scopus (including cited references field) in .bib format and locally saved as **scopus.bib**.    
 
-```{r, results = "hide"}
+```{r}
 # Load data set containing background information on each study
 bib <- read_csv(here("data", "zf_sm_bibliometrics.csv"), skip = 0) # 83 rows 9 columns 
 
@@ -1471,5 +1471,6 @@ circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
   circos.text(mean(xlim), ylim[1] + 0.2, sector.name, facing = "clockwise", niceFacing = TRUE, adj = c(0, 1))
   circos.axis(h = "top", labels.cex = 0.5, major.tick.length = 0.2, sector.index = sector.name, track.index = 2)
 }, bg.border = NA)
+
 
 ```
