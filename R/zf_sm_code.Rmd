@@ -1,5 +1,5 @@
 ---
-title: "Mapping the Behavioural Impacts of Pesticide Exposures on Zebrafish: A Systematic Evidence Map and Bibliometric Analysis "
+Title: "Mapping the Behavioural Impacts of Pesticide Exposures on Zebrafish: A Systematic Evidence Map and Bibliometric Analysis "
 authors: "Kyle Morrison, Manuela Santana, Yefeng Yang, Malgorazata Lagisz and, Shinichi Nakagawa"
 subtitle: Supplemental file s2
 output: 
@@ -10,19 +10,6 @@ output:
 editor_options: 
   chunk_output_type: console
   
-
----
-```{r setup, include = FALSE}
-# knitr setting
-knitr::opts_chunk$set(
-  message = FALSE,
-  warning = FALSE, 
-  tidy = TRUE,
-  cache = TRUE,
-  echo=TRUE
-)
-```
-
 
 In this Rmarkdown we provide the following workflow:
 
@@ -38,7 +25,7 @@ In this Rmarkdown we provide the following workflow:
 
 ## Load packages
 
-```{r setup, results="hide"}
+```{r, results="hide"}
 rm(list = ls())
 knitr::opts_chunk$set(echo = TRUE)
 pacman::p_load(tidyverse,
@@ -64,7 +51,7 @@ All extracted data is stored in five separate **.csv** files representing differ
 
 Bibliographic data records are exported from Scopus (including cited references field) in .bib format and locally saved as **scopus.bib**.    
 
-```{r}
+```{r, results = "hide"}
 # Load data set containing background information on each study
 bib <- read_csv(here("data", "zf_sm_bibliometrics.csv"), skip = 0) # 83 rows 9 columns 
 
@@ -86,7 +73,7 @@ bib_sco <- convert2df(here("data","scopus.bib"), dbsource = "scopus", format = "
 
 # Objective 0: General literature characteristics
 ## fig 2- study time time trends
-```{r}
+```{r, fig.width=15, fig.height=9}
 
 # Count the number of articles by year
 fig2 <- bib %>%
@@ -1027,7 +1014,7 @@ figs16
 
 ## figs17 - heat map to show which behavours have been investigated in which pesticide target class
 ```{r}
-# Join the "bd" and "pd" data frames by "study_id"
+# Join the behaviour details and pesticide details by "study_id"
 bd_pd <- left_join(bd, pd, by = "study_id")
 
 # Separate rows in "bd_pd" by "behavioural_class" and "pesticide_target_class" columns
@@ -1072,6 +1059,7 @@ figs17
 
 ## figs18 - heat map to show which behavours have been investigated in which pesticide chemical class
 ```{r}
+# Separate rows by behavioural_class and pesticide_chemical_class columns
 bd_pd2 <- separate_rows(bd_pd, behavioural_class, sep = ",\\s*", convert = TRUE)
 bd_pd2 <- separate_rows(bd_pd2, pesticide_chemical_class, sep = ",", convert = TRUE)
 
@@ -1091,11 +1079,11 @@ top_pesticide_classes <- bd_pd_summary2 %>%
   top_n(3, count) %>% 
   pull(pesticide_chemical_class)
 
-# Subset the data to include only the top 5 classes
+# Subset the data to include only the top 3 classes
 bd_pd_summary_top3 <- bd_pd_summary2 %>%
   filter(pesticide_chemical_class %in% top_pesticide_classes)
 
-# Create a heatmap using ggplot2
+# Create a heatmap with pesticide chemical class on the x-axis and behavioral class on the y-axis
 figs18 <- ggplot(bd_pd_summary_top3, aes(x = pesticide_chemical_class, y = behavioural_class, fill = count)) +
   
   #Create and fill each tile 
@@ -1125,11 +1113,14 @@ figs18
 ## figs19 - heat map to show which life stages of exposure have been exposed to each pesticide chemical class
 ```{r}
 
+# Join the stydt details with pesticide details by "study_id". 
 sd_pd <- left_join(sd, pd, by = "study_id")
 
+# Separate rows in "sd_pd" by "life_stage_exposure" and "pesticide_chemical_class" columns
 sd_pd1 <- separate_rows(sd_pd, life_stage_exposure, sep = ",", convert = TRUE)
 sd_pd1 <- separate_rows(sd_pd1, pesticide_chemical_class, sep = ",", convert = TRUE)
 
+# Group by "life_stage_exposure" and "pesticide_chemical_class" and summarize count
 sd_pd_summary1 <- sd_pd1 %>%
   mutate(life_stage_exposure = str_trim(life_stage_exposure),
          pesticide_chemical_class = str_trim(pesticide_chemical_class)) %>%
@@ -1148,11 +1139,20 @@ top_pesticide_classes <- sd_pd_summary1 %>%
 sd_pd_summary1_top5 <- sd_pd_summary1 %>%
   filter(pesticide_chemical_class %in% top_pesticide_classes)
 
+# Create a heatmap with pesticide target class on the x-axis and behavioural class on the y-axis
 figs19 <- ggplot(sd_pd_summary1_top5, aes(x = pesticide_chemical_class, y = life_stage_exposure, fill = count)) +
+  
+  #Create and fill each tile
   geom_tile(color = "white") +
   scale_fill_gradient(low = "#F0F4F8", high = "#446487") +
+  
+  # Add labels to the bars for absolute count 
   geom_text(aes(label = ifelse(count > 0, count, "")), color = "black", size = 4) +
+  
+  # Add axis and plot labels
   labs(x = "Pesticide Chemical Class", y = "Life Stage Exposure", fill = "Count") +
+  
+  # Customize the plot theme
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
@@ -1168,9 +1168,12 @@ figs19
 
 ## figs20 - heat map to show which life stages of exposure have been exposed to each target chemical class
 ```{r}
+
+# Separate rows by life_stage_exposure and pesticide_target_class columns
 sd_pd2 <- separate_rows(sd_pd, life_stage_exposure, sep = ",", convert = TRUE)
 sd_pd2 <- separate_rows(sd_pd2, pesticide_target_class, sep = ",", convert = TRUE)
 
+# Group by "life_stage_exposure" and "pesticide_target_class" and summarize count
 sd_pd_summary2 <- sd_pd2 %>%
   mutate(life_stage_exposure = str_trim(life_stage_exposure),
          pesticide_target_class = str_trim(pesticide_target_class)) %>%
@@ -1178,24 +1181,22 @@ sd_pd_summary2 <- sd_pd2 %>%
   summarise(count = n()) %>%
   ungroup()
 
-top_pesticide_classes <- sd_pd_summary2 %>%
-  filter(!is.na(pesticide_target_class)) %>%
-  group_by(pesticide_target_class) %>%
-  summarise(count = sum(count)) %>%
-  ungroup() %>%
-  top_n(5, count) %>%
-  pull(pesticide_target_class)
-
-sd_pd_summary2_top5 <- sd_pd_summary2 %>%
-  filter(pesticide_target_class %in% top_pesticide_classes)
-
-figs20 <- ggplot(sd_pd_summary2_top5, aes(x = pesticide_target_class, y = life_stage_exposure, fill = count)) +
+# Create a heatmap with pesticide target class on the x-axis and life stage exposure on the y-axis
+figs20 <- ggplot(sd_pd_summary2, aes(x = pesticide_target_class, y = life_stage_exposure, fill = count)) +
+  
+  #Create and fill each tile
   geom_tile(color = "white") +
   scale_fill_gradient(low = "#F0F4F8", high = "#446487") +
+  
+  # Add labels to the bars for absolute count 
   geom_text(aes(label = ifelse(count > 0, count, "")), color = "black", size = 4) +
+  
+  # Add axis and plot labels
   labs(x = "Pesticide Target Class", y = "Life Stage Exposure", fill = "Count") +
+  
+  # Customize the plot theme
   theme_minimal() +
-theme(panel.grid.major.y = element_blank(),
+  theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
     axis.text.x = element_text(size = 15),
@@ -1212,63 +1213,85 @@ figs20
 
 ## figs24 - general bibliometric summaries
 ```{r}
+# Perform bibliometric analysis on dataset "bib_sco"
 figs24 <- biblioAnalysis(bib_sco)
+
+# Display the plot of the analysis results
 plot(figs24)
+
 ```
 
 ## figs27 - co-occurance matrix
 ```{r}
+# Generate a bibliometric network based on co-occurrences of keywords in the "bib_sco" dataset
 NetMatrix_keywords <- biblioNetwork(bib_sco, analysis = "co-occurrences", network = "keywords", sep = ";")
+
+# Plot the network using the "networkPlot" function, with various formatting options
 figs25 <- networkPlot(NetMatrix_keywords, normalize="association", n = 10, 
                      Title = "Keyword Co-occurrences", type = "fruchterman", 
                      size.cex = TRUE, size = 10, remove.multiple = F, 
                      edgesize = 4, labelsize = 3, label.cex = TRUE, 
-                     edges.min = 2, label.n = 9, alpha = 0.3) 
+                     edges.min = 2, label.n = 10, alpha = 0.3)
+ 
 ```
 
 ## fig s26 - thematic map based on keywords
 ```{r}
+# Set plot parameters to display a single plot with narrow margins
 par(mfrow=c(1,1), mar=c(0,2,0,2))
+
+# Generate a thematic map of the "bib_sco" dataset, using the "ID" field as the basis for the map
 figs26 <- thematicMap(bib_sco, field = "ID", n = 1000, minfreq = 5, stemming = FALSE, size = 0.5, n.labels = 1, repel = TRUE)
+
+# Display the resulting map using the "plot" function
 plot(figs26$map)
+
 
 ```
 
 ## fig5e - country publications map
 ```{r}
 
+# Extract country information from the "AU1_CO" and "AU_CO" fields of the "bib_sco" dataset
 bibmap <- metaTagExtraction(bib_sco, Field = "AU1_CO", sep = ";") 
 bibmap <- metaTagExtraction(bibmap, Field = "AU_CO", sep = ";") 
-#save counts in a data frame
-bibmap %>% group_by(AU1_CO) %>% count() %>% filter(!is.na(AU1_CO)) -> firstcountrycounts
-#load map data
+
+# Create a data frame with counts of articles from each country
+bibmap %>% 
+  group_by(AU1_CO) %>% 
+  count() %>% 
+  filter(!is.na(AU1_CO)) -> firstcountrycounts
+
+# Load world map data and remove countries with longitude >180 to make an equal projection-like map
 world_map <- map_data("world") %>% 
-  filter(! long > 180) #remove countries with longitude >180 to make equal projection-like map without artifacts
-#table(world_map$region) #note that United Kingdom is UK here
+  filter(! long > 180)
+
 # Format country names to match regions on the world map
 firstcountrycounts$region <- str_to_title(firstcountrycounts$AU1_CO)
-firstcountrycounts$region[firstcountrycounts$region == "Usa"] <- "USA" #Fix "Usa" to "USA" :
+firstcountrycounts$region[firstcountrycounts$region == "Usa"] <- "USA" 
 firstcountrycounts$region[firstcountrycounts$region == "Korea"] <- "South Korea"
 
+# Join count data with map data and set missing counts to zero
+emptymap <- tibble(region = unique(world_map$region), n = rep(0,length(unique(world_map$region))))
+fullmap <- left_join(emptymap, firstcountrycounts, by = "region")
+fullmap$n <- fullmap$n.x + fullmap$n.y
+fullmap$n[is.na(fullmap$n)] <- 0
 
-#(firstcountrycounts$region) %in% world_map$region #check matching
-## colour all regions on the map:
-emptymap <- tibble(region = unique(world_map$region), n = rep(0,length(unique(world_map$region)))) #create table with all counts as 0
-fullmap <- left_join(emptymap, firstcountrycounts, by = "region") #join with actual counts table
-fullmap$n <- fullmap$n.x + fullmap$n.y # make new column for fixed counts
-fullmap$n[is.na(fullmap$n)] <- 0 #change NA to 0 for regions with no counts
+# Create a plot of the world map with regions colored based on article counts
 figs27 <- fullmap %>% 
   ggplot(aes(fill = n, map_id = region)) +
   geom_map(map = world_map) +
   expand_limits(x = world_map$long, y = world_map$lat) +
-  coord_map("moll") +
+  coord_map("moll") + # Mollweide projection
   theme_map(line_size = 0.5) + 
   theme(legend.position="right") +
-  scale_fill_gradient(low = "#7BCCC4", high = "#084081",
+  scale_fill_gradient(low = "#7BCCC4", high = "#084081", # set color gradient
                     name = "Score", na.value = "gray50",
- limits = c(0.1, 25),
-      guide = guide_colorbar(direction = "vertical.")) +
-  guides(fill = guide_colourbar(barwidth = unit(15, units = "mm"), barheight = unit(20, units = "mm")))
+                    limits = c(0.1, 25),
+                    guide = guide_colorbar(direction = "vertical.")) +
+                    guides(fill = guide_colourbar(barwidth = unit(15, units = "mm"), 
+                    barheight = unit(20, units = "mm"))) # set legend size
+
 figs27
 ```
 
@@ -1298,32 +1321,31 @@ rownames(NetMatrix_country)[rownames(NetMatrix_country) == "Usa"] <- "USA"
 colnames(NetMatrix_country)[colnames(NetMatrix_country) == "United Kingdom"] <- "UK"
 rownames(NetMatrix_country)[rownames(NetMatrix_country) == "United Kingdom"] <- "UK"
 
-# Define colors for each country
 my.cols2 <- c(
-  USA = "#377eb8",
-  China = "#e41a1c",
-  Brazil = "#4daf4a",
-  Switzerland = "#984ea3",
-  Norway = "#ff7f00",
-  Mexico = "#a65628",
-  Ecuador = "#f781bf",
-  UK = "#ffff33",
+  USA = "#e41a1c",
+  Canada = "#377eb8",
+  Mexico = "#4daf4a",
+  Brazil = "#984ea3",
+  Ecuador = "#ff7f00",
+  Chile = "#ffff33",
   Philippines = "#a65628",
-  Netherlands = "#377eb8",
-  Italy = "#e41a1c",
-  Sweden = "#4daf4a",
-  Portugal = "#984ea3", 
-  Korea = "#f781bf",
-  France = "#999999",
-  Chile = "#ff7f00",
-  Spain = "#ffff33", 
-  Cananda = "#a6cee3",
-  India = "#1f78b4",
-  Germany = "#b2df8a",
-  Turkey = "#33a02c",
-  Romania = "#fb9a99"
+  China = "#f781bf",
+  Korea = "#e41a1c",
+  India = "#984ea3",
+  Turkey = "#ff7f00",
+  Romania = "#4daf4a",
+  Switzerland = "#377eb8",
+  Norway = "#1b9e77",
+  Netherlands = "#d95f02",
+  Germany = "#7570b3",
+  France = "#e7298a",
+  Italy = "#66a61e",
+  Portugal = "#e6ab02",
+  Spain = "#a6761d",
+  Sweden = "#666666"
 )
 
+ 
 
 # Create a chord diagram of the network matrix
 figs28 <- chordDiagram(NetMatrix_country, annotationTrack = "grid", preAllocateTracks = 1, grid.col = my.cols2)
@@ -1341,7 +1363,7 @@ circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
 
 ## fig6a collaboration matrix with self citation removed
 ```{r}
-
+# Making diagnol zero to remove self citations 
 diag(NetMatrix_country) <- 0
 
 # Create a chord diagram of the network matrix
@@ -1450,25 +1472,4 @@ circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
   circos.axis(h = "top", labels.cex = 0.5, major.tick.length = 0.2, sector.index = sector.name, track.index = 2)
 }, bg.border = NA)
 
-```
-
-
-now done on vosviewer 
-```{r most cited articles and authors}
-
-CR <- citations(bib_sco, field = "article", sep = ";") #list of most cited articles
- cbind(CR$Cited[1:10]) #ten most cited articles
- 
-CR <- citations(bib_sco, field = "author", sep = ";")
-cbind(CR$Cited[1:10]) #ten most cited authors
-``` 
-
-
-
-this is now being done on vosviewer 
-```{r bibliometric coupling network}
-NetMatrix_coupling <- biblioNetwork(bib_sco, analysis = "coupling", network = "references", sep = "; ")
-NetMatrix_coupling_plot <- networkPlot(NetMatrix_coupling, n = 20, 
-                                       Title = "Paper co-citation", type = "fruchterman", size=T, 
-                                       remove.multiple=FALSE, labelsize=0.8,edgesize = 5)
 ```
