@@ -180,7 +180,7 @@ fig3b <- ggplot(target_class_pct, aes(reorder(pesticide_target_class, n), y = pe
   geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 5) +
   
   # Add labels to the bars for percentage 
- geom_text(data = target_class_pct, aes(label = paste0(round(percentage), "%")), 
+ geom_text(data = target_class_pct, aes(label = paste0(round(percentage, 1), "%")), 
             position = position_dodge(width = 0.9), hjust = -0.2, size = 5, color = "black", fontface = "bold") +
     
   # Customize the appearance of the plot
@@ -195,10 +195,11 @@ fig3b <- ggplot(target_class_pct, aes(reorder(pesticide_target_class, n), y = pe
     axis.title.y = element_text(size = 15),
     plot.title = element_blank()) +
     coord_flip() +
-    ylim(0,100)
+    ylim(0, 100)
+
 
  fig3b
-#ggsave(here("figures", "fig3b_pesticide_target_count.pdf"), width = 8, height = 10, units = "cm", scale = 2, dpi = 300, device = cairo_pdf)
+# ggsave(here("figures", "fig3b_pesticide_target_count_test.png"), width = 16, height = 10, units = "cm", scale = 2, dpi = 300)
 ```
 
 ## fig3c - total for chemical class 
@@ -651,7 +652,51 @@ figs9 <- ggplot(life_stage_pct, aes(x = reorder(life_stage_exposure, percentage)
 figs9
 ```
 
-## figs10  - total sexes exposed completed as a percentage
+## figs10 - total lifestage of behaviour completed as a percentage
+```{r}
+# Calculate total count for each category
+total_count_lsb <- sd %>% count(life_stage_behaviour)
+
+# Calculate proportion and percentage for each category
+life_stage_pct <- sd %>%
+  separate_rows(life_stage_behaviour, sep = ",\\s*") %>% 
+  count(life_stage_behaviour) %>%
+  mutate( proportion = n / sum(total_count_lsb$n),
+    percentage = proportion * 100)
+
+# Create a bar chart with the count on the x-axis and life stage of behavior on the y-axis
+figs10 <- ggplot(life_stage_pct, aes(x = reorder(life_stage_behaviour, percentage), y = percentage)) +
+  
+  # Customize the appearance of the bars 
+  geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8,position = position_dodge(0.9)) +
+  
+  # Add labels to the bars for percentage 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 5, fontface = "bold") +
+  
+  # Add absolute count to bars
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white",fontface = "bold", size = 5) +
+  
+  # Add axis and plot labels 
+  labs(x = "Life Stage of Behavior", y = "Percentage", fontsize = 14) +
+  
+  # Customize the plot theme 
+  theme_minimal() +
+  theme(panel.grid.major.y = element_blank(),
+    axis.line.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.x = element_text(size = 15),
+    axis.text.y = element_text(size = 15, hjust = 1),
+    axis.title.x = element_text(size = 15),
+    axis.title.y = element_text(size = 15),
+    plot.title = element_blank()) +
+  coord_flip() + 
+  ylim(0, 100)
+
+figs10
+
+```
+
+## figs11  - total sexes exposed completed as a percentage
 ```{r}
 # Calculate total count for each category
 total_sex_count <- sd %>% count(sex)
@@ -663,7 +708,7 @@ sex_pct <- sd %>%
          percentage = proportion*100)
 
 # Create a bar chart with the count  on the x-axis and behaviorual class on the y-axis
-figs10 <- ggplot(sex_pct, aes(x = reorder(sex, percentage), y = percentage)) +
+figs11 <- ggplot(sex_pct, aes(x = reorder(sex, percentage), y = percentage)) +
   
   # Customize the appearance of the bars 
   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
@@ -690,7 +735,7 @@ figs10 <- ggplot(sex_pct, aes(x = reorder(sex, percentage), y = percentage)) +
   coord_flip() + 
   ylim(0, 100)
 
-figs10
+figs11
 ```
 
 
@@ -742,7 +787,7 @@ fig5
 ```
 
 
-## figs11 - total number of studies investigating each behavioural assay of behaviour activity
+## figs12 - total number of studies investigating each behavioural assay of behaviour activity
 ```{r}
 # Calculate count for each assay in behavioral activity 
 total_behaviour_activity_count <- bd %>% 
@@ -756,7 +801,7 @@ behav_activity_pct <- total_behaviour_activity_count %>%
          percentage = proportion*100)
 
 # Create a bar chart with the count on the x-axis and Behavioural activity assay on the y-axis
-figs11 <-  ggplot(behav_activity_pct, aes(x = reorder(behaviour_activity, n), y = percentage)) +
+figs12 <-  ggplot(behav_activity_pct, aes(x = reorder(behaviour_activity, n), y = percentage)) +
   
   # Customize the appearance of the bars 
   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
@@ -783,10 +828,10 @@ figs11 <-  ggplot(behav_activity_pct, aes(x = reorder(behaviour_activity, n), y 
     coord_flip() +
   ylim(0, 100)
 
-figs11
+figs12
 ```
 
-## figs12 - total number of studies investigating each behavioural assay of behaviour_aggression
+## figs13 - total number of studies investigating each behavioural assay of behaviour_aggression
 ```{r}
 # Calculate count for each assay in aggression behavior
 total_behaviour_aggression_count <- bd %>% 
@@ -800,7 +845,7 @@ behav_aggression_pct <- total_behaviour_aggression_count %>%
          percentage = proportion*100)
 
 # Create a bar chart with the count on the x-axis and aggression behavior assay on the y-axis
-figs12 <-  ggplot(behav_aggression_pct, aes(x = reorder(behaviour_aggression, n), y = percentage)) +
+figs13 <-  ggplot(behav_aggression_pct, aes(x = reorder(behaviour_aggression, n), y = percentage)) +
   
   # Customize the appearance of the bars 
   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
@@ -827,11 +872,11 @@ figs12 <-  ggplot(behav_aggression_pct, aes(x = reorder(behaviour_aggression, n)
     coord_flip() +
   ylim(0, 120)
 
-figs12
+figs13
 
 ```
 
-## figs13 - total number of studies investigating each behavioural assay of behavioural_sociality
+## figs14 - total number of studies investigating each behavioural assay of behavioural_sociality
 ```{r}
 # Calculate count for each assay in social behavior
 total_behaviour_sociality_count <- bd %>% 
@@ -845,7 +890,7 @@ behav_sociality_pct <- total_behaviour_sociality_count %>%
          percentage = proportion*100)
 
 # Create a bar chart with the count on the x-axis and social behavior assay on the y-axis
-figs13 <-  ggplot(behav_sociality_pct, aes(x = reorder(behaviour_sociality, n), y = percentage)) +
+figs14 <-  ggplot(behav_sociality_pct, aes(x = reorder(behaviour_sociality, n), y = percentage)) +
   
   # Customize the appearance of the bars 
   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
@@ -872,11 +917,11 @@ figs13 <-  ggplot(behav_sociality_pct, aes(x = reorder(behaviour_sociality, n), 
     coord_flip() +
     ylim(0, 100)
 
-figs13
+figs14
 
 ```
 
-## figs14 - total number of studies investigating each behavioural assay of behavioural_foraging
+## figs15 - total number of studies investigating each behavioural assay of behavioural_foraging
 ```{r}
 # Calculate count for each assay in foraging behavior
 total_behaviour_foraging_count <- bd %>% 
@@ -890,7 +935,7 @@ behav_foraging_pct <- total_behaviour_foraging_count %>%
          percentage = proportion*100)
 
 # Create a bar chart with the count on the x-axis and foraging behavior assay on the y-axis
-figs14 <-  ggplot(behav_foraging_pct, aes(x = reorder(behaviour_foraging, n), y = percentage)) +
+figs15 <-  ggplot(behav_foraging_pct, aes(x = reorder(behaviour_foraging, n), y = percentage)) +
   
   # Customize the appearance of the bars 
   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
@@ -917,11 +962,11 @@ figs14 <-  ggplot(behav_foraging_pct, aes(x = reorder(behaviour_foraging, n), y 
     coord_flip() +
     ylim(0, 100)
 
-figs14
+figs15
 
 ```
 
-## figs15 - total number of studies investigating each behavioural assay of anti-predator behaviour
+## figs16 - total number of studies investigating each behavioural assay of anti-predator behaviour
 ```{r}
 # Calculate count for each assay in antipredator behavior
 total_behaviour_antipredator_count <- bd %>% 
@@ -935,7 +980,7 @@ behav_antipredator_pct <- total_behaviour_antipredator_count %>%
          percentage = proportion*100)
 
 # Create a bar chart with the count on the x-axis and antipredator behavior assay on the y-axis
-figs15 <- ggplot(behav_antipredator_pct, aes(x = reorder(behaviour_antipredator, n), y = percentage)) +
+figs16 <- ggplot(behav_antipredator_pct, aes(x = reorder(behaviour_antipredator, n), y = percentage)) +
   
   # Customize the appearance of the bars 
   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
@@ -962,11 +1007,11 @@ figs15 <- ggplot(behav_antipredator_pct, aes(x = reorder(behaviour_antipredator,
   coord_flip() +
   ylim(0, 100)
 
-figs15
+figs16
 
 ```
 
-## figs16 - total number of studies investigating each behavioural assay of Anxiety or Boldness behaviour
+## figs17 - total number of studies investigating each behavioural assay of Anxiety or Boldness behaviour
 ```{r}
 # Calculate count for each assay in anxiety behavior
 total_behaviour_anxiety_count <- bd %>% 
@@ -980,7 +1025,7 @@ behav_anxiety_pct <- total_behaviour_anxiety_count %>%
          percentage = proportion*100)
 
 # Create a bar chart with the count on the x-axis and anxiety behavior assay on the y-axis
-figs16 <- ggplot(behav_anxiety_pct, aes(x = reorder(behaviour_anxiety, n), y = percentage)) +
+figs17 <- ggplot(behav_anxiety_pct, aes(x = reorder(behaviour_anxiety, n), y = percentage)) +
   
   # Customize the appearance of the bars 
   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
@@ -1007,12 +1052,12 @@ figs16 <- ggplot(behav_anxiety_pct, aes(x = reorder(behaviour_anxiety, n), y = p
         coord_flip() +
         ylim(0, 80)
 
-figs16
+figs17
 
 ```
 
 
-## figs17 - heat map to show which behavours have been investigated in which pesticide target class
+## figs18 - heat map to show which behavours have been investigated in which pesticide target class
 ```{r}
 # Join the behaviour details and pesticide details by "study_id"
 bd_pd <- left_join(bd, pd, by = "study_id")
@@ -1030,7 +1075,7 @@ bd_pd_summary1 <- bd_pd1 %>%
   ungroup() 
 
 # Create a heatmap with pesticide target class on the x-axis and behavioural class on the y-axis
-figs17 <- ggplot(bd_pd_summary1, aes(x = pesticide_target_class, y = behavioural_class, fill = count)) +
+figs18 <- ggplot(bd_pd_summary1, aes(x = pesticide_target_class, y = behavioural_class, fill = count)) +
   
   #Create and fill each tile 
   geom_tile(color = "white") +
@@ -1054,10 +1099,10 @@ figs17 <- ggplot(bd_pd_summary1, aes(x = pesticide_target_class, y = behavioural
         plot.title = element_blank())
 
 
-figs17
+figs18
 ```
 
-## figs18 - heat map to show which behavours have been investigated in which pesticide chemical class
+## figs19 - heat map to show which behavours have been investigated in which pesticide chemical class
 ```{r}
 # Separate rows by behavioural_class and pesticide_chemical_class columns
 bd_pd2 <- separate_rows(bd_pd, behavioural_class, sep = ",\\s*", convert = TRUE)
@@ -1084,7 +1129,7 @@ bd_pd_summary_top3 <- bd_pd_summary2 %>%
   filter(pesticide_chemical_class %in% top_pesticide_classes)
 
 # Create a heatmap with pesticide chemical class on the x-axis and behavioral class on the y-axis
-figs18 <- ggplot(bd_pd_summary_top3, aes(x = pesticide_chemical_class, y = behavioural_class, fill = count)) +
+figs19 <- ggplot(bd_pd_summary_top3, aes(x = pesticide_chemical_class, y = behavioural_class, fill = count)) +
   
   #Create and fill each tile 
   geom_tile(color = "white") +
@@ -1106,11 +1151,11 @@ figs18 <- ggplot(bd_pd_summary_top3, aes(x = pesticide_chemical_class, y = behav
     axis.title.x = element_text(size = 15),
     axis.title.y = element_text(size = 15),
     plot.title = element_blank())
-figs18
+figs19
 
 ```
 
-## figs19 - heat map to show which life stages of exposure have been exposed to each pesticide chemical class
+## figs20 - heat map to show which life stages of exposure have been exposed to each pesticide chemical class
 ```{r}
 
 # Join the stydt details with pesticide details by "study_id". 
@@ -1140,7 +1185,7 @@ sd_pd_summary1_top5 <- sd_pd_summary1 %>%
   filter(pesticide_chemical_class %in% top_pesticide_classes)
 
 # Create a heatmap with pesticide target class on the x-axis and behavioural class on the y-axis
-figs19 <- ggplot(sd_pd_summary1_top5, aes(x = pesticide_chemical_class, y = life_stage_exposure, fill = count)) +
+figs20 <- ggplot(sd_pd_summary1_top5, aes(x = pesticide_chemical_class, y = life_stage_exposure, fill = count)) +
   
   #Create and fill each tile
   geom_tile(color = "white") +
@@ -1163,10 +1208,10 @@ figs19 <- ggplot(sd_pd_summary1_top5, aes(x = pesticide_chemical_class, y = life
     axis.title.y = element_text(size = 15),
     plot.title = element_blank())
 
-figs19
+figs20
 ```
 
-## figs20 - heat map to show which life stages of exposure have been exposed to each target chemical class
+## figs21 - heat map to show which life stages of exposure have been exposed to each target chemical class
 ```{r}
 
 # Separate rows by life_stage_exposure and pesticide_target_class columns
@@ -1182,7 +1227,7 @@ sd_pd_summary2 <- sd_pd2 %>%
   ungroup()
 
 # Create a heatmap with pesticide target class on the x-axis and life stage exposure on the y-axis
-figs20 <- ggplot(sd_pd_summary2, aes(x = pesticide_target_class, y = life_stage_exposure, fill = count)) +
+figs21 <- ggplot(sd_pd_summary2, aes(x = pesticide_target_class, y = life_stage_exposure, fill = count)) +
   
   #Create and fill each tile
   geom_tile(color = "white") +
@@ -1204,7 +1249,7 @@ figs20 <- ggplot(sd_pd_summary2, aes(x = pesticide_target_class, y = life_stage_
     axis.title.x = element_text(size = 15),
     axis.title.y = element_text(size = 15),
     plot.title = element_blank())
-figs20                                     
+figs21                                     
 
 ```
 
@@ -1284,13 +1329,13 @@ figs27 <- fullmap %>%
   expand_limits(x = world_map$long, y = world_map$lat) +
   coord_map("moll") + # Mollweide projection
   theme_map(line_size = 0.5) + 
-  theme(legend.position="right") +
-  scale_fill_gradient(low = "#7BCCC4", high = "#084081", # set color gradient
+  theme(legend.position="none") +
+  scale_fill_gradient(low = "#5FAD78", high = "#975FAD", # set color gradient
                     name = "Score", na.value = "gray50",
-                    limits = c(0.1, 25),
+                    limits = c(0.1, 24),
                     guide = guide_colorbar(direction = "vertical.")) +
                     guides(fill = guide_colourbar(barwidth = unit(15, units = "mm"), 
-                    barheight = unit(20, units = "mm"))) # set legend size
+                    barheight = unit(50, units = "mm"))) # set legend size
 
 figs27
 ```
