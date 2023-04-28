@@ -1294,7 +1294,7 @@ plot(figs26$map)
 
 ```
 
-## fig5e - country publications map
+## fig6 - country publications map
 ```{r}
 
 # Extract country information from the "AU1_CO" and "AU_CO" fields of the "bib_sco" dataset
@@ -1329,15 +1329,18 @@ figs27 <- fullmap %>%
   expand_limits(x = world_map$long, y = world_map$lat) +
   coord_map("moll") + # Mollweide projection
   theme_map(line_size = 0.5) + 
-  theme(legend.position="none") +
-  scale_fill_gradient(low = "#5FAD78", high = "#975FAD", # set color gradient
-                    name = "Score", na.value = "gray50",
+  scale_fill_gradient(low = "#ECF207", high = "#C307F2", # set color gradient
+                    name = "Score", na.value = "gray",
                     limits = c(0.1, 24),
-                    guide = guide_colorbar(direction = "vertical.")) +
-                    guides(fill = guide_colourbar(barwidth = unit(15, units = "mm"), 
-                    barheight = unit(50, units = "mm"))) # set legend size
+                    guide = guide_colorbar(direction = "vertical.",
+                                           barwidth = unit(15, units = "mm"), 
+                                           barheight = unit(50, units = "mm"))) +
+  guides(fill = guide_colourbar()) +
+  theme(panel.background = element_rect(fill = "transparent", colour = NA),
+        plot.background = element_rect(fill = "transparent", colour = NA))
+  
 
-figs27
+ ggsave(here("figures", "world_map.png"), width = 16, height = 10, units = "cm", scale = 2, dpi = 300)
 ```
 
 ## figs28 - country collaboration network circle plot
