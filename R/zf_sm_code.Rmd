@@ -15,9 +15,9 @@ In this Rmarkdown we provide the following workflow:
 
 - Objective 1.	To investigate the types of pesticides and pesticide classes, both in terms of chemical structure and target organism, that have been used in studies examining the effects of pesticide exposure on non-larval zebrafish behaviour.
 
-- Objective 2. To investigate pesticide exposure study designs such as concentration and duration of exposure, life stages of zebrafish used in each study and the sample sizes used. 
+- Objective 2. 	To investigate the study designs employed to assess the effects of pesticide exposure on the behaviour of non-larval zebrafish.  
 
-- Objective 3.	To identify the specific behaviours that have been investigated in pesticide exposure experiments that use zebrafish as a model.
+- Objective 3.  To identify the specific behaviours that have been investigated in pesticide exposure studies that use non-larval zebrafish as a model.
 
 - Objective 4.	To assess the research outputs of different countries and investigate the level of collaboration between authors amongst different countries. 
 
@@ -94,15 +94,15 @@ fig2 <- bib %>%
   theme(legend.position = "none",
         axis.title.x = element_text(size = 15, face = "bold"),
         axis.title.y = element_text(size = 15, face = "bold"),
-        axis.text.x = element_text(angle = 45, hjust = 1, size = 13),
-        axis.text.y = element_text(size = 10),
+        axis.text.x = element_text(angle = 45, hjust = 1, size = 15),
+        axis.text.y = element_text(size = 15),
         panel.grid.major.y = element_line(color = "gray"),
         panel.grid.minor.y = element_blank(),
         plot.title = element_text(size = 16, face = "bold"))
  
 
 fig2
-#ggsave(here("figures", "fig2_time_trends.pdf"), width = 10, height = 8, units = "cm", scale = 2, dpi = 300, device = cairo_pdf)
+# ggsave(here("figures", "fig2_time_trends.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 300, device = cairo_pdf)
 ```
 
 
@@ -115,7 +115,7 @@ total_pesticide_count <- pd %>%
   separate_rows(pesticide_investigated, sep = ", ") %>%
   count(pesticide_investigated) %>%
   mutate(pesticide_investigated = ifelse(n == 1, "other", as.character(pesticide_investigated))) %>%
-  # "other" includes tribotyltin, terbutylazine, sodium fluride, pyrimethonil, pyraclostrobin, propiconazole, prochloraz, parathion,       paclobutazol, monocotophos, methylbenzoate, methylbenzoate, methomyl, mecroprop, linuron, endosulfan, diuron, difenoconazole, dicamba,   cyprodinil, chlorothalonil, carbofuran, carbaryl, broflanilide and boscalid. 
+  # "other" includes tribotyltin, terbutylazine, sodium fluride, pyrimethonil, pyraclostrobin, propiconazole, prochloraz, parathion, paclobutazol, monocotophos, methylbenzoate, methylbenzoate, methomyl, mecroprop, linuron, endosulfan, diuron, difenoconazole, dicamba,   cyprodinil, chlorothalonil, carbofuran, carbaryl, broflanilide and boscalid. 
   group_by(pesticide_investigated) %>%
   summarise(n = sum(n))
 
@@ -135,7 +135,7 @@ fig3a <-  ggplot(pesticide_pct, aes(x = reorder(pesticide_investigated, n), y = 
   
 
   # Add labels to the bars for percentage 
- geom_text(data = pesticide_pct, aes(label = paste0(round(percentage), "%")), 
+ geom_text(data = pesticide_pct, aes(label = paste0(round(percentage,1), "%")), 
             position = position_dodge(width = 0.9), hjust = -0.2, size = 5, color = "black", fontface = "bold") +
   
   # Customize the appearance of the plot
@@ -146,16 +146,16 @@ fig3a <-  ggplot(pesticide_pct, aes(x = reorder(pesticide_investigated, n), y = 
         axis.ticks.y = element_blank(),
         axis.title.x = element_text(size = 15),
         axis.title.y = element_text(size = 15),
-        axis.text.x = element_text(size = 15, hjust = 0),
-        axis.text.y = element_text(size = 15, hjust = 1),
+        axis.text.x = element_text(size = 15),
+        axis.text.y = element_text(size = 15),
         axis.title = element_text(size = 15),
         plot.title = element_blank()) +
         coord_flip() +
-        ylim(0,50)
+        ylim(0,30)
 
 
  fig3a
-#ggsave(here("figures", "fig3a_pesticide_count.pdf"), width = 8, height = 10, units = "cm", scale = 2, dpi = 300, device = cairo_pdf)
+# ggsave(here("figures", "fig3a_pesticide_count.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 300, device = cairo_pdf)
 ```
 
 ## fig3b - total for each pesticide target class used in pesticide exposure studies
@@ -177,11 +177,11 @@ fig3b <- ggplot(target_class_pct, aes(reorder(pesticide_target_class, n), y = pe
   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) + 
   
   # Add labels to the bars for absolute count
-  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 5) +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 7) +
   
   # Add labels to the bars for percentage 
  geom_text(data = target_class_pct, aes(label = paste0(round(percentage, 1), "%")), 
-            position = position_dodge(width = 0.9), hjust = -0.2, size = 5, color = "black", fontface = "bold") +
+            position = position_dodge(width = 0.9), hjust = -0.2, size = 7, color = "black", fontface = "bold") +
     
   # Customize the appearance of the plot
   labs(x = "Pesticide Target Class", y = "Percentage") +
@@ -189,17 +189,17 @@ fig3b <- ggplot(target_class_pct, aes(reorder(pesticide_target_class, n), y = pe
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
-    axis.text.x = element_text(size = 15, hjust = 0),
-    axis.text.y = element_text(size = 15, hjust = 1),
-    axis.title.x = element_text(size = 15),
-    axis.title.y = element_text(size = 15),
+    axis.text.x = element_text(size = 20),
+    axis.text.y = element_text(size = 20),
+    axis.title.x = element_text(size = 20),
+    axis.title.y = element_text(size = 20),
     plot.title = element_blank()) +
     coord_flip() +
-    ylim(0, 100)
+    ylim(0, 80)
 
 
  fig3b
-# ggsave(here("figures", "fig3b_pesticide_target_count_test.png"), width = 16, height = 10, units = "cm", scale = 2, dpi = 300)
+# ggsave(here("figures", "fig3b_pesticide_target_count.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 300, device = cairo_pdf)
 ```
 
 ## fig3c - total for chemical class 
@@ -229,7 +229,7 @@ total_chemical_class_count <- pd %>%
   
    
   # Add labels to the bars for percentage 
- geom_text(data = chemical_class_pct, aes(label = paste0(round(percentage), "%")), 
+ geom_text(data = chemical_class_pct, aes(label = paste0(round(percentage,1), "%")), 
             position = position_dodge(width = 0.9), hjust = -0.2, size = 5, color = "black", fontface = "bold") +
    
   # Customize the appearance of the plot
@@ -238,17 +238,17 @@ total_chemical_class_count <- pd %>%
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
-    axis.text.x = element_text(size = 15, hjust = 0),
-    axis.text.y = element_text(size = 15, hjust = 1),
-    axis.title.x = element_text(size = 15),
-    axis.title.y = element_text(size = 15),
+    axis.text.x = element_text(size = 20),
+    axis.text.y = element_text(size = 15),
+    axis.title.x = element_text(size = 20),
+    axis.title.y = element_text(size = 20),
     plot.title = element_blank()) +
     coord_flip() +
-    ylim(0, 50)
+    ylim(0, 40)
     
 
  fig3c
-#ggsave(here("figures", "fig3c_pesticide_chemical_count.pdf"), width = 8, height = 10, units = "cm", scale = 2, dpi = 300, device = cairo_pdf
+# ggsave(here("figures", "fig3c_pesticide_chemical_count.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 300, device = cairo_pdf)
 ```
 
 ##fig3 combined 
@@ -256,8 +256,8 @@ total_chemical_class_count <- pd %>%
 # Combine three plots into a single plot using a grid layout
 fig3 <- ((fig3a) | (fig3b / fig3c) + plot_annotation(tag_levels = "A"))
 
-# fig3
-#ggsave(here("figures", "fig3_pesticide_count_combined.pdf"), width = 8, height = 10, units = "cm", scale = 2, dpi = 300, device = cairo_pdf)
+fig3
+#ggsave(here("figures", "fig3_pesticide_count_combined.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 300, device = cairo_pdf)
 ```
 
 Objective 2. To investigate pesticide exposure study designs such as concentration and duration of exposure, life stages of zebrafish used in each study and the sample sizes used.
@@ -290,8 +290,8 @@ figs3 <- ggplot(route_pct, aes(x = reorder(route, percentage), y = percentage)) 
   labs(x = "Route of Exposure", y = "Percentage") +
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
-        axis.text.x = element_text(size = 15, hjust = 0),
-        axis.text.y = element_text(size = 15, hjust = 1),
+        axis.text.x = element_text(size = 15),
+        axis.text.y = element_text(size = 15),
         axis.title.x = element_text(size = 15),
         axis.title.y = element_text(size = 15),
         plot.title = element_blank()) +
@@ -300,8 +300,10 @@ figs3 <- ggplot(route_pct, aes(x = reorder(route, percentage), y = percentage)) 
 
 
 figs3
-#ggsave(here("figures", "figs3_pesticide_chemical_count.pdf"), width = 8, height = 10, units = "cm", scale = 2, dpi = 300, device = cairo_pdf
+# ggsave(here("figures", "figs3_pesticide_chemical_count.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 300, device = cairo_pdf)
 ```
+
+# Objective 2. To investigate the study designs employed to assess the effects of pesticide exposure on the behaviour of non-larval zebrafish.
 
 making dosages consistent for dosage comparisons
 ```{r}
@@ -319,7 +321,6 @@ pdo <- pdo %>%
            dosage_lowest_unit == "g/L" ~ "ug/L",
            dosage_lowest_unit == "ppb" ~ "ug/L",
            dosage_lowest_unit == "ppm" ~ "ug/L",
-           dosage_lowest_unit == "ug/g" ~ "mg/kg",
            TRUE ~ dosage_lowest_unit),
          
          # Convert dosage_lowest to ug/L based on dosage_lowest_unit
@@ -327,6 +328,7 @@ pdo <- pdo %>%
            dosage_lowest_unit == "mg/L" ~ dosage_lowest * 1000,
            dosage_lowest_unit == "ng/L" ~ dosage_lowest / 1000,
            dosage_lowest_unit == "g/L" ~ dosage_lowest/1000000,
+           dosage_lowest_unit == "ppb" ~ dosage_lowest * 1000,
            dosage_lowest_unit == "ppm" ~ dosage_lowest/1000,
            TRUE ~ dosage_lowest),
          
@@ -338,6 +340,7 @@ pdo <- pdo %>%
            dosage_highest_unit == "mg/L" ~ dosage_highest * 1000,
            dosage_highest_unit == "ng/L" ~ dosage_highest / 1000,
            dosage_highest_unit == "g/L" ~ dosage_highest/1000000,
+           dosage_highest_unit == "ppb" ~ dosage_highest * 1000,
            dosage_highest_unit == "ppm" ~ dosage_highest/1000,
            TRUE ~ dosage_highest))
 ```
@@ -380,13 +383,13 @@ fig4 <- ggplot(pdo_waterbourne, aes(x = dosage_type, y = log(dosage_value))) +
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
     axis.text.x = element_text(size = 15),
-    axis.text.y = element_text(size = 15, hjust = 1),
+    axis.text.y = element_text(size = 15),
     axis.title.x = element_text(size = 15),
     axis.title.y = element_text(size = 15),
     plot.title = element_blank())
 
  fig4
-#ggsave(here("figures", "fig4_pesticide_dosage.pdf"), width = 8, height = 10, units = "cm", scale = 2, dpi = 300, device = cairo_pdf)
+ggsave(here("figures", "fig4_pesticide_dosage.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 300, device = cairo_pdf)
 ```
 
 ## figs4 - comparison of lowest and highest dosages of waterbourne exposure to deltamethrin
@@ -606,6 +609,62 @@ figs8 <- ggplot(pdo_waterbourne_chloropyrifo, aes(x = dosage_type, y = log(dosag
     axis.title.y = element_text(size = 15),
     plot.title = element_blank())
 figs8
+```
+
+## figx - durations of waterbourne exposure 
+
+```{r}
+
+pdo <- pdo %>% 
+  filter(!is.na(duration)) %>%
+  # Convert duration to numeric and duration_unit to character 
+  mutate(duration = as.numeric(duration),
+         duration_unit = as.character(duration_unit),
+         
+  # Standardize duration_unit_consistent based on dosage_unit 
+  duration_unit_consistent = case_when(
+          duration_unit == "minutes" ~ "hours",
+        
+          duration_unit == "days" ~ "hours",
+          duration_unit == "weeks" ~ "hours",
+           TRUE ~ duration_unit),
+  
+  # Convert duration to hours based on duration_unit
+  
+  duration_convert = case_when(
+    duration_unit == "minutes" ~ duration* 60,
+    duration_unit == "days" ~ duration/24, 
+    duration_unit == "weeks" ~ duration/168,
+    TRUE ~ duration)) %>% 
+  filter(route == "waterbourne")
+  
+
+figx <- ggplot(pdo, aes(x = route , y = log(duration))) + 
+    # Add a violin plot 
+  geom_violin(fill = "#5F85AE", alpha =0.2, color = NA, trim = FALSE) +
+
+  # Add a boxplot 
+  geom_boxplot(width = 0.05, fill = "white", color = "#5F85AE", outlier.shape = NA) +
+
+  # Add jittered points 
+  geom_jitter(width = 0.1, height = 0.05, color = "#5F85AE", alpha = 0.8) +
+
+  
+  # Add axis and plot labels
+  labs(x = "Route ", y = "log(duration (hours))") +
+  
+  # Customize plot theme
+  theme_minimal() +
+  theme(panel.grid.major.y = element_blank(),
+    axis.line.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.x = element_text(size = 15),
+    axis.text.y = element_text(size = 15),
+    axis.title.x = element_text(size = 15),
+    axis.title.y = element_text(size = 15),
+    plot.title = element_blank())
+
+figx
 ```
 
 ## figs9 - total lifestage of exposure completed as a percentage
@@ -1339,8 +1398,8 @@ figs27 <- fullmap %>%
   theme(panel.background = element_rect(fill = "transparent", colour = NA),
         plot.background = element_rect(fill = "transparent", colour = NA))
   
-
- ggsave(here("figures", "world_map.png"), width = 16, height = 10, units = "cm", scale = 2, dpi = 300)
+figs27
+# ggsave(here("figures", "world_map.png"), width = 16, height = 10, units = "cm", scale = 2, dpi = 300)
 ```
 
 ## figs28 - country collaboration network circle plot
