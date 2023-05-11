@@ -27,7 +27,7 @@ Timestamp,study_id,pesticide_investigated ,route,dosage_number,dosage_lowest ,do
 31/01/2023 9:13,s_019,chloropyrifo,waterbourne,3,35,ug/L,220,ug/L,24,hours,
 31/01/2023 9:27,s_020,glyphosate,waterbourne,2,0.3,ug/L,3,ug/L,2,weeks,
 31/01/2023 9:40,s_021,rotenone,waterbourne,1,2,ug/L,2,ug/L,4,weeks,
-31/01/2023 9:53,s_022,imidacloprid ,waterbourne,2,45,uM,60,uM,24,hours,
+31/01/2023 9:53,s_022,imidacloprid ,waterbourne,2,45,uM,60,uM,24,s,
 31/01/2023 10:00,s_023,chloropyrifo,waterbourne,1,100,ng/L,100,ng/L,5,days,
 ,s_024,paraquat,diet,1,20,mg/kg,20,mg/kg,16,days,
 31/01/2023 10:12,s_025,"2,4-dichlorophenoxyacetic acid",waterbourne,5,0.03,ug/L,300,ug/L,96,hours,

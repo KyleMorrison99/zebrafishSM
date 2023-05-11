@@ -73,7 +73,7 @@ bib_sco <- convert2df(here("data","scopus.bib"), dbsource = "scopus", format = "
 
 # Objective 0: General literature characteristics
 ## fig 2- study time time trends
-```{r, fig.width=15, fig.height=9}
+```{r}
 
 # Count the number of articles by year
 fig2 <- bib %>%
@@ -252,7 +252,7 @@ total_chemical_class_count <- pd %>%
 ```
 
 ##fig3 combined 
-```{r}
+```{r, fig.height=10, figwidth = 20}
 # Combine three plots into a single plot using a grid layout
 fig3 <- ((fig3a) | (fig3b / fig3c) + plot_annotation(tag_levels = "A"))
 
@@ -262,7 +262,7 @@ fig3
 
 Objective 2. To investigate pesticide exposure study designs such as concentration and duration of exposure, life stages of zebrafish used in each study and the sample sizes used.
 
-## figs3 - total route of exposure completed as a percentage
+## figs3 - total route of exposure
 ```{r}
 # Count the total occurrence of each route in the data set
 total_route_count <- pdo %>% 
