@@ -428,8 +428,8 @@ fig4 <- ((fig4a) / (fig4b) / (fig4c) + plot_annotation(tag_levels = "A"))
 
 fig4
 
- # ggsave(here("figures", "fig3_zebrafish_characteristics.pdf"), width = 16, height = 15, units = "cm", scale = 2, dpi = 800)
-  # ggsave(here("figures", "fig4_zebrafish_characteristics.jpg"), width = 16, height = 15, units = "cm", scale = 2, dpi = 800)
+ #  ggsave(here("figures", "fig3_zebrafish_characteristics.pdf"), width = 15, height = 15, units = "cm", scale = 2, dpi = 800)
+ #  ggsave(here("figures", "fig4_zebrafish_characteristics.jpg"), width = 15, height = 15, units = "cm", scale = 2, dpi = 800)
 ```
 
 ## fig5a - total route of exposure
@@ -1487,34 +1487,20 @@ plot(figs24)
 
 ```
 
-## figs27 - co-occurance matrix
-```{r, fig.width=8, fig.height=5}
-# Generate a bibliometric network based on co-occurrences of keywords in the "bib_sco" dataset
-NetMatrix_keywords <- biblioNetwork(bib_sco, analysis = "co-occurrences", network = "keywords", sep = ";")
 
-# Plot the network using the "networkPlot" function, with various formatting options
-figs25 <- networkPlot(NetMatrix_keywords, normalize="association", n = 10, 
-                     Title = "Keyword Co-occurrences", type = "fruchterman", 
-                     size.cex = TRUE, size = 10, remove.multiple = F, 
-                     edgesize = 4, labelsize = 3, label.cex = TRUE, 
-                     edges.min = 2, label.n = 10, alpha = 0.3)
- 
-ggsave(here("figures", "figs25_keyword_occurence.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
-
-```
-
-## fig s26 - thematic map based on keywords
+## fig s28 - thematic map based on keywords
 ```{r, fig.width=8, fig.height=5}
 # Set plot parameters to display a single plot with narrow margins
 par(mfrow=c(1,1), mar=c(0,2,0,2))
 
 # Generate a thematic map of the "bib_sco" dataset, using the "ID" field as the basis for the map
-figs26 <- thematicMap(bib_sco, field = "ID", n = 1000, minfreq = 5, stemming = FALSE, size = 0.5, n.labels = 1, repel = TRUE)
+figs28 <- thematicMap(bib_sco, field = "ID", n = 1000, minfreq = 5, stemming = FALSE, size = 0.5, n.labels = 1, repel = TRUE)
 
 # Display the resulting map using the "plot" function
-plot(figs26$map)
+plot(figs28$map)
 
-# ggsave(here("figures", "figs26_thematic_map.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+ ggsave(here("figures", "figs28_thematic_map.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+ ggsave(here("figures", "figs28_thematic_map.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
 
 ```
 
@@ -1547,7 +1533,7 @@ fullmap$n <- fullmap$n.x + fullmap$n.y
 fullmap$n[is.na(fullmap$n)] <- 0
 
 # Create a plot of the world map with regions colored based on article counts
-fig6 <- fullmap %>% 
+fig7 <- fullmap %>% 
   ggplot(aes(fill = n, map_id = region)) +
   geom_map(map = world_map) +
   expand_limits(x = world_map$long, y = world_map$lat) +
@@ -1563,11 +1549,13 @@ fig6 <- fullmap %>%
   theme(panel.background = element_rect(fill = "transparent", colour = NA),
         plot.background = element_rect(fill = "transparent", colour = NA))
  
-fig6
-ggsave(here("figures", "fig6_world_map.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi =800)
+fig7
+# ggsave(here("figures", "fig7_world_map.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi =800)
+# ggsave(here("figures", "fig7_world_map.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi =800)
+
 ```
 
-## figs28 - country collaboration network circle plot
+## figs28 - country collaborate network circle plot with self-collaborations included 
 ```{r, fig.width=8, fig.height=5}
 # Extract countries from the affiliations
 bib_sco2 <- metaTagExtraction(bib_sco, Field = "AU_CO", sep = ";")
@@ -1620,7 +1608,7 @@ my.cols2 <- c(
  
 
 # Create a chord diagram of the network matrix
-figs28 <- chordDiagram(NetMatrix_country, annotationTrack = "grid", preAllocateTracks = 1, grid.col = my.cols2)
+figs29 <- chordDiagram(NetMatrix_country, annotationTrack = "grid", preAllocateTracks = 1, grid.col = my.cols2)
 
 # Add a track to label each sector with its name
 circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
@@ -1632,16 +1620,18 @@ circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
 }, bg.border = NA)
 
 
+ggsave(here("figures", "figs29_country_collaboration_with_self_citation.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi =800)
+ggsave(here("figures", "figs29_country_collaboration_with_self_citation.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi =800)
 
 ```
 
-## fig6a collaboration matrix with self citation removed
+## figs30 - country collaborate network circle plot with self-collaborations removed 
 ```{r, fig.width=8, fig.height=5}
 # Making diagnal zero to remove self citations 
 diag(NetMatrix_country) <- 0
 
 # Create a chord diagram of the network matrix         
-fig6a <- chordDiagram(NetMatrix_country, annotationTrack = "grid", preAllocateTracks = 1, grid.col = my.cols2)
+figs30 <- chordDiagram(NetMatrix_country, annotationTrack = "grid", preAllocateTracks = 1, grid.col = my.cols2)
 
 # Add a track to label each sector with its name
 circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
@@ -1653,18 +1643,18 @@ circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
 }, bg.border = NA)
 ```
 
-## fig6b continent collaboration 
+## figs31 - continent collaborate network circle plot with self-collaborations included 
 ```{r, fig.width=8, fig.height=5}
 NetMatrix_continent <- NetMatrix_country
 # Change "Usa" to "North America"
-colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "USA"] <- "North America"
-rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "USA"] <- "North America"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "USA"] <- "North  \nAmerica"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "USA"] <- "North  \nAmerica"
 # Change "Usa" to "North America"
-colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Canada"] <- "North America"
-rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Canada"] <- "North America"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Canada"] <- "North  \nAmerica"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Canada"] <- "North  \nAmerica"
 # Change "Mexico" to "North America"
-colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Mexico"] <- "North America"
-rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Mexico"] <- "North America"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Mexico"] <- "North  \nAmerica"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Mexico"] <- "North  \nAmerica"
 # Change China to Asia
 colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "China"] <- "Asia"
 rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "China"] <- "Asia"
@@ -1675,14 +1665,14 @@ rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "India"] <- "Asia
 colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Philippines"] <- "Asia"
 rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Philippines"] <- "Asia"
 # Change "Brazil" to "South America"
-colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Brazil"] <- "South America"
-rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Brazil"] <- "South America"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Brazil"] <- "South  \nAmerica"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Brazil"] <- "South  \nAmerica"
 # Change "Ecuador" to "South America"
-colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Ecuador"] <- "South America"
-rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Ecuador"] <- "South America"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Ecuador"] <- "South  \nAmerica"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Ecuador"] <- "South  \nAmerica"
 # Change "Chile" to "South America"
-colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Chile"] <- "South America"
-rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Chile"] <- "South America"
+colnames(NetMatrix_continent)[colnames(NetMatrix_continent) == "Chile"] <- "South  \nAmerica"
+rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Chile"] <- "South  \nAmerica"
 # Change "United Kingdom" to "Europe" 
 colnames(NetMatrix_continent)[colnames(NetMatrix_continent) =="UK"] <- "Europe"
 rownames(NetMatrix_continent)[rownames(NetMatrix_continent) =="UK"] <- "Europe"
@@ -1730,8 +1720,7 @@ rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Turkey"] <- "Eur
 # collapsing
 merge_matrix <- t(rowsum(t(NetMatrix_continent), group = colnames(NetMatrix_continent), na.rm = T))
 merge_matrix2 <- rowsum(merge_matrix, group = rownames(merge_matrix))
-# remove diagonal elements
-diag(merge_matrix2) <- 0
+
 # chord plot
 chordDiagramFromMatrix(merge_matrix2)
 
@@ -1748,3 +1737,24 @@ circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
 
 
 ```
+
+## fig8 - continent collaborate network circle plot with self-collaborations removed 
+```{r}
+# remove diagonal elements
+diag(merge_matrix2) <- 0
+# chord plot
+chordDiagramFromMatrix(merge_matrix2)
+
+# Create a chord diagram of the network matrix
+fig6b <- chordDiagram(merge_matrix2, annotationTrack = "grid", preAllocateTracks = 1)
+# Add a track to label each sector with its name
+circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
+  xlim = get.cell.meta.data("xlim")
+  ylim = get.cell.meta.data("ylim")
+  sector.name = get.cell.meta.data("sector.index")
+  circos.text(mean(xlim), ylim[1] + 0.2, sector.name, facing = "clockwise", niceFacing = TRUE, adj = c(0, 1))
+  circos.axis(h = "top", labels.cex = 0.5, major.tick.length = 0.2, sector.index = sector.name, track.index = 2)
+}, bg.border = NA)
+
+```
+
