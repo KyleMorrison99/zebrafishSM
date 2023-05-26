@@ -1620,8 +1620,6 @@ circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
 }, bg.border = NA)
 
 
-ggsave(here("figures", "figs29_country_collaboration_with_self_citation.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi =800)
-ggsave(here("figures", "figs29_country_collaboration_with_self_citation.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi =800)
 
 ```
 
@@ -1721,11 +1719,9 @@ rownames(NetMatrix_continent)[rownames(NetMatrix_continent) == "Turkey"] <- "Eur
 merge_matrix <- t(rowsum(t(NetMatrix_continent), group = colnames(NetMatrix_continent), na.rm = T))
 merge_matrix2 <- rowsum(merge_matrix, group = rownames(merge_matrix))
 
-# chord plot
-chordDiagramFromMatrix(merge_matrix2)
 
 # Create a chord diagram of the network matrix
-fig6b <- chordDiagram(merge_matrix2, annotationTrack = "grid", preAllocateTracks = 1)
+figs31 <- chordDiagram(merge_matrix2, annotationTrack = "grid", preAllocateTracks = 1)
 # Add a track to label each sector with its name
 circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
   xlim = get.cell.meta.data("xlim")
@@ -1742,11 +1738,10 @@ circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
 ```{r}
 # remove diagonal elements
 diag(merge_matrix2) <- 0
-# chord plot
-chordDiagramFromMatrix(merge_matrix2)
 
 # Create a chord diagram of the network matrix
-fig6b <- chordDiagram(merge_matrix2, annotationTrack = "grid", preAllocateTracks = 1)
+fig8 <- chordDiagram(merge_matrix2, annotationTrack = "grid", preAllocateTracks = 1)
+
 # Add a track to label each sector with its name
 circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
   xlim = get.cell.meta.data("xlim")
