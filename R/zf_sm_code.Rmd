@@ -422,7 +422,7 @@ fig4c
 
 
 ## fig4 combined 
-```{r, fig.width=16, fig.height=9}
+```{r, fig.width=8, fig.height=9}
 # Combine three plots into a single plot using a grid layout
 fig4 <- ((fig4a) / (fig4b) / (fig4c) + plot_annotation(tag_levels = "A"))
 
@@ -600,10 +600,10 @@ figs3 <- ggplot(pdo_waterbourne_deltamethrin, aes(x = dosage_type, y = log(dosag
   theme(panel.grid.major.y = element_blank(),
         axis.line.y = element_blank(),
         axis.ticks.y = element_blank(),
-        axis.text.x = element_text(size = 15),
-        axis.text.y = element_text(size = 15, hjust = 1),
-        axis.title.x = element_text(size = 15),
-        axis.title.y = element_text(size = 15),
+        axis.text.x = element_text(size = 20),
+        axis.text.y = element_text(size = 20, hjust = 1),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
         plot.title = element_blank())
 
 figs3
@@ -646,10 +646,10 @@ figs4 <- ggplot(pdo_waterbourne_rotenone, aes(x = dosage_type, y = log(dosage_va
   theme(panel.grid.major.y = element_blank(),
         axis.line.y = element_blank(),
         axis.ticks.y = element_blank(),
-        axis.text.x = element_text(size = 15),
-        axis.text.y = element_text(size = 15, hjust = 1),
-        axis.title.x = element_text(size = 15),
-        axis.title.y = element_text(size = 15),
+        axis.text.x = element_text(size = 20),
+        axis.text.y = element_text(size = 20, hjust = 1),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
         plot.title = element_blank())
 figs4
   # ggsave(here("figures", "figs4_pesticide_dosage_rotenone.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
@@ -692,10 +692,10 @@ figs5 <- ggplot(pdo_waterbourne_atrazine, aes(x = dosage_type, y = log(dosage_va
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
-    axis.text.x = element_text(size = 15),
-    axis.text.y = element_text(size = 15, hjust = 1),
-    axis.title.x = element_text(size = 15),
-    axis.title.y = element_text(size = 15),
+    axis.text.x = element_text(size = 20),
+    axis.text.y = element_text(size = 20, hjust = 1),
+    axis.title.x = element_text(size = 20),
+    axis.title.y = element_text(size = 20),
     plot.title = element_blank())
 
 
@@ -741,10 +741,10 @@ figs6 <- ggplot(pdo_waterbourne_glyphosate, aes(x = dosage_type, y = log(dosage_
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
-    axis.text.x = element_text(size = 15),
-    axis.text.y = element_text(size = 15, hjust = 1),
-    axis.title.x = element_text(size = 15),
-    axis.title.y = element_text(size = 15),
+    axis.text.x = element_text(size = 20),
+    axis.text.y = element_text(size = 20, hjust = 1),
+    axis.title.x = element_text(size = 20),
+    axis.title.y = element_text(size = 20),
     plot.title = element_blank())
 
 figs6
@@ -787,15 +787,15 @@ figs7 <- ggplot(pdo_waterbourne_chloropyrifo, aes(x = dosage_type, y = log(dosag
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
-    axis.text.x = element_text(size = 15),
-    axis.text.y = element_text(size = 15, hjust = 1),
-    axis.title.x = element_text(size = 15),
-    axis.title.y = element_text(size = 15),
+    axis.text.x = element_text(size = 20),
+    axis.text.y = element_text(size = 20, hjust = 1),
+    axis.title.x = element_text(size = 20),
+    axis.title.y = element_text(size = 20),
     plot.title = element_blank())
 
 figs7
- # ggsave(here("figures", "figs7_pesticide_dosage_chloropyrifo.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
- # ggsave(here("figures", "figs7_pesticide_dosage_chloropyrifo.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+  # ggsave(here("figures", "figs7_pesticide_dosage_chloropyrifo.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+  # ggsave(here("figures", "figs7_pesticide_dosage_chloropyrifo.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
 
 ```
 
@@ -930,7 +930,7 @@ behav_class_pct <- total_behaviour_class_count %>%
          percentage = proportion*100)
 
 # Create a bar chart with the count on the x-axis and behavioural class assay on the y-axis
- fig6 <-  ggplot(behav_class_pct, aes(x = reorder(behavioural_class, percentage), y = percentage)) +
+ fig6<-  ggplot(behav_class_pct, aes(x = reorder(behavioural_class, percentage), y = percentage)) +
     
   # Customize the appearance of the bars 
   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
@@ -955,17 +955,16 @@ behav_class_pct <- total_behaviour_class_count %>%
     axis.title.y = element_text(size = 20),
     plot.title = element_blank()) +
    coord_flip() + 
-   ylim(0, 50)
-  
-  
+   ylim(0, 50) 
+   
 fig6
- ggsave(here("figures", "fig6_behaviour_class_count.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
- ggsave(here("figures", "fig6_behaviour_class_count.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+#  ggsave(here("figures", "fig6_behaviour_class_count.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+#  ggsave(here("figures", "fig6_behaviour_class_count.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
 
 ```
 
 
-## figs12 - total number of studies investigating each behavioural assay of behaviour activity
+## figs8 - total percentage of evaluated behaviours that were under the locomotion/ activity category
 ```{r, fig.width=8, fig.height=5}
 # Calculate count for each assay in behavioral activity 
 total_behaviour_activity_count <- bd %>% 
@@ -979,16 +978,16 @@ behav_activity_pct <- total_behaviour_activity_count %>%
          percentage = proportion*100)
 
 # Create a bar chart with the count on the x-axis and behavioural activity assay on the y-axis
-figs12 <-  ggplot(behav_activity_pct, aes(x = reorder(behaviour_activity, n), y = percentage)) +
+figs8 <-  ggplot(behav_activity_pct, aes(x = reorder(behaviour_activity, n), y = percentage)) +
   
   # Customize the appearance of the bars 
   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
   
  # Add labels to the bars for percentage 
-  geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 5, fontface = "bold",     color = "black") +
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 7, fontface = "bold",     color = "black") +
     
   # Add labels to the bars for absolute count  
-  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 5, hjust = 0.5, fontface =   "bold") +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 7, hjust = 0.5, fontface =   "bold") +
   
   # Add axis and plot labels
   labs(x = "Activity Assay", y = "Percentage") +
@@ -998,20 +997,22 @@ figs12 <-  ggplot(behav_activity_pct, aes(x = reorder(behaviour_activity, n), y 
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
-    axis.text.x = element_text(size = 15),
-    axis.text.y = element_text(size = 15, hjust = 1),
-    axis.title.x = element_text(size = 15),
-    axis.title.y = element_text(size = 15),
+    axis.text.x = element_text(size = 20),
+    axis.text.y = element_text(size = 20, hjust = 1),
+    axis.title.x = element_text(size = 20),
+    axis.title.y = element_text(size = 20),
     plot.title = element_blank()) +
     coord_flip() +
   ylim(0, 100)
 
-figs12
-# ggsave(here("figures", "figs12_behaviour_activity.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+figs8
+  # ggsave(here("figures", "figs8_behaviour_activity.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+  # ggsave(here("figures", "figs8_behaviour_activity.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+
 ```
 
-## figs13 - total number of studies investigating each behavioural assay of behaviour_aggression
-```{r, fig.width=8, fig.height=5}
+## figs9 - total percentage of evaluated behaviours that were under the aggression category.
+```{r, fig.width=12, fig.height=5}
 # Calculate count for each assay in aggression behavior
 total_behaviour_aggression_count <- bd %>% 
   separate_rows(behaviour_aggression, sep = ",\\s*") %>%  
@@ -1024,16 +1025,16 @@ behav_aggression_pct <- total_behaviour_aggression_count %>%
          percentage = proportion*100)
 
 # Create a bar chart with the count on the x-axis and aggression behaviour assay on the y-axis
-figs13 <-  ggplot(behav_aggression_pct, aes(x = reorder(behaviour_aggression, n), y = percentage)) +
+figs9 <-  ggplot(behav_aggression_pct, aes(x = reorder(behaviour_aggression, n), y = percentage)) +
   
   # Customize the appearance of the bars 
   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
   
  # Add labels to the bars for percentage 
-  geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 5, fontface = "bold",     color = "black") +
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 7, fontface = "bold",     color = "black") +
     
   # Add labels to the bars for absolute count  
-  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 5, hjust = 0.5, fontface =   "bold") +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 7, hjust = 0.5, fontface =   "bold") +
   
   # Add axis and plot labels
   labs(x = "Aggression Behavior Assay", y = "Percentage") +
@@ -1043,20 +1044,23 @@ figs13 <-  ggplot(behav_aggression_pct, aes(x = reorder(behaviour_aggression, n)
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
-    axis.text.x = element_text(size = 15),
-    axis.text.y = element_text(size = 15, hjust = 1),
-    axis.title.x = element_text(size = 15),
-    axis.title.y = element_text(size = 15),
+    axis.text.x = element_text(size = 20),
+    axis.text.y = element_text(size = 20 , hjust = 1),
+    axis.title.x = element_text(size = 20),
+    axis.title.y = element_text(size = 20),
     plot.title = element_blank()) +
     coord_flip() +
-  ylim(0, 120)
+    ylim(0, 120) +
+    scale_x_discrete(labels = c("Aggression with conspecific\nvideo or mirror of self"))
 
-figs13
-# ggsave(here("figures", "figs13_behaviour_aggression.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+figs9
+ # ggsave(here("figures", "figs9_behaviour_aggression.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+ # ggsave(here("figures", "figs9_behaviour_aggression.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+
 ```
 
-## figs14 - total number of studies investigating each behavioural assay of behavioural_sociality
-```{r, fig.width=8, fig.height=5}
+## figs10 - total percentage of evaluated behaviours that were under the social category.
+```{r, fig.width=12, fig.height=5}
 # Calculate count for each assay in social behavior
 total_behaviour_sociality_count <- bd %>% 
   separate_rows(behaviour_sociality, sep = ",\\s*") %>%  
@@ -1069,16 +1073,16 @@ behav_sociality_pct <- total_behaviour_sociality_count %>%
          percentage = proportion*100)
 
 # Create a bar chart with the count on the x-axis and social behaviour assay on the y-axis
-figs14 <-  ggplot(behav_sociality_pct, aes(x = reorder(behaviour_sociality, n), y = percentage)) +
+figs10 <-  ggplot(behav_sociality_pct, aes(x = reorder(behaviour_sociality, n), y = percentage)) +
   
   # Customize the appearance of the bars 
   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
   
  # Add labels to the bars for percentage 
-  geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 5, fontface = "bold",     color = "black") +
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 7, fontface = "bold",     color = "black") +
     
   # Add labels to the bars for absolute count  
-  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 5, hjust = 0.5, fontface =   "bold") +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 7, hjust = 0.5, fontface =   "bold") +
   
   # Add axis and plot labels
   labs(x = "Social Behavior Assay ", y = "Percentage") +
@@ -1088,23 +1092,23 @@ figs14 <-  ggplot(behav_sociality_pct, aes(x = reorder(behaviour_sociality, n), 
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
-    axis.text.x = element_text(size = 15),
-    axis.text.y = element_text(size = 15, hjust = 1),
-    axis.title.x = element_text(size = 15),
-    axis.title.y = element_text(size = 15),
+    axis.text.x = element_text(size = 20),
+    axis.text.y = element_text(size = 20, hjust = 1),
+    axis.title.x = element_text(size = 20),
+    axis.title.y = element_text(size = 20),
     plot.title = element_blank()) +
     coord_flip() +
     ylim(0, 100) +
-  
-  # scale_x_discrete(labels = c("Social \n Behavior Assay", "a", "b"))
+   scale_x_discrete(labels = c("Affiliation with conspecific\nmodel or video", "Affiliation with a live conspecific\nbehind a barrier", "Affiliation with conspecific where\n they are free to interact"))
 
-figs14
-# ggsave(here("figures", "figs14_behaviour_sociality.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+figs10
+ # ggsave(here("figures", "figs10_behaviour_sociality.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+ # ggsave(here("figures", "figs10_behaviour_sociality.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
 
 ```
 
-## figs15 - total number of studies investigating each behavioural assay of behavioural_foraging
-```{r, fig.width=8, fig.height=5}
+## figs11 - total percentage of evaluated behaviours that were under the foraging category.
+```{r, fig.width=12, fig.height=5}
 # Calculate count for each assay in foraging behavior
 total_behaviour_foraging_count <- bd %>% 
   separate_rows(behaviour_foraging, sep = ",\\s*") %>%  
@@ -1117,16 +1121,16 @@ behav_foraging_pct <- total_behaviour_foraging_count %>%
          percentage = proportion*100)
 
 # Create a bar chart with the count on the x-axis and foraging behaviour assay on the y-axis
-figs15 <-  ggplot(behav_foraging_pct, aes(x = reorder(behaviour_foraging, n), y = percentage)) +
+figs11 <-  ggplot(behav_foraging_pct, aes(x = reorder(behaviour_foraging, n), y = percentage)) +
   
   # Customize the appearance of the bars 
   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
   
  # Add labels to the bars for percentage 
-  geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 5, fontface = "bold",     color = "black") +
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 7, fontface = "bold",     color = "black") +
     
   # Add labels to the bars for absolute count  
-  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 5, hjust = 0.5, fontface =   "bold") +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 7, hjust = 0.5, fontface =   "bold") +
   
   # Add axis and plot labels
   labs(x = "Foraging Behavior Assay", y = "Percentage") +
@@ -1136,21 +1140,25 @@ figs15 <-  ggplot(behav_foraging_pct, aes(x = reorder(behaviour_foraging, n), y 
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
-    axis.text.x = element_text(size = 15),
-    axis.text.y = element_text(size = 15, hjust = 1),
-    axis.title.x = element_text(size = 15),
-    axis.title.y = element_text(size = 15),
+    axis.text.x = element_text(size = 20),
+    axis.text.y = element_text(size = 20, hjust = 1),
+    axis.title.x = element_text(size = 20),
+    axis.title.y = element_text(size = 20),
     plot.title = element_blank()) +
     coord_flip() +
-    ylim(0, 100)
+    ylim(0, 100) +
+    scale_x_discrete(labels = c("Locomotor Activity\n within this context", "Olfactroy\npreference test", "Foraging on a live\nfood source", "Foraging on a not\n live food source"))
 
-figs15
-# ggsave(here("figures", "figs15_behaviour_foraging.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+
+figs11
+ # ggsave(here("figures", "figs11_behaviour_foraging.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+ # ggsave(here("figures", "figs11_behaviour_foraging.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+
 
 ```
 
-## figs16 - total number of studies investigating each behavioural assay of anti-predator behaviour
-```{r, fig.width=8, fig.height=5}
+## figs12 - total percentage of evaluated behaviours that were under the antipredator category.
+```{r, fig.width=12, fig.height=5}
 # Calculate count for each assay in antipredator behavior
 total_behaviour_antipredator_count <- bd %>% 
   separate_rows(behaviour_antipredator, sep = ",\\s*") %>%  
@@ -1163,16 +1171,16 @@ behav_antipredator_pct <- total_behaviour_antipredator_count %>%
          percentage = proportion*100)
 
 # Create a bar chart with the count on the x-axis and antipredator behaviour assay on the y-axis
-figs16 <- ggplot(behav_antipredator_pct, aes(x = reorder(behaviour_antipredator, n), y = percentage)) +
+figs12 <- ggplot(behav_antipredator_pct, aes(x = reorder(behaviour_antipredator, n), y = percentage)) +
   
   # Customize the appearance of the bars 
   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
   
   # Add labels to the bars for percentage 
-  geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 5, fontface = "bold", color = "black") +
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 7, fontface = "bold", color = "black") +
     
   # Add labels to the bars for absolute count  
-  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 5, hjust = 0.5, fontface = "bold") +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 7, hjust = 0.5, fontface = "bold") +
   
   # Add axis and plot labels
   labs(x = "Antipredator Behavior Assay", y = "Percentage") +
@@ -1182,21 +1190,23 @@ figs16 <- ggplot(behav_antipredator_pct, aes(x = reorder(behaviour_antipredator,
   theme(panel.grid.major.y = element_blank(),
         axis.line.y = element_blank(),
         axis.ticks.y = element_blank(),
-        axis.text.x = element_text(size = 15),
-        axis.text.y = element_text(size = 15, hjust = 1),
-        axis.title.x = element_text(size = 15),
-        axis.title.y = element_text(size = 15),
+        axis.text.x = element_text(size = 20),
+        axis.text.y = element_text(size = 20, hjust = 1),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
         plot.title = element_blank()) +
-  coord_flip() +
-  ylim(0, 100)
+        coord_flip() +
+        ylim(0, 100) +
+        scale_x_discrete(labels = c("Locomotor Activity\n within this context", "Response to a live predator\nbehind a barrier", "Response to a simulated\n predator"))
 
-figs16
-# ggsave(here("figures", "figs16_behaviour_antipredator.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+figs12
+ # ggsave(here("figures", "figs12_behaviour_antipredator.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+ # ggsave(here("figures", "figs12_behaviour_antipredator.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
 
 ```
 
-## figs17 - total number of studies investigating each behavioural assay of Anxiety or Boldness behaviour
-```{r, fig.width=8, fig.height=5}
+## figs13 - total percentage of evaluated behaviours that were under the anxiety/boldness category.
+```{r, fig.width=12, fig.height=5}
 # Calculate count for each assay in anxiety behavior
 total_behaviour_anxiety_count <- bd %>% 
   separate_rows(behaviour_anxiety, sep = ",\\s*") %>%  
@@ -1209,16 +1219,16 @@ behav_anxiety_pct <- total_behaviour_anxiety_count %>%
          percentage = proportion*100)
 
 # Create a bar chart with the count on the x-axis and anxiety behavior assay on the y-axis
-figs17 <- ggplot(behav_anxiety_pct, aes(x = reorder(behaviour_anxiety, n), y = percentage)) +
+figs13 <- ggplot(behav_anxiety_pct, aes(x = reorder(behaviour_anxiety, n), y = percentage)) +
   
   # Customize the appearance of the bars 
   geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
   
   # Add labels to the bars for percentage 
-  geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 5, fontface = "bold", color = "black") +
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 7, fontface = "bold", color = "black") +
     
   # Add labels to the bars for absolute count  
-  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 5, hjust = 0.5, fontface = "bold") +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", size = 7, hjust = 0.5, fontface = "bold") +
   
   # Add axis and plot labels
   labs(x = "Anxiety Behavior Assay", y = "Percentage") +
@@ -1228,22 +1238,26 @@ figs17 <- ggplot(behav_anxiety_pct, aes(x = reorder(behaviour_anxiety, n), y = p
   theme(panel.grid.major.y = element_blank(),
         axis.line.y = element_blank(),
         axis.ticks.y = element_blank(),
-        axis.text.x = element_text(size = 15),
-        axis.text.y = element_text(size = 15, hjust = 1),
-        axis.title.x = element_text(size = 15),
-        axis.title.y = element_text(size = 15),
+        axis.text.x = element_text(size = 20),
+        axis.text.y = element_text(size = 20, hjust = 1),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
         plot.title = element_blank()) +
         coord_flip() +
-        ylim(0, 80)
+        ylim(0, 80) + 
+        scale_x_discrete(labels = c("Lights on-off", "Shoaling", "Locomotor Activity\n within this context", "Habituation task", "Black-white area", "Novel tank or\n exploration"))
 
-figs17
-# ggsave(here("figures", "figs17_behaviour_anxiety.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+
+figs13
+  ggsave(here("figures", "figs13_behaviour_anxiety.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+  ggsave(here("figures", "figs13_behaviour_anxiety.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+
 
 ```
 
 
-## figs18 - heat map to show which behavours have been investigated in which pesticide target class
-```{r, fig.width=8, fig.height=5}
+## figs14 - heat map to show which behavours have been investigated in which pesticide target class
+```{r, fig.width=16, fig.height=8}
 # Join the behaviour details and pesticide details by "study_id"
 bd_pd <- left_join(bd, pd, by = "study_id")
 
@@ -1260,14 +1274,14 @@ bd_pd_summary1 <- bd_pd1 %>%
   ungroup() 
 
 # Create a heatmap with pesticide target class on the x-axis and behavioural class on the y-axis
-figs18 <- ggplot(bd_pd_summary1, aes(x = pesticide_target_class, y = behavioural_class, fill = count)) +
+figs14 <- ggplot(bd_pd_summary1, aes(x = pesticide_target_class, y = behavioural_class, fill = count)) +
   
   #Create and fill each tile 
   geom_tile(color = "white") +
   scale_fill_gradient(low = "#F0F4F8", high = "#446487") +
   
   # Add labels to the bars for absolute count  
-  geom_text(aes(label = count), color = "black", size = 4) + 
+  geom_text(aes(label = count), color = "black", size = 7) + 
   
   # Add axis and plot labels
   labs(x = "Pesticide Target Class", y = "Behavioural Class", fill = "Count") +
@@ -1277,19 +1291,23 @@ figs18 <- ggplot(bd_pd_summary1, aes(x = pesticide_target_class, y = behavioural
   theme(panel.grid.major.y = element_blank(),
         axis.line.y = element_blank(),
         axis.ticks.y = element_blank(),
-        axis.text.x = element_text(size = 15),
-        axis.text.y = element_text(size = 15, hjust = 1),
-        axis.title.x = element_text(size = 15),
-        axis.title.y = element_text(size = 15),
-        plot.title = element_blank())
+        axis.text.x = element_text(size = 20),
+        axis.text.y = element_text(size = 20, hjust = 1),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        plot.title = element_blank(),
+        legend.text = element_text(size= 20),
+        legend.title = element_text(size = 20))
 
 
-figs18
-# ggsave(here("figures", "figs18_behaviour_target_class_heat_map.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+figs14
+ # ggsave(here("figures", "figs14_behaviour_target_class_heat_map.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+ # ggsave(here("figures", "figs14_behaviour_target_class_heat_map.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+
 ```
 
-## figs19 - heat map to show which behavours have been investigated in which pesticide chemical class
-```{r, fig.width=8, fig.height=5}
+## figs15 - heat map to show which behavours have been investigated in which pesticide chemical class
+```{r, fig.width=16, fig.height=8}
 # Separate rows by behavioural_class and pesticide_chemical_class columns
 bd_pd2 <- separate_rows(bd_pd, behavioural_class, sep = ",\\s*", convert = TRUE)
 bd_pd2 <- separate_rows(bd_pd2, pesticide_chemical_class, sep = ",", convert = TRUE)
@@ -1307,22 +1325,22 @@ top_pesticide_classes <- bd_pd_summary2 %>%
   group_by(pesticide_chemical_class) %>%
   summarise(count = sum(count)) %>%
   ungroup() %>%
-  top_n(3, count) %>% 
+  top_n(5, count) %>% 
   pull(pesticide_chemical_class)
 
 # Subset the data to include only the top 3 classes
-bd_pd_summary_top3 <- bd_pd_summary2 %>%
+bd_pd_summary_top5 <- bd_pd_summary2 %>%
   filter(pesticide_chemical_class %in% top_pesticide_classes)
 
 # Create a heatmap with pesticide chemical class on the x-axis and behavioral class on the y-axis
-figs19 <- ggplot(bd_pd_summary_top3, aes(x = pesticide_chemical_class, y = behavioural_class, fill = count)) +
+figs15 <- ggplot(bd_pd_summary_top5, aes(x = pesticide_chemical_class, y = behavioural_class, fill = count)) +
   
   #Create and fill each tile 
   geom_tile(color = "white") +
   scale_fill_gradient(low = "#F0F4F8", high = "#446487") +
   
   # Add labels to the bars for absolute count 
-  geom_text(aes(label = ifelse(count > 0, count, "")), color = "black", size = 4) +  
+  geom_text(aes(label = ifelse(count > 0, count, "")), color = "black", size = 7) +  
   
   # Add axis and plot labels
   labs(x = "Pesticide Chemical Class", y = "Behavioural Class", fill = "Count") +
@@ -1330,21 +1348,25 @@ figs19 <- ggplot(bd_pd_summary_top3, aes(x = pesticide_chemical_class, y = behav
   # Customize the plot theme
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
-    axis.line.y = element_blank(),
-    axis.ticks.y = element_blank(),
-    axis.text.x = element_text(size = 15),
-    axis.text.y = element_text(size = 15, hjust = 1),
-    axis.title.x = element_text(size = 15),
-    axis.title.y = element_text(size = 15),
-    plot.title = element_blank())
+        axis.line.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.text.x = element_text(size = 20),
+        axis.text.y = element_text(size = 20, hjust = 1),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        plot.title = element_blank(),
+        legend.text = element_text(size= 20),
+        legend.title = element_text(size = 20))
 
-figs19
-# ggsave(here("figures", "figs19_behaviour_chemical_class_heat_map.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+figs15
+# ggsave(here("figures", "figs15_behaviour_chemical_class_heat_map.pdf"), width = 21, height = 10, units = "cm", scale = 2, dpi = 800)
+# ggsave(here("figures", "figs15_behaviour_chemical_class_heat_map.jpg"), width = 21, height = 10, units = "cm", scale = 2, dpi = 800)
+
 
 ```
 
-## figs20 - heat map to show which life stages of exposure have been exposed to each pesticide chemical class
-```{r, fig.width=8, fig.height=5}
+## figs16 - heat map to show which life stages of exposure have been exposed to each pesticide chemical class
+```{r, fig.width=16, fig.height=8}
 
 # Join the stydt details with pesticide details by "study_id". 
 sd_pd <- left_join(sd, pd, by = "study_id")
@@ -1373,14 +1395,14 @@ sd_pd_summary1_top5 <- sd_pd_summary1 %>%
   filter(pesticide_chemical_class %in% top_pesticide_classes)
 
 # Create a heatmap with pesticide target class on the x-axis and behavioural class on the y-axis
-figs20 <- ggplot(sd_pd_summary1_top5, aes(x = pesticide_chemical_class, y = life_stage_exposure, fill = count)) +
+figs16 <- ggplot(sd_pd_summary1_top5, aes(x = pesticide_chemical_class, y = life_stage_exposure, fill = count)) +
   
   #Create and fill each tile
   geom_tile(color = "white") +
   scale_fill_gradient(low = "#F0F4F8", high = "#446487") +
   
   # Add labels to the bars for absolute count 
-  geom_text(aes(label = ifelse(count > 0, count, "")), color = "black", size = 4) +
+  geom_text(aes(label = ifelse(count > 0, count, "")), color = "black", size = 7) +
   
   # Add axis and plot labels
   labs(x = "Pesticide Chemical Class", y = "Life Stage Exposure", fill = "Count") +
@@ -1388,21 +1410,24 @@ figs20 <- ggplot(sd_pd_summary1_top5, aes(x = pesticide_chemical_class, y = life
   # Customize the plot theme
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
-    axis.line.y = element_blank(),
-    axis.ticks.y = element_blank(),
-    axis.text.x = element_text(size = 15),
-    axis.text.y = element_text(size = 15, hjust = 1),
-    axis.title.x = element_text(size = 15),
-    axis.title.y = element_text(size = 15),
-    plot.title = element_blank())
+        axis.line.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.text.x = element_text(size = 20),
+        axis.text.y = element_text(size = 20, hjust = 1),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        plot.title = element_blank(),
+        legend.text = element_text(size= 20),
+        legend.title = element_text(size = 20))
 
-figs20
-# ggsave(here("figures", "figs20_life_stage_chemical_class_heat_map.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+figs16
+ # ggsave(here("figures", "figs16_life_stage_chemical_class_heat_map.pdf"), width = 21, height = 10, units = "cm", scale = 2, dpi = 800)
+ # ggsave(here("figures", "figs16_life_stage_chemical_class_heat_map.jpg"), width = 21, height = 10, units = "cm", scale = 2, dpi = 800)
 
 ```
 
-## figs21 - heat map to show which life stages of exposure have been exposed to each target chemical class
-```{r, fig.width=8, fig.height=5}
+## figs17 - heat map to show which life stages of exposure have been exposed to each target chemical class
+```{r, fig.width=16, fig.height=8}
 
 # Separate rows by life_stage_exposure and pesticide_target_class columns
 sd_pd2 <- separate_rows(sd_pd, life_stage_exposure, sep = ",", convert = TRUE)
@@ -1417,32 +1442,35 @@ sd_pd_summary2 <- sd_pd2 %>%
   ungroup()
 
 # Create a heatmap with pesticide target class on the x-axis and life stage exposure on the y-axis
-figs21 <- ggplot(sd_pd_summary2, aes(x = pesticide_target_class, y = life_stage_exposure, fill = count)) +
+figs17 <- ggplot(sd_pd_summary2, aes(x = pesticide_target_class, y = life_stage_exposure, fill = count)) +
   
   #Create and fill each tile
   geom_tile(color = "white") +
   scale_fill_gradient(low = "#F0F4F8", high = "#446487") +
   
   # Add labels to the bars for absolute count 
-  geom_text(aes(label = ifelse(count > 0, count, "")), color = "black", size = 4) +
+  geom_text(aes(label = ifelse(count > 0, count, "")), color = "black", size = 7) +
   
   # Add axis and plot labels
   labs(x = "Pesticide Target Class", y = "Life Stage Exposure", fill = "Count") +
   
   # Customize the plot theme
-  theme_minimal() +
+ theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
-    axis.line.y = element_blank(),
-    axis.ticks.y = element_blank(),
-    axis.text.x = element_text(size = 15),
-    axis.text.y = element_text(size = 15, hjust = 1),
-    axis.title.x = element_text(size = 15),
-    axis.title.y = element_text(size = 15),
-    plot.title = element_blank())
+        axis.line.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.text.x = element_text(size = 20),
+        axis.text.y = element_text(size = 20, hjust = 1),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        plot.title = element_blank(),
+        legend.text = element_text(size= 20),
+        legend.title = element_text(size = 20))
 
 
-figs21                                     
-# ggsave(here("figures", "figs21_life_stage_target_class_heat_map.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+figs17                                     
+ # ggsave(here("figures", "figs17_life_stage_target_class_heat_map.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+ # ggsave(here("figures", "figs17_life_stage_target_class_heat_map.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
 
 ```
 
