@@ -159,7 +159,7 @@ fig3a <-  ggplot(pesticide_pct, aes(x = reorder(pesticide_investigated, n), y = 
         axis.ticks.y = element_blank(),
         axis.title.x = element_text(size = 25),
         axis.title.y = element_text(size = 25),
-        axis.text.x = element_text(size = 25),
+        axis.text.x = element_text(size = 20),
         axis.text.y = element_text(size = 25),
         axis.title = element_text(size = 25),
         plot.title = element_blank()) +
@@ -204,7 +204,7 @@ fig3b <- ggplot(target_class_pct, aes(reorder(pesticide_target_class, n), y = pe
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
-    axis.text.x = element_text(size = 20),
+    axis.text.x = element_text(size = 15),
     axis.text.y = element_text(size = 20),
     axis.title.x = element_text(size = 20),
     axis.title.y = element_text(size = 20),
@@ -255,7 +255,7 @@ total_chemical_class_count <- pd %>%
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
-    axis.text.x = element_text(size = 20),
+    axis.text.x = element_text(size = 15),
     axis.text.y = element_text(size = 20),
     axis.title.x = element_text(size = 20),
     axis.title.y = element_text(size = 20),
@@ -314,7 +314,7 @@ fig4a <- ggplot(life_stage_pct, aes(x = reorder(life_stage_behaviour, percentage
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
-    axis.text.x = element_text(size = 20),
+    axis.text.x = element_text(size = 15),
     axis.text.y = element_text(size = 20, hjust = 1),
     axis.title.x = element_text(size = 20),
     axis.title.y = element_text(size = 20),
@@ -360,7 +360,7 @@ fig4b <- ggplot(life_stage_pct, aes(x = reorder(life_stage_exposure, percentage)
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
-    axis.text.x = element_text(size = 20),
+    axis.text.x = element_text(size = 15),
     axis.text.y = element_text(size = 20, hjust = 1),
     axis.title.x = element_text(size = 20),
     axis.title.y = element_text(size = 20),
@@ -405,7 +405,7 @@ fig4c <- ggplot(sex_pct, aes(x = reorder(sex, percentage), y = percentage)) +
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
-    axis.text.x = element_text(size = 20),
+    axis.text.x = element_text(size = 15),
     axis.text.y = element_text(size = 20, hjust = 1),
     axis.title.x = element_text(size = 20),
     axis.title.y = element_text(size = 20),
@@ -460,8 +460,8 @@ fig5a <- ggplot(route_pct, aes(x = reorder(route, percentage), y = percentage)) 
   labs(x = "Route of Exposure", y = "Percentage") +
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
-        axis.text.x = element_text(size = 20),
-        axis.text.y = element_text(size = 20),
+        axis.text.x = element_text(size = 15),
+        axis.text.y = element_text(size = 20, angle = 90, hjust = 0.45),
         axis.title.x = element_text(size = 20),
         axis.title.y = element_text(size = 20),
         plot.title = element_blank()) +
@@ -547,14 +547,14 @@ fig5b <- ggplot(pdo_waterbourne, aes(x = dosage_type, y = log(dosage_value))) +
 
   
   # Add axis and plot labels
-  labs(title = "Waterborne Exposures by Dosage in ug/L", x = "Waterborne Exposure", y = "log(Dosage (ug/L))") +
+  labs(title = "Waterborne Exposures by Dosage in ug/L", x = "Waterborne Exposure", y = "log(Dosage) [ug/L]") +
   
   # Customize plot theme
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
-    axis.text.x = element_text(size = 20),
+    axis.text.x = element_text(size = 15),
     axis.text.y = element_text(size = 20),
     axis.title.x = element_text(size = 20),
     axis.title.y = element_text(size = 20),
@@ -593,14 +593,14 @@ figs3 <- ggplot(pdo_waterbourne_deltamethrin, aes(x = dosage_type, y = log(dosag
   geom_jitter(width = 0.1, height = 0.05, color = "#5F85AE", alpha = 0.5) +
   
   # Add axis and plot labels
-  labs(title = "Waterborne Exposures of Deltamethrin by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage (ug/L))") +
+  labs(title = "Waterborne Exposures of Deltamethrin by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage) [ug/L]") +
   
   # Customize plot theme
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
         axis.line.y = element_blank(),
         axis.ticks.y = element_blank(),
-        axis.text.x = element_text(size = 20),
+        axis.text.x = element_text(size = 15),
         axis.text.y = element_text(size = 20, hjust = 1),
         axis.title.x = element_text(size = 20),
         axis.title.y = element_text(size = 20),
@@ -639,14 +639,14 @@ figs4 <- ggplot(pdo_waterbourne_rotenone, aes(x = dosage_type, y = log(dosage_va
   geom_jitter(width = 0.1, height = 0.05, color = "#5F85AE", alpha = 0.5) +
   
   # Add axis and plot labels
-  labs(title = "Waterborne Exposures of Rotenone by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage (ug/L))") +
+  labs(title = "Waterborne Exposures of Rotenone by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage) [ug/L]") +
   
   # Customize plot theme
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
         axis.line.y = element_blank(),
         axis.ticks.y = element_blank(),
-        axis.text.x = element_text(size = 20),
+        axis.text.x = element_text(size = 15),
         axis.text.y = element_text(size = 20, hjust = 1),
         axis.title.x = element_text(size = 20),
         axis.title.y = element_text(size = 20),
@@ -685,14 +685,14 @@ figs5 <- ggplot(pdo_waterbourne_atrazine, aes(x = dosage_type, y = log(dosage_va
   geom_jitter(width = 0.1, height = 0.05, color = "#5F85AE", alpha = 0.5) +
 
   # Add axis and plot labels
-  labs(title = "Waterborne Exposures of Atrazine by Dosage in ug/L", x = "Waterborne exposure", y = "log(Dosage (ug/L))")  +
+  labs(title = "Waterborne Exposures of Atrazine by Dosage in ug/L", x = "Waterborne exposure", y = "log(Dosage) [ug/L]")  +
 
   # Customize plot theme
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
-    axis.text.x = element_text(size = 20),
+    axis.text.x = element_text(size = 15),
     axis.text.y = element_text(size = 20, hjust = 1),
     axis.title.x = element_text(size = 20),
     axis.title.y = element_text(size = 20),
@@ -734,14 +734,14 @@ figs6 <- ggplot(pdo_waterbourne_glyphosate, aes(x = dosage_type, y = log(dosage_
   geom_jitter(width = 0.1, height = 0.05, color = "#5F85AE", alpha = 0.5) +
   
   # Add axis and plot labels
-  labs(title = "Waterborne Exposures of Glyphosate by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage (ug/L))")  +
+  labs(title = "Waterborne Exposures of Glyphosate by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage) [ug/L]")  +
   
   # Customize plot theme
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
-    axis.text.x = element_text(size = 20),
+    axis.text.x = element_text(size = 15),
     axis.text.y = element_text(size = 20, hjust = 1),
     axis.title.x = element_text(size = 20),
     axis.title.y = element_text(size = 20),
@@ -780,14 +780,14 @@ figs7 <- ggplot(pdo_waterbourne_chloropyrifo, aes(x = dosage_type, y = log(dosag
   geom_jitter(width = 0.1, height = 0.05, color = "#5F85AE", alpha = 0.5) +
 
   # Add axis and plot labels
-  labs(title = "Waterborne Exposures of Chloropyrifos by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage (ug/L))")  +
+  labs(title = "Waterborne Exposures of Chloropyrifos by Dosage in ug/L", x = "Waterbourne exposure", y = "log(Dosage) [ug/L]")  +
   
   # Customize plot theme
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
-    axis.text.x = element_text(size = 20),
+    axis.text.x = element_text(size = 15),
     axis.text.y = element_text(size = 20, hjust = 1),
     axis.title.x = element_text(size = 20),
     axis.title.y = element_text(size = 20),
@@ -837,15 +837,15 @@ fig5c <- ggplot(pdo, aes(x = route , y = log(duration))) +
 
   
   # Add axis and plot labels
-  labs(x = "Route ", y = "log(duration (hours))") +
+  labs(x = "Distribution of Duration ", y = "log(duration) [hours]") +
   
   # Customize plot theme
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
-    axis.text.x = element_text(size = 20),
-    axis.text.y = element_text(size = 20, angle = 90, hjust = 0.45),
+    axis.text.x = element_text(size = 15),
+    axis.text.y = element_blank(),
     axis.title.x = element_text(size = 20),
     axis.title.y = element_text(size = 20),
     plot.title = element_blank()) +
