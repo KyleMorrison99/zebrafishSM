@@ -33,7 +33,7 @@ In this Rmarkdown we provide the following workflow:
 
 - Objective 4.	To assess the research outputs of different countries and investigate the level of collaboration between authors among different countries. 
 
-# **Load packages and data**
+# Load packages and Data 
 
 ## Load packages
 
@@ -56,12 +56,10 @@ pacman::p_load(tidyverse,
                mapproj)
 ```
 
-
 ## Load data
 All extracted data is stored in five separate **.csv** files representing different aspects of the data (extracted via structured predefined Google Forms - one per table). 
 
 Bibliographic data records are exported from Scopus (including cited references field) in .bib format and locally saved as **scopus.bib**.    
-
 ```{r}
 # Load data set containing background information on each study
 bib <- read_csv(here("data", "zf_sm_bibliometrics.csv"), skip = 0) # 83 rows 9 columns 
@@ -84,7 +82,7 @@ bib_sco <- convert2df(here("data","scopus.bib"), dbsource = "scopus", format = "
 
 # Objective 0: General literature characteristics
 
-## Figure 1a – Current time trends of articles investigating the impacts of pesticide exposure on zebrafish behaviour
+## Figure 1a - Current time trends of articles investigating the impacts of pesticide exposure on zebrafish behaviour
 ```{r, fig.width=8, fig.height=5}
 # Count the number of articles by year
 fig1 <- bib %>%
@@ -117,10 +115,9 @@ fig1
  # ggsave(here("figures", "fig1_time_trends.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
 ```
 
-
 #  Objective 1.	To investigate the types of pesticides and pesticide classes, both in terms of chemical and target, that have been used in experiments examining the effects of pesticide exposure on zebrafish behaviour.
 
-## Figure 3a – Percentages and counts of included papers on the effects of pesticides on zebrafish behaviour (raw count is provided within each bar) according to individual pesticides (“other” is a total for all pesticides with a publication count less than or equal to two)
+## Figure 3a - Percentages and counts of included papers on the effects of pesticides on zebrafish behaviour (raw count is provided within each bar) according to individual pesticides (“other” is a total for all pesticides with a publication count less than or equal to two)
 ```{r, fig.width=8, fig.height=5}
 # Separate rows with multiple pesticides, count their occurrence, and combined all pesticide that occured once as "other"
 total_pesticide_count <- pd %>%
@@ -270,7 +267,7 @@ fig3c
 
 ```
 
-## Figure 3 – Percentages and counts of included papers on the effects of pesticides on zebrafish behaviour (raw count is provided within each bar) according to: a) individual pesticides (“other” is a total for all pesticides with a publication count less than or equal to two), b) target classes of pesticides, and c) chemical classes of pesticides (“other” is all pesticide chemical classes with publication count less than or equal to two). 
+## Figure 3 - Percentages and counts of included papers on the effects of pesticides on zebrafish behaviour (raw count is provided within each bar) according to: a) individual pesticides (“other” is a total for all pesticides with a publication count less than or equal to two), b) target classes of pesticides, and c) chemical classes of pesticides (“other” is all pesticide chemical classes with publication count less than or equal to two). 
 ```{r, fig.width=16, fig.height=9}
 # Combine three plots into a single plot using a grid layout
 fig3 <- ((fig3a) | (fig3b / fig3c) + plot_annotation(tag_levels = "A"))
@@ -280,7 +277,7 @@ fig3
 # ggsave(here("figures", "fig3_pesticide_count_combined.jpg"), width = 20, height = 12, units = "cm", scale = 2, dpi = 800)
 ```
 
-## Objective 2. To investigate pesticide exposure study designs such as concentration and duration of exposure, life stages of zebrafish used in each study and the sample sizes used.
+# Objective 2. To investigate pesticide exposure study designs such as concentration and duration of exposure, life stages of zebrafish used in each study and the sample sizes used.
 
 ## Figure 4a – Percentages and counts of included papers on the effects of pesticides on zebrafish behaviour (raw count is provided within each bar) according to reported sex of zebrafish exposed to pesticides
 ```{r, fig.width=8, fig.height=5}
@@ -327,8 +324,7 @@ fig4a
 
 ```
 
-
-## Figure 4b – Percentages and counts of included papers on the effects of pesticides on zebrafish behaviour (raw count is provided within each bar) according to zebrafish life stages at pesticide exposure
+## Figure 4b - Percentages and counts of included papers on the effects of pesticides on zebrafish behaviour (raw count is provided within each bar) according to zebrafish life stages at pesticide exposure
 ```{r, fig.width=8, fig.height=5}
 # Calculate total count for each category
 total_count_lse <- sd %>% count(life_stage_exposure)
@@ -373,7 +369,6 @@ fig4b
  # ggsave(here("figures", "fig4b_life_stage_exposure.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
 
 ```
-
 
 ## Figure 4c – Percentages and counts of included papers on the effects of pesticides on zebrafish behaviour (raw count is provided within each bar) according to zebrafish life stages at behavioural assessment. 
 ``````{r, fig.width=8, fig.height=5}
@@ -420,8 +415,6 @@ fig4c
  # ggsave(here("figures", "fig4c_life_stage_behaviour.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
 
 ```
-
-
 
 ## Figure 4 – Percentages and counts of included papers on the effects of pesticides on zebrafish behaviour (raw count is provided within each bar) according to: a) reported sex of zebrafish exposed to pesticides, b) zebrafish life stages at pesticide exposure, c) zebrafish life stages at behavioural assessment. 
 ```{r, fig.width=8, fig.height=9}
@@ -523,7 +516,7 @@ fig5a
 
 ```
 
-## Figure s3 - Plot showing the distributions of highest and lowest dosages of waterbourne exposure to deltamethrin
+## Figure s3 - Distribution of dosages used to expose zebrafish to deltamethrin via the waterborne exposure method
 ```{r, fig.width=8, fig.height=5}
 # Pivot the data set to a longer format, separating out the dosage type (lowest or highest) and value into separate columns
 pdo_waterbourne_deltamethrin <- pdo %>%
@@ -569,7 +562,7 @@ figs3
 
 ```
 
-## Figure s4 - Plot showing the distributions of highest and lowest dosages of waterbourne exposure to rotenone
+## Figure s4 - Distribution of dosages used to expose zebrafish to rotenone via the waterborne exposure method 
 ```{r, fig.width=8, fig.height=5}
 # Pivot the data set to a longer format, separating out the dosage type (lowest or highest) and value into separate columns
 pdo_waterbourne_rotenone <- pdo %>%
@@ -614,8 +607,7 @@ figs4
 
 ```
 
-## Figure s5 - Plot showing the distributions of highest and lowest dosages of waterbourne exposure to atrazine
-
+## Figure s5 – Distribution of dosages used to expose zebrafish to atrazine via the waterborne exposure method 
 ```{r, fig.width=8, fig.height=5}
 # Pivot the data set to a longer format, separating out the dosage type (lowest or highest) and value into separate columns
 pdo_waterbourne_atrazine <- pdo %>%
@@ -663,7 +655,7 @@ figs5
 
 ```
 
-## Figure s6 - Plot showing the distributions of highest and lowest dosages of waterbourne exposure to glyphosate
+## Figure s6 – Distribution of the dosages used to expose zebrafish to glyphosate via the waterborne exposure method 
 ```{r, fig.width=8, fig.height=5}
 # Pivot the data set to a longer format, separating out the dosage type (lowest or highest) and value into separate columns
 pdo_waterbourne_glyphosate <- pdo %>%
@@ -710,7 +702,7 @@ figs6
 
 ```
 
-## Figure s7 - Plot showing the distributions of highest and lowest dosages of waterbourne exposure to chlopyrifo
+## Figure s7 – Distribution of dosages used to expose zebrafish to chlorpyrifos via the waterborne exposure method 
 ```{r, fig.width=8, fig.height=5}
 # Pivot the data set to a longer format, separating out the dosage type (lowest or highest) and value into separate columns
 pdo_waterbourne_chloropyrifo <- pdo %>%
@@ -755,7 +747,6 @@ figs7
   # ggsave(here("figures", "figs7_pesticide_dosage_chloropyrifo.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
 
 ```
-
 
 ## Figure 5b – Plot showing the distribuion of durations of pesticide exposure used in each study  
 ```{r, fig.width=8, fig.height=5}
@@ -902,8 +893,7 @@ mean(sd1$sample_size)
 sd(sd1$sample_size)
 ```
 
-
-Figure 5 – Plots showing a) distributions of highest and lowest concentrations of pesticide used in each study, b) the distribution of durations of pesticide exposure used in each study  , c) the percentages of studies using each exposure methodology (IP stands for intraperitoneal injection) and, d) the distribution of sample sizes  used in pesticide exposure studies per group (if multiple exposure groups we calculated mean sample size per study). 
+## Figure 5 - Plots showing a) distributions of highest and lowest concentrations of pesticide used in each study, b) the distribution of durations of pesticide exposure used in each study  , c) the percentages of studies using each exposure methodology (IP stands for intraperitoneal injection) and, d) the distribution of sample sizes  used in pesticide exposure studies per group (if multiple exposure groups we calculated mean sample size per study). 
 ```{r, fig.width=16, fig.height=12}
 # Combine three plots into a single plot using a grid layout
 fig5 <- ((fig5a | fig5b) / (fig5c | fig5d)  + plot_annotation(tag_levels = "A"))
@@ -914,11 +904,10 @@ fig5
 
 ```
 
-
-
 # Objective 3.	To identify the specific behaviours that have been investigated in pesticide exposure experiments that use zebrafish as a model.
 
-## fig6 - total number of studies investigating each broad behaviour class
+## Figure 6 - Percentages of included papers on the effects of pesticides on zebrafish behaviour across behavioural classes assessed.
+
 ```{r, fig.width=8, fig.height=5}
 # Calculate total count for each category
 total_behaviour_class_count <- bd %>% 
@@ -965,7 +954,7 @@ fig6
 ```
 
 
-## figs8 - total percentage of evaluated behaviours that were under the locomotion/ activity category
+## Figure s8 – Percentages of included papers according to evaluated behaviours that were under the locomotion/activity category. Raw count is provided within each bar. 
 ```{r, fig.width=8, fig.height=5}
 # Calculate count for each assay in behavioral activity 
 total_behaviour_activity_count <- bd %>% 
@@ -1012,7 +1001,7 @@ figs8
 
 ```
 
-## figs9 - total percentage of evaluated behaviours that were under the aggression category.
+## Figure s9 – Percentages of included papers according to evaluated behaviours that were under the aggression category. Raw count is provided within each bar.
 ```{r, fig.width=12, fig.height=5}
 # Calculate count for each assay in aggression behavior
 total_behaviour_aggression_count <- bd %>% 
@@ -1060,7 +1049,7 @@ figs9
 
 ```
 
-## figs10 - total percentage of evaluated behaviours that were under the social category.
+## Figure s10 – Percentages of included papers according to evaluated behaviours that were under the social category. Raw count is provided within each bar
 ```{r, fig.width=12, fig.height=5}
 # Calculate count for each assay in social behavior
 total_behaviour_sociality_count <- bd %>% 
@@ -1108,7 +1097,7 @@ figs10
 
 ```
 
-## figs11 - total percentage of evaluated behaviours that were under the foraging category.
+## Figure s11 – Percentages of included papers according to evaluated behaviours that were under the foraging category. Raw count is provided within each bar.  
 ```{r, fig.width=12, fig.height=5}
 # Calculate count for each assay in foraging behavior
 total_behaviour_foraging_count <- bd %>% 
@@ -1158,7 +1147,7 @@ figs11
 
 ```
 
-## figs12 - total percentage of evaluated behaviours that were under the antipredator category.
+## Figure s12 – Percentages of included papers according to evaluated behaviours that were under the antipredator category. Raw count is provided within each bar.  
 ```{r, fig.width=12, fig.height=5}
 # Calculate count for each assay in antipredator behavior
 total_behaviour_antipredator_count <- bd %>% 
@@ -1206,7 +1195,7 @@ figs12
 
 ```
 
-## figs13 - total percentage of evaluated behaviours that were under the anxiety/boldness category.
+## Figure s13 – Percentages of included papers according to evaluated behaviours that were under the anxiety/boldness category. Raw count is provided within each bar. 
 ```{r, fig.width=12, fig.height=5}
 # Calculate count for each assay in anxiety behavior
 total_behaviour_anxiety_count <- bd %>% 
@@ -1257,7 +1246,7 @@ figs13
 ```
 
 
-## figs14 - heat map to show which behavours have been investigated in which pesticide target class
+## Figure s14 – Heat map plot showing counts of included papers according to combinations of evaluated behaviours and pesticide target class
 ```{r, fig.width=16, fig.height=8}
 # Join the behaviour details and pesticide details by "study_id"
 bd_pd <- left_join(bd, pd, by = "study_id")
@@ -1307,7 +1296,7 @@ figs14
 
 ```
 
-## figs15 - heat map to show which behavours have been investigated in which pesticide chemical class
+## Figure s15 – Heat map plot showing counts of included papers according to combinations of evaluated behaviours and pesticide chemical class (filtered for top 5 most abundant chemical classes)
 ```{r, fig.width=16, fig.height=8}
 # Separate rows by behavioural_class and pesticide_chemical_class columns
 bd_pd2 <- separate_rows(bd_pd, behavioural_class, sep = ",\\s*", convert = TRUE)
@@ -1366,7 +1355,7 @@ figs15
 
 ```
 
-## figs16 - heat map to show which life stages of exposure have been exposed to each pesticide chemical class
+## Figure s16 – Heat map plot showing counts of included papers according to combinations of evaluated life stages and pesticide chemical class (filtered for top 5 most abundant chemical classes)
 ```{r, fig.width=16, fig.height=8}
 
 # Join the stydt details with pesticide details by "study_id". 
@@ -1427,7 +1416,7 @@ figs16
 
 ```
 
-## figs17 - heat map to show which life stages of exposure have been exposed to each target chemical class
+## Figure s17 – Heat map plot showing counts of included papers according to combinations of evaluated life stages and pesticide target class
 ```{r, fig.width=16, fig.height=8}
 
 # Separate rows by life_stage_exposure and pesticide_target_class columns
@@ -1478,7 +1467,10 @@ figs17
 
 # Objective 4. To examine how are authors connected between countries and how is the literature connected between and within disciplines.
 
-## figs24 - general bibliometric summaries
+## Figure s23 - Average total citation count per year for papers included in the systematic map
+## Figure s24 – Average article citation per year for papers included in the systematic map
+## Figure s25 – Annual scientific production counts of papers included in the systematic map
+## Figure s26 – Most productive countries of author affiliations for papers included in the systematic map
 ```{r, fig.width=8, fig.height=5}
 # Perform bibliometric analysis on dataset "bib_sco"
 figs24 <- biblioAnalysis(bib_sco)
@@ -1489,7 +1481,7 @@ plot(figs24)
 ```
 
 
-## fig s28 - thematic map based on keywords
+## Figure s28 – Thematic map based on keywords extracted from ID field (taken from Scopus bibliometric information) of papers included in the systematic map.
 ```{r, fig.width=8, fig.height=5}
 # Set plot parameters to display a single plot with narrow margins
 par(mfrow=c(1,1), mar=c(0,2,0,2))
@@ -1500,12 +1492,12 @@ figs28 <- thematicMap(bib_sco, field = "ID", n = 1000, minfreq = 5, stemming = F
 # Display the resulting map using the "plot" function
 plot(figs28$map)
 
- ggsave(here("figures", "figs28_thematic_map.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
- ggsave(here("figures", "figs28_thematic_map.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+# ggsave(here("figures", "figs28_thematic_map.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+# ggsave(here("figures", "figs28_thematic_map.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
 
 ```
 
-## fig6 - country publications map
+## Figure 7 – Heat map of world showing the country-level counts for first authors’ country of affiliation of studies investigating the impacts of pesticide exposure on zebrafish behaviour. Grey indicates no publications affiliated with a given country. 
 ```{r, fig.width=8, fig.height=5}
 
 # Extract country information from the "AU1_CO" and "AU_CO" fields of the "bib_sco" dataset
@@ -1556,7 +1548,7 @@ fig7
 
 ```
 
-## figs28 - country collaborate network circle plot with self-collaborations included 
+## Figure s29 – Country-level collaboration network circle plot with self-collaborations included, based on affiliation countries of the authors of papers included in the systematic map. 
 ```{r, fig.width=8, fig.height=5}
 # Extract countries from the affiliations
 bib_sco2 <- metaTagExtraction(bib_sco, Field = "AU_CO", sep = ";")
@@ -1624,7 +1616,7 @@ circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
 
 ```
 
-## figs30 - country collaborate network circle plot with self-collaborations removed 
+## Figure s30 – Country-level collaborate network circle plot with self-collaborations excluded, based on affiliation countries of the authors of papers included in the systematic map.
 ```{r, fig.width=8, fig.height=5}
 # Making diagnal zero to remove self citations 
 diag(NetMatrix_country) <- 0
@@ -1642,7 +1634,7 @@ circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
 }, bg.border = NA)
 ```
 
-## figs31 - continent collaborate network circle plot with self-collaborations included 
+## Figure s31– Continent-level collaborate network circle plot with self-collaborations included, based on affiliation countries of the authors of papers included in the systematic map.  
 ```{r, fig.width=8, fig.height=5}
 NetMatrix_continent <- NetMatrix_country
 # Change "Usa" to "North America"
@@ -1735,7 +1727,7 @@ circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
 
 ```
 
-## fig8 - continent collaborate network circle plot with self-collaborations removed 
+## Figure 8 – Continent-level collaborate network circle plot with self-collaborations removed, based on affiliation countries of the authors of papers included in the systematic map
 ```{r}
 # remove diagonal elements
 diag(merge_matrix2) <- 0
