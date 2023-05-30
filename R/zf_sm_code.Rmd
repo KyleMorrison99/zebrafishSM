@@ -84,10 +84,10 @@ bib_sco <- convert2df(here("data","scopus.bib"), dbsource = "scopus", format = "
 
 # Objective 0: General literature characteristics
 
-## fig 2- study time time trends
+## Figure 1a – Current time trends of articles investigating the impacts of pesticide exposure on zebrafish behaviour
 ```{r, fig.width=8, fig.height=5}
 # Count the number of articles by year
-fig2 <- bib %>%
+fig1 <- bib %>%
   count(publication_year) %>%
   
   # Create a bar chart with publication year on x-axis and count on y-axis
@@ -112,15 +112,15 @@ fig2 <- bib %>%
         plot.title = element_text(size = 16, face = "bold"))
  
 
-fig2
- # ggsave(here("figures", "fig2_time_trends.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
- # ggsave(here("figures", "fig2_time_trends.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+fig1
+# ggsave(here("figures", "fig1_time_trends.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+ # ggsave(here("figures", "fig1_time_trends.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
 ```
 
 
 #  Objective 1.	To investigate the types of pesticides and pesticide classes, both in terms of chemical and target, that have been used in experiments examining the effects of pesticide exposure on zebrafish behaviour.
 
-## fig3a - plot for total of individual pesticides used in pesticide exposure studies
+## Figure 3a – Percentages and counts of included papers on the effects of pesticides on zebrafish behaviour (raw count is provided within each bar) according to individual pesticides (“other” is a total for all pesticides with a publication count less than or equal to two)
 ```{r, fig.width=8, fig.height=5}
 # Separate rows with multiple pesticides, count their occurrence, and combined all pesticide that occured once as "other"
 total_pesticide_count <- pd %>%
@@ -173,7 +173,7 @@ fig3a
 
 ```
 
-## fig3b - total for each pesticide target class used in pesticide exposure studies
+## Figure 3b – Percentages and counts of included papers on the effects of pesticides on zebrafish behaviour (raw count is provided within each bar) according to target classes of pesticides
 ```{r, fig.width=8, fig.height=5}
 # Separate rows with multiple pesticides and count their occurrence
 total_target_class_count <- pd %>%
@@ -219,7 +219,7 @@ fig3b
 
 ```
 
-## fig3c - total for chemical class 
+## Figure 3c – Percentages and counts of included papers on the effects of pesticides on zebrafish behaviour (raw count is provided within each bar) according to chemical classes of pesticides (“other” is all pesticide chemical classes with publication count less than or equal to two). 
 ```{r, fig.width=8, fig.height=5}
 # Separate rows with multiple pesticides and count their occurrence, then filter for cases with more than one occurrence
 total_chemical_class_count <- pd %>%
@@ -270,7 +270,7 @@ fig3c
 
 ```
 
-## fig3 combined 
+## Figure 3 – Percentages and counts of included papers on the effects of pesticides on zebrafish behaviour (raw count is provided within each bar) according to: a) individual pesticides (“other” is a total for all pesticides with a publication count less than or equal to two), b) target classes of pesticides, and c) chemical classes of pesticides (“other” is all pesticide chemical classes with publication count less than or equal to two). 
 ```{r, fig.width=16, fig.height=9}
 # Combine three plots into a single plot using a grid layout
 fig3 <- ((fig3a) | (fig3b / fig3c) + plot_annotation(tag_levels = "A"))
@@ -282,35 +282,34 @@ fig3
 
 ## Objective 2. To investigate pesticide exposure study designs such as concentration and duration of exposure, life stages of zebrafish used in each study and the sample sizes used.
 
-## fig4a - total lifestage of behaviour
-``````{r, fig.width=8, fig.height=5}
+## Figure 4a – Percentages and counts of included papers on the effects of pesticides on zebrafish behaviour (raw count is provided within each bar) according to reported sex of zebrafish exposed to pesticides
+```{r, fig.width=8, fig.height=5}
 # Calculate total count for each category
-total_count_lsb <- sd %>% count(life_stage_behaviour)
+total_sex_count <- sd %>% count(sex)
 
 # Calculate proportion and percentage for each category
-life_stage_pct <- sd %>%
-  separate_rows(life_stage_behaviour, sep = ",\\s*") %>% 
-  count(life_stage_behaviour) %>%
-  mutate( proportion = n / sum(total_count_lsb$n),
-    percentage = proportion * 100)
+sex_pct <- sd %>%
+  count(sex) %>%
+  mutate(proportion = n/sum(total_sex_count$n),
+         percentage = proportion*100)
 
-# Create a bar chart with the count on the x-axis and life stage of behavior on the y-axis
-fig4a <- ggplot(life_stage_pct, aes(x = reorder(life_stage_behaviour, percentage), y = percentage)) +
+# Create a bar chart with the count  on the x-axis and behaviorual class on the y-axis
+fig4a <- ggplot(sex_pct, aes(x = reorder(sex, percentage), y = percentage)) +
   
   # Customize the appearance of the bars 
-  geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8,position = position_dodge(0.9)) +
+  geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
   
   # Add labels to the bars for percentage 
   geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 7, fontface = "bold") +
   
   # Add absolute count to bars
-  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white",fontface = "bold", size = 7) +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 7) +
   
   # Add axis and plot labels 
-  labs(x = "Life Stage of Behavior", y = "Percentage", fontsize = 14) +
+  labs(x = "Sex of Exposure", y = "Percentage") +
   
   # Customize the plot theme 
-  theme_minimal() +
+   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
@@ -323,12 +322,13 @@ fig4a <- ggplot(life_stage_pct, aes(x = reorder(life_stage_behaviour, percentage
   ylim(0, 100)
 
 fig4a
-# ggsave(here("figures", "fig4a_life_stage_behaviour.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
-# ggsave(here("figures", "fig4a_life_stage_behaviour.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+ # ggsave(here("figures", "fig4a_total_sex_exposed.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+ # ggsave(here("figures", "fig4a_total_sex_exposed.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
 
 ```
 
-## fig4b - total lifestage of exposure 
+
+## Figure 4b – Percentages and counts of included papers on the effects of pesticides on zebrafish behaviour (raw count is provided within each bar) according to zebrafish life stages at pesticide exposure
 ```{r, fig.width=8, fig.height=5}
 # Calculate total count for each category
 total_count_lse <- sd %>% count(life_stage_exposure)
@@ -374,34 +374,36 @@ fig4b
 
 ```
 
-## fig4c  - total sexes exposed 
-```{r, fig.width=8, fig.height=5}
+
+## Figure 4c – Percentages and counts of included papers on the effects of pesticides on zebrafish behaviour (raw count is provided within each bar) according to zebrafish life stages at behavioural assessment. 
+``````{r, fig.width=8, fig.height=5}
 # Calculate total count for each category
-total_sex_count <- sd %>% count(sex)
+total_count_lsb <- sd %>% count(life_stage_behaviour)
 
 # Calculate proportion and percentage for each category
-sex_pct <- sd %>%
-  count(sex) %>%
-  mutate(proportion = n/sum(total_sex_count$n),
-         percentage = proportion*100)
+life_stage_pct <- sd %>%
+  separate_rows(life_stage_behaviour, sep = ",\\s*") %>% 
+  count(life_stage_behaviour) %>%
+  mutate( proportion = n / sum(total_count_lsb$n),
+    percentage = proportion * 100)
 
-# Create a bar chart with the count  on the x-axis and behaviorual class on the y-axis
-fig4c <- ggplot(sex_pct, aes(x = reorder(sex, percentage), y = percentage)) +
+# Create a bar chart with the count on the x-axis and life stage of behavior on the y-axis
+fig4c <- ggplot(life_stage_pct, aes(x = reorder(life_stage_behaviour, percentage), y = percentage)) +
   
   # Customize the appearance of the bars 
-  geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
+  geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8,position = position_dodge(0.9)) +
   
   # Add labels to the bars for percentage 
   geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 7, fontface = "bold") +
   
   # Add absolute count to bars
-  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 7) +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white",fontface = "bold", size = 7) +
   
   # Add axis and plot labels 
-  labs(x = "Sex of Exposure", y = "Percentage") +
+  labs(x = "Life Stage of Behavior", y = "Percentage", fontsize = 14) +
   
   # Customize the plot theme 
-   theme_minimal() +
+  theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
     axis.line.y = element_blank(),
     axis.ticks.y = element_blank(),
@@ -414,68 +416,23 @@ fig4c <- ggplot(sex_pct, aes(x = reorder(sex, percentage), y = percentage)) +
   ylim(0, 100)
 
 fig4c
- # ggsave(here("figures", "fig4c_total_sex_exposed.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
- # ggsave(here("figures", "fig4c_total_sex_exposed.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+ # ggsave(here("figures", "fig4c_life_stage_behaviour.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+ # ggsave(here("figures", "fig4c_life_stage_behaviour.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
 
 ```
 
 
 
-## fig4 combined 
+## Figure 4 – Percentages and counts of included papers on the effects of pesticides on zebrafish behaviour (raw count is provided within each bar) according to: a) reported sex of zebrafish exposed to pesticides, b) zebrafish life stages at pesticide exposure, c) zebrafish life stages at behavioural assessment. 
 ```{r, fig.width=8, fig.height=9}
 # Combine three plots into a single plot using a grid layout
 fig4 <- ((fig4a) / (fig4b) / (fig4c) + plot_annotation(tag_levels = "A"))
 
 fig4
 
- #  ggsave(here("figures", "fig3_zebrafish_characteristics.pdf"), width = 15, height = 15, units = "cm", scale = 2, dpi = 800)
- #  ggsave(here("figures", "fig4_zebrafish_characteristics.jpg"), width = 15, height = 15, units = "cm", scale = 2, dpi = 800)
+ # ggsave(here("figures", "fig4_zebrafish_characteristics.pdf"), width = 15, height = 15, units = "cm", scale = 2, dpi = 800)
+ # ggsave(here("figures", "fig4_zebrafish_characteristics.jpg"), width = 15, height = 15, units = "cm", scale = 2, dpi = 800)
 ```
-
-## fig5a - total route of exposure
-```{r, fig.width=8, fig.height=5}
-# Count the total occurrence of each route in the data set
-total_route_count <- pdo %>% 
-                     count(route)
-
-# Count the proportion and percentage of each route in the data set
-route_pct <- pdo %>%
-  count(route) %>%
-  mutate(proportion = n/sum(total_route_count$n),
-         percentage = proportion*100)
-
-# Create a bar chart with the percentage of pesticides by route of exposure on the x-axis and the routes of exposure on the y-axis
-fig5a <- ggplot(route_pct, aes(x = reorder(route, percentage), y = percentage)) +
-  
-  # Customize the appearance of the bars
-  geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
-  
-  # Add absolute count to bars
-  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 7) +
-  
-  # Add percentage label to bars 
-  geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 7, fontface = "bold") +
-  
-  # Customize the appearance of the plot
-  labs(x = "Route of Exposure", y = "Percentage") +
-  theme_minimal() +
-  theme(panel.grid.major.y = element_blank(),
-        axis.text.x = element_text(size = 15),
-        axis.text.y = element_text(size = 20, angle = 90, hjust = 0.45),
-        axis.title.x = element_text(size = 20),
-        axis.title.y = element_text(size = 20),
-        plot.title = element_blank()) +
-        coord_flip() + 
-        ylim(0, 105)
-
-
-fig5a
- # ggsave(here("figures", "fig5a_pesticide_route_count.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
- # ggsave(here("figures", "fig5a_pesticide_route_count.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
-
-```
-
-
 
 making dosages consistent for dosage comparisons
 ```{r}
@@ -518,7 +475,7 @@ pdo <- pdo %>%
 ```
 
 
-## fig5b - comparison of lowest and highest dosages in waterbourne exposure methods
+## Figure 5a - Plot showing the distributions of highest and lowest concentrations of pesticide used in each study
 ```{r, fig.width=8, fig.height=5}
 # Pivot the dataset to a longer format, separating out the dosage type (lowest or highest) and value into separate columns
 pdo_waterbourne <- pdo %>%
@@ -534,7 +491,7 @@ pdo_waterbourne <- pdo %>%
   mutate(dosage_type = if_else(dosage_type == "dosage_lowest", "Lowest ", "Highest ")) 
 
 # Create the plot with dosage type (i.e., lowest or highest dose) on the x-axis and dosage value on the y-axis
-fig5b <- ggplot(pdo_waterbourne, aes(x = dosage_type, y = log(dosage_value))) +
+fig5a <- ggplot(pdo_waterbourne, aes(x = dosage_type, y = log(dosage_value))) +
   
   # Add a violin plot 
   geom_violin(fill = "#5F85AE", alpha =0.2, color = NA, trim = FALSE) +
@@ -560,13 +517,13 @@ fig5b <- ggplot(pdo_waterbourne, aes(x = dosage_type, y = log(dosage_value))) +
     axis.title.y = element_text(size = 20),
     plot.title = element_blank())
 
-fig5b
-# ggsave(here("figures", "fig5b_pesticide_dosage.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
-# ggsave(here("figures", "fig5b_pesticide_dosage.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+fig5a
+# ggsave(here("figures", "fig5a_pesticide_dosage.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+# ggsave(here("figures", "fig5a_pesticide_dosage.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
 
 ```
 
-## figs3 - comparison of lowest and highest dosages of waterbourne exposure to deltamethrin
+## Figure s3 - Plot showing the distributions of highest and lowest dosages of waterbourne exposure to deltamethrin
 ```{r, fig.width=8, fig.height=5}
 # Pivot the data set to a longer format, separating out the dosage type (lowest or highest) and value into separate columns
 pdo_waterbourne_deltamethrin <- pdo %>%
@@ -612,7 +569,7 @@ figs3
 
 ```
 
-## figs4 - comparison of lowest and highest dosages of waterbourne exposure to rotenone
+## Figure s4 - Plot showing the distributions of highest and lowest dosages of waterbourne exposure to rotenone
 ```{r, fig.width=8, fig.height=5}
 # Pivot the data set to a longer format, separating out the dosage type (lowest or highest) and value into separate columns
 pdo_waterbourne_rotenone <- pdo %>%
@@ -657,7 +614,7 @@ figs4
 
 ```
 
-## figs5 - comparison of lowest and highest dosages of waterbourne exposure atrazine
+## Figure s5 - Plot showing the distributions of highest and lowest dosages of waterbourne exposure to atrazine
 
 ```{r, fig.width=8, fig.height=5}
 # Pivot the data set to a longer format, separating out the dosage type (lowest or highest) and value into separate columns
@@ -706,7 +663,7 @@ figs5
 
 ```
 
-## figs6 - comparison to lowest and highest dosages of waterbourne exposure to glyphosate
+## Figure s6 - Plot showing the distributions of highest and lowest dosages of waterbourne exposure to glyphosate
 ```{r, fig.width=8, fig.height=5}
 # Pivot the data set to a longer format, separating out the dosage type (lowest or highest) and value into separate columns
 pdo_waterbourne_glyphosate <- pdo %>%
@@ -753,7 +710,7 @@ figs6
 
 ```
 
-## figs7  - comparison to lowest and highest dosages of waterbourne exposure to chlopyrifo
+## Figure s7 - Plot showing the distributions of highest and lowest dosages of waterbourne exposure to chlopyrifo
 ```{r, fig.width=8, fig.height=5}
 # Pivot the data set to a longer format, separating out the dosage type (lowest or highest) and value into separate columns
 pdo_waterbourne_chloropyrifo <- pdo %>%
@@ -799,10 +756,10 @@ figs7
 
 ```
 
-## fig5c - durations of waterbourne exposure 
 
+## Figure 5b – Plot showing the distribuion of durations of pesticide exposure used in each study  
 ```{r, fig.width=8, fig.height=5}
-pdo <- pdo %>% 
+pdo_duration <- pdo %>% 
   filter(!is.na(duration)) %>%
   # Convert duration to numeric and duration_unit to character 
   mutate(duration = as.numeric(duration),
@@ -825,7 +782,7 @@ pdo <- pdo %>%
   filter(route == "waterbourne")
   
 
-fig5c <- ggplot(pdo, aes(x = route , y = log(duration))) + 
+fig5b <- ggplot(pdo_duration, aes(x = route , y = log(duration))) + 
     # Add a violin plot 
   geom_violin(fill = "#5F85AE", alpha =0.2, color = NA, trim = FALSE) +
 
@@ -851,13 +808,56 @@ fig5c <- ggplot(pdo, aes(x = route , y = log(duration))) +
     plot.title = element_blank()) +
     coord_flip()
 
-fig5c
-# ggsave(here("figures", "fig5c_pesticide_duration_exposure.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
-# ggsave(here("figures", "fig5c_pesticide_duration_exposure.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+fig5b
+# ggsave(here("figures", "fig5b_pesticide_duration_exposure.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+# ggsave(here("figures", "fig5b_pesticide_duration_exposure.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
 
 ```
 
-## fig5d - distribution of sample sizes 
+## Figure 5c - Plot showing the percentages of studies using each exposure methodology (IP stands for intraperitoneal injection) 
+```{r, fig.width=8, fig.height=5}
+# Count the total occurrence of each route in the data set
+total_route_count <- pdo %>% 
+                     count(route)
+
+# Count the proportion and percentage of each route in the data set
+route_pct <- pdo %>%
+  count(route) %>%
+  mutate(proportion = n/sum(total_route_count$n),
+         percentage = proportion*100)
+
+# Create a bar chart with the percentage of pesticides by route of exposure on the x-axis and the routes of exposure on the y-axis
+fig5c <- ggplot(route_pct, aes(x = reorder(route, percentage), y = percentage)) +
+  
+  # Customize the appearance of the bars
+  geom_bar(stat = "identity", fill = "#5F85AE", color = "white", alpha = 0.8, position = position_dodge(0.9)) +
+  
+  # Add absolute count to bars
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "white", fontface = "bold", size = 7) +
+  
+  # Add percentage label to bars 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), hjust = -0.2, vjust = 0.5, size = 7, fontface = "bold") +
+  
+  # Customize the appearance of the plot
+  labs(x = "Route of Exposure", y = "Percentage") +
+  theme_minimal() +
+  theme(panel.grid.major.y = element_blank(),
+        axis.text.x = element_text(size = 20),
+        axis.text.y = element_text(size = 20),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        plot.title = element_blank()) +
+        coord_flip() + 
+        ylim(0, 100)
+
+
+fig5c
+ # ggsave(here("figures", "fig5c_pesticide_route_count.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+ # ggsave(here("figures", "fig5c_pesticide_route_count.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+
+```
+
+## Figure 5 - Plot showing the distribution of sample sizes  used in pesticide exposure studies per group (if multiple exposure groups we calculated mean sample size per study). 
 ```{r, fig.width=8, fig.height=5}
 count <- sum(sd$sample_size == "not reported", na.rm = TRUE)
 
@@ -902,16 +902,17 @@ mean(sd1$sample_size)
 sd(sd1$sample_size)
 ```
 
+
+Figure 5 – Plots showing a) distributions of highest and lowest concentrations of pesticide used in each study, b) the distribution of durations of pesticide exposure used in each study  , c) the percentages of studies using each exposure methodology (IP stands for intraperitoneal injection) and, d) the distribution of sample sizes  used in pesticide exposure studies per group (if multiple exposure groups we calculated mean sample size per study). 
 ```{r, fig.width=16, fig.height=12}
 # Combine three plots into a single plot using a grid layout
-fig5 <- ((fig5b | fig5c) / (fig5a | fig5d)  + plot_annotation(tag_levels = "A"))
+fig5 <- ((fig5a | fig5b) / (fig5c | fig5d)  + plot_annotation(tag_levels = "A"))
 
 fig5
-# ggsave(here("figures", "fig5_pesticide_characteristics.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
-# ggsave(here("figures", "fig5_pesticide_characteristics.jpg"), width = 20, height = 12, units = "cm", scale = 2, dpi = 800)
+ # ggsave(here("figures", "fig5_pesticide_characteristics.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+ #  ggsave(here("figures", "fig5_pesticide_characteristics.jpg"), width = 22, height = 12, units = "cm", scale = 2, dpi = 800)
 
 ```
-
 
 
 
