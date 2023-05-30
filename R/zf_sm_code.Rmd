@@ -25,13 +25,13 @@ In this Rmarkdown we provide the following workflow:
 
 - Objective 0. To investigate general literature characteristics such as time trends 
 
-- Objective 1.	To investigate the types of pesticides and pesticide classes, both in terms of chemical structure and target organism, that have been used in studies examining the effects of pesticide exposure on non-larval zebrafish behaviour.
+- Objective 1. To investigate the types of pesticides and pesticide classes, both in terms of the chemical structure and target organism, that have been used in studies examining the effects of pesticide exposure on post-larval  zebrafish behaviour
 
-- Objective 2. 	To investigate the study designs employed to assess the effects of pesticide exposure on the behaviour of non-larval zebrafish.  
+- Objective 2. To characterise the study set ups (e.g., characteristics of zebrafish such as life stage of exposure and sex, and characteristics of pesticides such as concentrations and duration of exposure)  have been employed to assess the effects of pesticide exposure on the behaviour of post-larval zebrafish.   
 
-- Objective 3.  To identify the specific behaviours that have been investigated in pesticide exposure studies that use non-larval zebrafish as a model.
+- Objective 3. To identify the extent the specific behaviours have been investigated in pesticide exposure studies that use post-larval zebrafish as a model.
 
-- Objective 4.	To assess the research outputs of different countries and investigate the level of collaboration between authors among different countries. 
+- Objective 4. To assess the research contributions of different countries and continents and describe the level of collaboration between authors amongst different countries.    
 
 # Load packages and Data 
 
@@ -80,7 +80,7 @@ bd <- read_csv(here("data", "zf_sm_behaviour_details.csv"), skip = 0) # 83 rows 
 bib_sco <- convert2df(here("data","scopus.bib"), dbsource = "scopus", format = "bibtex") # 79 rows 38 columns 
 ```
 
-# Objective 0: General literature characteristics
+# Objective 0. To investigate general literature characteristics such as time trends
 
 ## Figure 1a - Current time trends of articles investigating the impacts of pesticide exposure on zebrafish behaviour
 ```{r, fig.width=8, fig.height=5}
@@ -273,7 +273,7 @@ fig3c
 fig3 <- ((fig3a) | (fig3b / fig3c) + plot_annotation(tag_levels = "A"))
 
 fig3
-# ggsave(here("figures", "fig3_pesticide_count_combined.pdf"), width = 16, height = 12, units = "cm", scale = 2, dpi = 800)
+# ggsave(here("figures", "fig3_pesticide_count_combined.pdf"), width = 20, height = 12, units = "cm", scale = 2, dpi = 800)
 # ggsave(here("figures", "fig3_pesticide_count_combined.jpg"), width = 20, height = 12, units = "cm", scale = 2, dpi = 800)
 ```
 
@@ -417,7 +417,7 @@ fig4c
 ```
 
 ## Figure 4 – Percentages and counts of included papers on the effects of pesticides on zebrafish behaviour (raw count is provided within each bar) according to: a) reported sex of zebrafish exposed to pesticides, b) zebrafish life stages at pesticide exposure, c) zebrafish life stages at behavioural assessment. 
-```{r, fig.width=8, fig.height=9}
+```{r, fig.width=12, fig.height=12}
 # Combine three plots into a single plot using a grid layout
 fig4 <- ((fig4a) / (fig4b) / (fig4c) + plot_annotation(tag_levels = "A"))
 
@@ -748,10 +748,10 @@ figs7
 
 ```
 
-## Figure 5b – Plot showing the distribuion of durations of pesticide exposure used in each study  
+## Figure 5b – Plot showing the distribuion of durations of pesticide exposure used in each study (filtered for waterborne exposure)
 ```{r, fig.width=8, fig.height=5}
 pdo_duration <- pdo %>% 
-  filter(!is.na(duration)) %>%
+  filter(!is.na(duration), duration != "not reported") %>%
   # Convert duration to numeric and duration_unit to character 
   mutate(duration = as.numeric(duration),
          duration_unit = as.character(duration_unit),
