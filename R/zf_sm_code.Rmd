@@ -417,7 +417,7 @@ fig4c
 ```
 
 ## Figure 4 – Percentages and counts of included papers on the effects of pesticides on zebrafish behaviour (raw count is provided within each bar) according to: a) reported sex of zebrafish exposed to pesticides, b) zebrafish life stages at pesticide exposure, c) zebrafish life stages at behavioural assessment. 
-```{r, fig.width=12, fig.height=12}
+```{r, fig.width=10, fig.height=12}
 # Combine three plots into a single plot using a grid layout
 fig4 <- ((fig4a) / (fig4b) / (fig4c) + plot_annotation(tag_levels = "A"))
 
@@ -848,7 +848,7 @@ fig5c
 
 ```
 
-## Figure 5 - Plot showing the distribution of sample sizes  used in pesticide exposure studies per group (if multiple exposure groups we calculated mean sample size per study). 
+## Figure 5d - Plot showing the distribution of sample sizes  used in pesticide exposure studies per group (if multiple exposure groups we calculated mean sample size per study). 
 ```{r, fig.width=8, fig.height=5}
 count <- sum(sd$sample_size == "not reported", na.rm = TRUE)
 
