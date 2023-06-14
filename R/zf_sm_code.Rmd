@@ -45,9 +45,9 @@ pacman::p_load(tidyverse,
                formatR,
                forcats,
                ggplot2,
-               hrbrthemes, # for ggplot2
+               hrbrthemes, 
                patchwork,
-               plotly, # for ggplot2
+               plotly, 
                bibliometrix,
                igraph, 
                tidyr,
@@ -57,9 +57,9 @@ pacman::p_load(tidyverse,
 ```
 
 ## Load data
-All extracted data is stored in five separate **.csv** files representing different aspects of the data (extracted via structured predefined Google Forms - one per table) 
+All extracted data is stored in five separate .csv files representing different aspects of the data (extracted via structured predefined Google Forms - one per table) 
 
-Bibliographic data records are exported from Scopus (including cited references field) in .bib format and locally saved as **scopus.bib**    
+Bibliographic data records are exported from Scopus (including cited references field) in .bib format and locally saved as scopus.bib    
 ```{r}
 # Load data set containing background information on each study
 bib <- read_csv(here("data", "zf_sm_bibliometrics.csv"), skip = 0) # 83 rows 9 columns 
@@ -113,8 +113,8 @@ fig1 <- bib %>%
  
 
 fig1
-# ggsave(here("figures", "fig1_time_trends.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
- # ggsave(here("figures", "fig1_time_trends.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+ ggsave(here("figures", "fig1_time_trends.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+ ggsave(here("figures", "fig1_time_trends.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
 ```
 
 #  Objective 1
