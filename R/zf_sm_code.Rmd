@@ -1507,7 +1507,7 @@ figs17
 ```
 
 
-# Objective 4. 
+# Objective 4
 To examine how are authors connected between countries and how is the literature connected between and within disciplines
 
 ## Figure s23 
