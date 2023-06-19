@@ -334,7 +334,7 @@ pdo <- pdo %>%
 
 
 ## Figure 4a 
-Plot showing the distributions of highest and lowest concentrations of pesticide used in each study
+Box and violin plot illustrating the distribution of pesticide dosages used in pesticide exposure studies on zebrafish behaviour
 ```{r, fig.width=16, fig.height=10}
 # Pivot the dataset to a longer format, separating out the dosage type (lowest or highest) and value into separate columns
 pdo_waterbourne <- pdo %>%
@@ -384,7 +384,7 @@ fig4a
 ```
 
 ## Figure s3 
-Distribution of dosages used to expose zebrafish to deltamethrin via the waterborne exposure method
+Box and violin plot illustrating the distribution of deltamethrin dosages used in pesticide exposure studies on zebrafish behaviour
 ```{r, fig.width=16, fig.height=10}
 # Pivot the data set to a longer format, separating out the dosage type (lowest or highest) and value into separate columns
 pdo_waterbourne_deltamethrin <- pdo %>%
@@ -431,7 +431,7 @@ figs3
 ```
 
 ## Figure s4 
-Distribution of dosages used to expose zebrafish to rotenone via the waterborne exposure method 
+Box and violin plot illustrating the distribution of rotenone dosages used in pesticide exposure studies on zebrafish behaviour
 ```{r, fig.width=16, fig.height=10}
 # Pivot the data set to a longer format, separating out the dosage type (lowest or highest) and value into separate columns
 pdo_waterbourne_rotenone <- pdo %>%
@@ -477,7 +477,7 @@ figs4
 ```
 
 ## Figure s5 
-Distribution of dosages used to expose zebrafish to atrazine via the waterborne exposure method 
+Box and violin plot illustrating the distribution of atrazine dosages used in pesticide exposure studies on zebrafish behaviour 
 ```{r, fig.width=16, fig.height=10}
 # Pivot the data set to a longer format, separating out the dosage type (lowest or highest) and value into separate columns
 pdo_waterbourne_atrazine <- pdo %>%
@@ -524,7 +524,7 @@ figs5
 ```
 
 ## Figure s6 
-Distribution of the dosages used to expose zebrafish to glyphosate via the waterborne exposure method 
+Box and violin plot illustrating the distribution of glyphosate dosages used in pesticide exposure studies on zebrafish behaviour 
 ```{r, fig.width=16, fig.height=10}
 # Pivot the data set to a longer format, separating out the dosage type (lowest or highest) and value into separate columns
 pdo_waterbourne_glyphosate <- pdo %>%
@@ -572,7 +572,7 @@ figs6
 ```
 
 ## Figure s7 
-Distribution of dosages used to expose zebrafish to chlorpyrifos via the waterborne exposure method 
+Box and violin plot illustrating the distribution of chlorpyrifos dosages used in pesticide exposure studies on zebrafish behaviour
 ```{r, fig.width=16, fig.height=10}
 # Pivot the data set to a longer format, separating out the dosage type (lowest or highest) and value into separate columns
 pdo_waterbourne_chloropyrifo <- pdo %>%
@@ -987,7 +987,7 @@ fig6
 
 
 ## Figure s8 
-Percentages of included papers according to evaluated behaviours that were under the locomotion/activity category. Raw count is provided within each bar
+Bar charts showing the percentage and counts of included studies according to evaluated behaviours that were under the locomotion/activity category (raw count is provided within each bar) 
 ```{r, fig.width=16, fig.height=10}
 # Calculate count for each assay in behavioral activity 
 total_behaviour_activity_count <- bd %>% 
@@ -1035,7 +1035,7 @@ figs8
 ```
 
 ## Figure s9 
-Percentages of included papers according to evaluated behaviours that were under the aggression category. Raw count is provided within each bar
+Bar charts showing the percentage and counts of included studies according to evaluated behaviours that were under the aggression category (raw count is provided within each bar)
 ```{r, fig.width=16, fig.height=10}
 # Calculate count for each assay in aggression behavior
 total_behaviour_aggression_count <- bd %>% 
@@ -1084,7 +1084,7 @@ figs9
 ```
 
 ## Figure s10 
-Percentages of included papers according to evaluated behaviours that were under the social category. Raw count is provided within each bar
+Bar charts showing the percentage and counts of included studies according to evaluated behaviours that were under the social category (raw count is provided within each bar)
 ```{r, fig.width=16, fig.height=10}
 # Calculate count for each assay in social behavior
 total_behaviour_sociality_count <- bd %>% 
@@ -1133,7 +1133,7 @@ figs10
 ```
 
 ## Figure s11 
-Percentages of included papers according to evaluated behaviours that were under the foraging category. Raw count is provided within each bar  
+Bar charts showing the percentage and counts of included studies according to evaluated behaviours that were under the foraging category (raw count is provided within each bar) 
 ```{r, fig.width=16, fig.height=10}
 # Calculate count for each assay in foraging behavior
 total_behaviour_foraging_count <- bd %>% 
@@ -1184,7 +1184,7 @@ figs11
 ```
 
 ## Figure s12 
-Percentages of included papers according to evaluated behaviours that were under the antipredator category. Raw count is provided within each bar  
+Bar charts showing the percentage and counts of included studies according to evaluated behaviours that were under the antipredator category (raw count is provided within each bar) 
 ```{r, fig.width=16, fig.height=10}
 # Calculate count for each assay in antipredator behavior
 total_behaviour_antipredator_count <- bd %>% 
@@ -1233,7 +1233,7 @@ figs12
 ```
 
 ## Figure s13 
-Percentages of included papers according to evaluated behaviours that were under the anxiety/boldness category. Raw count is provided within each bar 
+Bar charts showing the percentage and counts of included studies according to evaluated behaviours that were under the anxiety/boldness category (raw count is provided within each bar)
 ```{r, fig.width=16, fig.height=10}
 # Calculate count for each assay in anxiety behavior
 total_behaviour_anxiety_count <- bd %>% 
