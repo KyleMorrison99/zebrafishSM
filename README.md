@@ -1,7 +1,5 @@
 # A systematic evidence map and bibliometric analysis of the behavioural impacts of pesticide exposure on zebrafish.
 
-## Cite the data and code as: 
-
 The repository described below contains the data, bibliometric files, and code used for this study. A pre-compiled file is also provided:
 
 Please find the detailed description of the folders and their content below. Should you wish to reuse any data or analysis for future studies, kindly contact Kyle Morrison at kyle.morrison@unsw.edu.au.
