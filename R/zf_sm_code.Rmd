@@ -83,7 +83,7 @@ bib_sco <- convert2df(here("data","scopus.bib"), dbsource = "scopus", format = "
 # Objective 0
 To investigate general literature characteristics such as time trends
 
-## Figure 1a 
+## Figure 2
 Current time trends of articles investigating the impacts of pesticide exposure on zebrafish behaviour
 ```{r, fig.width=16, fig.height=10}
 # Count the number of articles by year
@@ -113,14 +113,14 @@ fig1 <- bib %>%
  
 
 fig1
- ggsave(here("figures", "fig1_time_trends.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
- ggsave(here("figures", "fig1_time_trends.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+ ggsave(here("figures", "fig2_time_trends.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
+ ggsave(here("figures", "fig2_time_trends.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
 ```
 
 #  Objective 1
 To investigate the types of pesticides and pesticide classes, both in terms of chemical and target, that have been used in experiments examining the effects of pesticide exposure on zebrafish behaviour.
 
-## Figure 3a 
+## Figure 3A
 Percentages and counts of included papers on the effects of pesticides on zebrafish behaviour (raw count is provided within each bar) according to individual pesticides (“other” is a total for all pesticides with a publication count less than or equal to two)
 ```{r, fig.width=16, fig.height=10}
 # Separate rows with multiple pesticides, count their occurrence, and combined all pesticide that occured once as "other"
@@ -175,7 +175,7 @@ fig3a
 
 ```
 
-## Figure 3b 
+## Figure 3B 
 Percentages and counts of included papers on the effects of pesticides on zebrafish behaviour (raw count is provided within each bar) according to target classes of pesticides
 ```{r, fig.width=16, fig.height=10}
 # Separate rows with multiple pesticides and count their occurrence
@@ -223,7 +223,7 @@ fig3b
 
 ```
 
-## Figure 3c 
+## Figure 3C 
 Percentages and counts of included papers on the effects of pesticides on zebrafish behaviour (raw count is provided within each bar) according to chemical classes of pesticides (“other” is all pesticide chemical classes with publication count less than or equal to two)
 ```{r, fig.width=16, fig.height=10}
 # Separate rows with multiple pesticides and count their occurrence, then filter for cases with more than one occurrence
@@ -333,7 +333,7 @@ pdo <- pdo %>%
 ```
 
 
-## Figure 4a 
+## Figure 4A
 Box and violin plot illustrating the distribution of pesticide dosages used in pesticide exposure studies on zebrafish behaviour
 ```{r, fig.width=16, fig.height=10}
 # Pivot the dataset to a longer format, separating out the dosage type (lowest or highest) and value into separate columns
@@ -618,7 +618,7 @@ figs7
 
 ```
 
-## Figure 4b 
+## Figure 4B
 Plot showing the distribuion of durations of pesticide exposure used in each study (filtered for waterborne exposure)
 ```{r, fig.width=16, fig.height=10}
 pdo_duration <- pdo %>% 
@@ -644,7 +644,7 @@ pdo_duration <- pdo %>%
   filter(route == "waterbourne")
   
 
-fig4b <- ggplot(pdo_duration, aes(x = route , y = log(duration))) + 
+fig4b <- ggplot(pdo_duration, aes(x = route , y = duration)) + 
     # Add a violin plot 
   geom_violin(fill = "#5F85AE", alpha =0.2, color = NA, trim = FALSE) +
 
@@ -656,7 +656,7 @@ fig4b <- ggplot(pdo_duration, aes(x = route , y = log(duration))) +
 
   
   # Add axis and plot labels
-  labs(x = "Distribution of Duration ", y = "log(duration) [hours]") +
+  labs(x = "Distribution of Duration ", y = "duration (hours)") +
   
   # Customize plot theme
   theme_minimal() +
@@ -677,7 +677,7 @@ ggsave(here("figures", "fig4b_pesticide_duration_exposure.jpg"), width = 16, hei
 
 ```
 
-## Figure 4c 
+## Figure 4C 
 Plot showing the percentages of studies using each exposure methodology (IP stands for intraperitoneal injection) 
 ```{r, fig.width=16, fig.height=10}
 # Count the total occurrence of each route in the data set
@@ -722,7 +722,7 @@ fig4c
 
 ```
 
-## Figure 4d 
+## Figure 4D 
 Plot showing the distribution of sample sizes  used in pesticide exposure studies per group (if multiple exposure groups we calculated mean sample size per study)
 ```{r, fig.width=16, fig.height=10}
 count <- sum(sd$sample_size == "not reported", na.rm = TRUE)
@@ -765,12 +765,21 @@ fig4d
  ggsave(here("figures", "fig4d_sample_sizes.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
 
 
-mean(sd1$sample_size)
-sd(sd1$sample_size)
+# Create aa dataframe with summary statistics
+(function(data) {
+  data.frame(
+    mean = mean(data),
+    sd = sd(data),
+    median = median(data),
+    first_quartile = quantile(data, 0.25),
+    third_quartile = quantile(data, 0.75)
+  )
+})(sd1$sample_size)
+
 ```
 
 ## Figure 4 
-Showing a) a box and violin plot illustrating the distribution of pesticide dosages used in pesticide exposure studies on zebrafish behaviour. Each individual point represents a specific exposure concentration from a given study. The box plot highlights the median value as well as the first and third quartiles, while the violin plot provides a visual representation of the dosage distribution, The dosage is illustrated on the Log10 scale. The plot is structured to display both the highest and lowest pesticide dosages reported in each study via the waterborne exposure method. B) a box and violin plot illustrating the distribution of pesticide durations used in pesticide exposure studies on zebrafish behaviour. Each individual point represents a specific exposure concentration from a given study. The box plot highlights the median value as well as the first and third quartiles, while the violin plot provides a visual representation of the duration distribution. The dosage is illustrated on the Log10 scale. C) a bar plot showing he percentages and counts of studies using each exposure methodology (IP stands for intraperitoneal injection and raw count is provided within each bar) in pesticide exposure studies on zebrafish behaviour. And d) a box and violin plot illustrating the distribution of sample sizes used in pesticides exposure studies on zebrafish. If multiple exposure groups were used in each study we calculated a mean sample size per study).
+Summary of characteristics of selected study design elements across included  studies. A) A box and violin plot illustrating the distribution of pesticide dosages used in pesticide exposure studies on zebrafish behaviour. Each individual point represents a specific exposure concentration from a given study. The box plot highlights the median value as well as the first and third quartiles, while the violin plot provides a visual representation of the dosage distribution, The dosage is illustrated on the Log10 scale. The plot shows both the highest and lowest pesticide dosages reported in each study with  a waterborne exposure method. B) a box and violin plot i llustrating the distribution of pesticide durations used in pesticide exposure studies on zebrafish behaviour. Each individual point represents a specific exposure concentration from a given study. The box plot highlights the median value as well as the first and third quartiles, while the violin plot provides a visual representation of the duration distribution. The dosage is illustrated on the Log10 scale. C) a bar plot showing the percentages and counts of studies using each exposure methodology (IP stands for intraperitoneal injection and raw count is provided within each bar) in pesticide exposure studies on zebrafish behaviour. And D) a box and violin plot illustrating the distribution of sample sizes used in pesticides exposure studies on zebrafish. If multiple exposure groups were used in each study we calculated a mean sample size per study).
 ```{r, fig.width=25, fig.height=15}
 # Combine three plots into a single plot using a grid layout
 fig4 <- ((fig4a | fig4b) / (fig4c | fig4d))  
@@ -781,7 +790,7 @@ fig4
 
 ```
 
-## Figure 5a 
+## Figure 5A 
 Percentages and counts of included papers on the effects of pesticides on zebrafish behaviour (raw count is provided within each bar) according to reported sex of zebrafish exposed to pesticides
 ```{r, fig.width=16, fig.height=10}
 # Calculate total count for each category
@@ -828,7 +837,7 @@ fig5a
 
 ```
 
-## Figure 5b 
+## Figure 5B 
 Percentages and counts of included papers on the effects of pesticides on zebrafish behaviour (raw count is provided within each bar) according to zebrafish life stages at pesticide exposure
 ```{r, fig.width=16, fig.height=10}
 # Calculate total count for each category
@@ -876,7 +885,7 @@ fig5b
 
 ```
 
-## Figure 5c 
+## Figure 5C 
 Percentages and counts of included papers on the effects of pesticides on zebrafish behaviour (raw count is provided within each bar) according to zebrafish life stages at behavioural assessment
 ``````{r, fig.width=16, fig.height=10}
 # Calculate total count for each category
@@ -925,7 +934,7 @@ fig5c
 ```
 
 ## Figure 5 
-Bar charts showing the percentage and counts of included studies on the effects of pesticides on zebrafish behaviour (raw count is provided within each bar). Counts are according to a) reported sex of zebrafish exposed to pesticides, b) reported life-stage of zebrafish at which the pesticide was exposed, and c) reported life-stage of zebrafish at which the behaviour was assessed. 
+Figure 5 – Summary of selected elements of zebrafish characteristics across included studies E (raw count is provided within each bar). Counts are according to A) reported sex of zebrafish exposed to pesticides, B) reported life-stage of zebrafish at which they were exposed to pesticides, and C) reported life-stage of zebrafish at which the behaviour was assessed.
 ```{r, fig.width=18, fig.height=21}
 # Combine three plots into a single plot using a grid layout
 fig5 <- ((fig5a) / (fig5b) / (fig5c))
@@ -1546,7 +1555,7 @@ plot(figs28$map)
 ```
 
 ## Figure 7 
-Heat map of world showing the country-level counts for first authors’ country of affiliation of studies investigating the impacts of pesticide exposure on zebrafish behaviour. Grey indicates no publications affiliated with a given country
+Heat map of world showing the country-level counts for first authors’ country of affiliation of studies investigating the impacts of pesticide exposure on zebrafish behaviour. Grey indicates no publications affiliated with a given country in our data set. 
 ```{r, fig.width=8, fig.height=5}
 
 # Extract country information from the "AU1_CO" and "AU_CO" fields of the "bib_sco" dataset
@@ -1582,18 +1591,21 @@ fig7 <- fullmap %>%
   coord_map("moll") + # Mollweide projection
   theme_map(line_size = 0.5) + 
   scale_fill_gradient(low = "#ECF207", high = "#C307F2", 
-                    name = "Score", na.value = "gray",
-                    limits = c(0.1, 24),
-                    guide = guide_colorbar(direction = "vertical.",
-                                           barwidth = unit(15, units = "mm"), 
-                                           barheight = unit(50, units = "mm"))) +
+                      name = "Score", na.value = "gray",
+                      limits = c(0.1, 24.9),
+                      guide = guide_colorbar(title.position = "bottom", direction = "horizontal",
+                                             barwidth = unit(130), units = "mm"), 
+                                             barheight = unit(120, units = "mm")) +
   guides(fill = guide_colourbar()) +
   theme(panel.background = element_rect(fill = "transparent", colour = NA),
-        plot.background = element_rect(fill = "transparent", colour = NA))
+        plot.background = element_rect(fill = "transparent", colour = NA),
+        legend.position = "bottom")
+
+
  
 fig7
- ggsave(here("figures", "fig7_world_map.pdf"), width = 16, height = 10, units = "cm", scale = 2, dpi =800)
- ggsave(here("figures", "fig7_world_map.jpg"), width = 16, height = 10, units = "cm", scale = 2, dpi =800)
+ ggsave(here("figures", "fig7_world_map.pdf"), width = 20, height = 11, units = "cm", scale = 2, dpi =800)
+ ggsave(here("figures", "fig7_world_map.jpg"), width = 20, height = 11, units = "cm", scale = 2, dpi =800)
 
 ```
 
@@ -1780,7 +1792,7 @@ circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
 ```
 
 ## Figure 8 
-Continent-level collaborate network circle plot with self-collaborations removed, based on affiliation countries of the authors of papers included in the systematic map
+A chord diagram illustration of collaborations across continents. Continents represent the location of the primary authors’ affiliated institution. Collaborations within continents are not shown.
 ```{r}
 # remove diagonal elements
 diag(merge_matrix2) <- 0
