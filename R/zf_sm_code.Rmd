@@ -1594,8 +1594,8 @@ fig7 <- fullmap %>%
                       name = "Score", na.value = "gray",
                       limits = c(0.1, 24.9),
                       guide = guide_colorbar(title.position = "bottom", direction = "horizontal",
-                                             barwidth = unit(130), units = "mm"), 
-                                             barheight = unit(120, units = "mm")) +
+                                             barwidth = unit(70, units = "mm"), 
+                                             barheight = unit(15, units = "mm"))) +
   guides(fill = guide_colourbar()) +
   theme(panel.background = element_rect(fill = "transparent", colour = NA),
         plot.background = element_rect(fill = "transparent", colour = NA),
