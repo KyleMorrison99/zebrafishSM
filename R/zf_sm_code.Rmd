@@ -291,9 +291,8 @@ fig3
 # Objective 2
 To investigate pesticide exposure study designs such as concentration and duration of exposure, life stages of zebrafish used in each study and the sample sizes used.
 
-
-making dosages consistent for dosage comparisons
 ```{r}
+# making dosages consistent for dosage comparisons
 pdo <- pdo %>%
   # Remove rows with NA values
   filter(!is.na(dosage_lowest)) %>%
@@ -303,11 +302,11 @@ pdo <- pdo %>%
          
          # Standardize dosage_unit_consistent based on dosage_lowest_unit
          dosage_unit_consistent = case_when(
-           dosage_lowest_unit == "mg/L" ~ "ug/L",
+           dosage_lowest_unit == "mg/L" ~ "ug/L", # what does this mean?
            dosage_lowest_unit == "ng/L" ~ "ug/L",
            dosage_lowest_unit == "g/L" ~ "ug/L",
-           dosage_lowest_unit == "ppb" ~ "ug/L",
-           dosage_lowest_unit == "ppm" ~ "ug/L",
+           dosage_lowest_unit == "ppb" ~ "ug/L", 
+           dosage_lowest_unit == "ppm" ~ "ug/L", 
            TRUE ~ dosage_lowest_unit),
          
          # Convert dosage_lowest to ug/L based on dosage_lowest_unit
@@ -315,8 +314,8 @@ pdo <- pdo %>%
            dosage_lowest_unit == "mg/L" ~ dosage_lowest * 1000,
            dosage_lowest_unit == "ng/L" ~ dosage_lowest / 1000,
            dosage_lowest_unit == "g/L" ~ dosage_lowest/1000000,
-           dosage_lowest_unit == "ppb" ~ dosage_lowest * 1000,
-           dosage_lowest_unit == "ppm" ~ dosage_lowest/1000,
+           dosage_lowest_unit == "ppb" ~ dosage_lowest * 1000, # 1 ppb = 1 ug/L
+           dosage_lowest_unit == "ppm" ~ dosage_lowest/1000, # 1 ppm = 1 mg/L
            TRUE ~ dosage_lowest),
          
          # Convert dosage_highest to numeric and dosage_highest_unit to character
@@ -637,7 +636,7 @@ pdo_duration <- pdo %>%
   # Convert duration to hours based on duration_unit
   
   duration_convert = case_when(
-    duration_unit == "minutes" ~ duration* 60,
+    duration_unit == "minutes" ~ duration* 60, # if the original unit is minute, it should be /60
     duration_unit == "days" ~ duration/24, 
     duration_unit == "weeks" ~ duration/168,
     TRUE ~ duration)) %>% 
