@@ -1604,7 +1604,7 @@ fig7 <- fullmap %>%
   scale_fill_gradient(
     low = "#ECF207", high = "#C307F2",
     name = "Score", na.value = "gray70",
-    limits = c(1, 20)
+    limits = c(1, 25)
     ) +
   guides(
     fill = guide_colourbar(
