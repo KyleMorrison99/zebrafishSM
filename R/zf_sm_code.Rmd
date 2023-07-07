@@ -314,8 +314,7 @@ pdo <- pdo %>%
            dosage_lowest_unit == "mg/L" ~ dosage_lowest * 1000,
            dosage_lowest_unit == "ng/L" ~ dosage_lowest / 1000,
            dosage_lowest_unit == "g/L" ~ dosage_lowest/1000000,
-           dosage_lowest_unit == "ppb" ~ dosage_lowest * 1000, # 1 ppb = 1 ug/L
-           dosage_lowest_unit == "ppm" ~ dosage_lowest/1000, # 1 ppm = 1 mg/L
+           dosage_lowest_unit == "ppm" ~ dosage_lowest*1000, 
            TRUE ~ dosage_lowest),
          
          # Convert dosage_highest to numeric and dosage_highest_unit to character
@@ -326,8 +325,7 @@ pdo <- pdo %>%
            dosage_highest_unit == "mg/L" ~ dosage_highest * 1000,
            dosage_highest_unit == "ng/L" ~ dosage_highest / 1000,
            dosage_highest_unit == "g/L" ~ dosage_highest/1000000,
-           dosage_highest_unit == "ppb" ~ dosage_highest * 1000,
-           dosage_highest_unit == "ppm" ~ dosage_highest/1000,
+           dosage_highest_unit == "ppm" ~ dosage_highest*1000,
            TRUE ~ dosage_highest))
 ```
 
@@ -636,9 +634,9 @@ pdo_duration <- pdo %>%
   # Convert duration to hours based on duration_unit
   
   duration_convert = case_when(
-    duration_unit == "minutes" ~ duration* 60, # if the original unit is minute, it should be /60
-    duration_unit == "days" ~ duration/24, 
-    duration_unit == "weeks" ~ duration/168,
+    duration_unit == "minutes" ~ duration/ 60, 
+    duration_unit == "days" ~ duration*24, 
+    duration_unit == "weeks" ~ duration*168,
     TRUE ~ duration)) %>% 
   filter(route == "waterbourne")
   
