@@ -1800,7 +1800,7 @@ circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
 
 ```
 
-## Figure 8 
+## Figure s32
 A chord diagram illustration of collaborations across continents. Continents represent the location of the primary authors’ affiliated institution. Collaborations within continents are not shown.
 ```{r}
 # remove diagonal elements
