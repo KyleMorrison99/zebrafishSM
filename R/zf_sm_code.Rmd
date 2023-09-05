@@ -1531,6 +1531,7 @@ figs24 <- biblioAnalysis(bib_sco)
 # Display the plot of the analysis results
 plot(figs24)
 
+summary(figs24)
 ```
 
 
