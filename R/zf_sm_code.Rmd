@@ -49,6 +49,7 @@ pacman::p_load(tidyverse,
                patchwork,
                plotly, 
                bibliometrix,
+               pwr,
                igraph, 
                tidyr,
                circlize,
@@ -782,7 +783,7 @@ fig4d
  ggsave(here("figures", "fig4d_sample_sizes.png"), width = 16, height = 10, units = "cm", scale = 2, dpi = 800)
 
 
-# Create aa dataframe with summary statistics
+# Create a dataframe with summary statistics
 (function(data) {
   data.frame(
     mean = mean(data),
@@ -792,6 +793,10 @@ fig4d
     third_quartile = quantile(data, 0.75)
   )
 })(sd1$sample_size)
+ 
+ # Assuming Cohen's d as 0.8 and using the median n value
+ pwr.t.test(d = 0.8, n = 11.65)
+ 
 
 ```
 
