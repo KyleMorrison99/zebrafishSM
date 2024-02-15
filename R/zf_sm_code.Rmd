@@ -310,7 +310,7 @@ pdo <- pdo %>%
          
          # Standardize dosage_unit_consistent based on dosage_lowest_unit
          dosage_unit_consistent = case_when(
-           dosage_lowest_unit == "mg/L" ~ "ug/L", # what does this mean?
+           dosage_lowest_unit == "mg/L" ~ "ug/L"
            dosage_lowest_unit == "ng/L" ~ "ug/L",
            dosage_lowest_unit == "g/L" ~ "ug/L",
            dosage_lowest_unit == "ppb" ~ "ug/L", 
