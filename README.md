@@ -1,7 +1,6 @@
 # A systematic evidence map and bibliometric analysis of the behavioural impacts of pesticide exposure on zebrafish.
 
-Citation: 
-
+## Citation: 
 Morrison, K., Yang, Y., Santana, M., Lagisz, M. and Nakagawa, S., 2024. A systematic evidence map and bibliometric analysis of the behavioural impacts of pesticide exposure on zebrafish. Environmental Pollution, p.123630.
 
 The repository described below contains the data, bibliometric files, and code used for this study. A pre-compiled file is also provided:
